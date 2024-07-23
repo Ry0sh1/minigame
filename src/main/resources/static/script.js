@@ -2,11 +2,11 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
 
 const player = {
-    x: 50,
-    y: 50,
-    width: 20,
-    height: 20,
-    speed: 3,
+    x: 0,
+    y: 0,
+    width: 10,
+    height: 10,
+    speed: 1,
 }
 
 const keys = {
@@ -16,8 +16,12 @@ const keys = {
     d: false
 };
 const obstacles  = [
-    { x: 10, y: 100, width: 100, height: 50 },
-    { x: 200, y: 150, width: 85, height: 75 },
+    { x: 40, y: 40, width: 60, height: 5 },
+    { x: 40, y: 40, width: 5, height: 60 },
+    { x: 140, y: 40, width: 5, height: 60 },
+    { x: 200, y: 40, width: 5, height: 60 },
+    { x: 260, y: 40, width: 5, height: 60 },
+    { x: 200, y: 40, width: 5, height: 60 },
     { x: 140, y: 230, width: 100, height: 10 },
     { x: 260, y: 340, width: 50, height: 15 }
 ]
@@ -62,9 +66,13 @@ function updatePlayerPosition() {
     if (keys.s && player.y < canvas.height -player.height) proposedPosition.y += player.speed;
     if (keys.d && player.x < canvas.width - player.width) proposedPosition.x += player.speed;
 
-    if (!isCollidingWithObstacle(proposedPosition)) {
+    if (!isCollidingWithObstacle(proposedPosition) && (proposedPosition.x !== player.x || proposedPosition.y !== player.y)) {
         player.x = proposedPosition.x;
         player.y = proposedPosition.y;
+        stompClient.send("/app/game.join/",
+            {},
+            JSON.stringify({player: 'Ryoshi',content: '['+player.x+','+player.y+']'})
+        );
     }
 }
 
@@ -78,7 +86,7 @@ function isCollidingWithObstacle(proposedPosition) {
 }
 
 function drawObstacle(obstacle) {
-    ctx.fillStyle = "rgb(231,208,82)";
+    ctx.fillStyle = "rgb(93,120,85)";
     ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 
     ctx.strokeStyle = 'black';
