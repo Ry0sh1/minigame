@@ -11,16 +11,24 @@ function onConnected(){
 
     stompClient.send("/app/game.join/",
         {},
-        JSON.stringify({player: 'Ryoshi',content: 'TEST'})
+        JSON.stringify({player: player.username,content: 'Joined'})
     );
 }
 
-connect();
-
 function onMessageReceived(payload){
     let message = (JSON.parse(payload.body));
-    console.log("Message Received");
-    if (message.gameCode === code){
+    if (message.type === 'POS'){
+        let pos = message.content.split(',');
 
+        player.x = parseInt(pos[0]);
+        player.y = parseInt(pos[1]);
     }
 }
+
+document.getElementById('join-button').addEventListener('click', () => {
+    player.username = document.getElementById('username').value;
+    document.querySelector('.user-input').classList.add('hidden');
+    canvas.classList.remove('hidden');
+    connect();
+    requestAnimationFrame(gameLoop);
+})

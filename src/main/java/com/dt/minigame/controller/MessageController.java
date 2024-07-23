@@ -19,12 +19,13 @@ public class MessageController {
 
     @MessageMapping("/game.join/")
     public void test(@Payload Message message){
-        System.out.println(message.getContent());
+        System.out.println(message.getPlayer() + " " + message.getContent());
     }
 
     @MessageMapping("/game.pos/")
-    public void pos(@Payload Message message){
-        System.out.println(message.getContent());
+    @SendTo("/start-game/game/")
+    public Message pos(@Payload Message message){
+        return message;
     }
 
 }

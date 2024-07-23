@@ -2,6 +2,7 @@ const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
 
 const player = {
+    username: '',
     x: 0,
     y: 0,
     width: 10,
@@ -67,11 +68,9 @@ function updatePlayerPosition() {
     if (keys.d && player.x < canvas.width - player.width) proposedPosition.x += player.speed;
 
     if (!isCollidingWithObstacle(proposedPosition) && (proposedPosition.x !== player.x || proposedPosition.y !== player.y)) {
-        player.x = proposedPosition.x;
-        player.y = proposedPosition.y;
-        stompClient.send("/app/game.join/",
+        stompClient.send("/app/game.pos/",
             {},
-            JSON.stringify({player: 'Ryoshi',content: '['+player.x+','+player.y+']'})
+            JSON.stringify({type: 'POS', player: player.username,content: proposedPosition.x+','+proposedPosition.y})
         );
     }
 }
@@ -93,5 +92,3 @@ function drawObstacle(obstacle) {
     ctx.lineWidth = 2;
     ctx.strokeRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 }
-
-requestAnimationFrame(gameLoop);
