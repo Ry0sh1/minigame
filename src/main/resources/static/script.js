@@ -1,14 +1,10 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
+let username;
 
-const player = {
-    username: '',
-    x: 0,
-    y: 0,
-    width: 10,
-    height: 10,
-    speed: 1,
-}
+let player;
+
+const players = [];
 
 const keys = {
     w: false,
@@ -42,7 +38,9 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "rgb(255,0,0)";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    players.forEach(p => {
+        ctx.fillRect(p.x, p.y, p.width, p.height);
+    })
 
     obstacles.forEach(drawObstacle);
 }

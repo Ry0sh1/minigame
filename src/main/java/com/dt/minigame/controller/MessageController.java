@@ -1,15 +1,26 @@
 package com.dt.minigame.controller;
 
 import com.dt.minigame.model.Message;
+import com.dt.minigame.model.Player;
+import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @CrossOrigin
 public class MessageController {
+
+    private final PlayerRepository playerRepository;
+
+    public MessageController(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     @MessageMapping("/game.wrongAnswer/")
     @SendTo("/start-game/game/")
@@ -18,13 +29,18 @@ public class MessageController {
     }
 
     @MessageMapping("/game.join/")
-    public void test(@Payload Message message){
-        System.out.println(message.getPlayer() + " " + message.getContent());
+    @SendTo("/start-game/game/")
+    public Message onJoin(@Payload Message message){
+        playerRepository.save(new Player(message.getPlayer(),0,0));
+        return message;
     }
 
     @MessageMapping("/game.pos/")
     @SendTo("/start-game/game/")
     public Message pos(@Payload Message message){
+        String[] pos = message.getContent().split(",");
+        Player player = new Player(message.getPlayer(),Integer.parseInt(pos[0]),Integer.parseInt(pos[1]));
+        playerRepository.save(player);
         return message;
     }
 
