@@ -10,8 +10,17 @@ const keys = {
     w: false,
     a: false,
     s: false,
-    d: false
+    d: false,
+
+    ArrowUp: false,
+    ArrowDown: false,
+    ArrowRight: false,
+    ArrowLeft: false
+
 };
+
+const bullets = []
+
 const obstacles  = [
     { x: 40, y: 40, width: 60, height: 5 },
     { x: 40, y: 40, width: 5, height: 60 },
@@ -28,10 +37,14 @@ function gameLoop(){
 
     update();
     draw();
+
 }
 
 function update() {
     updatePlayerPosition();
+    bullets.forEach(b => {
+        b.move();
+    })
 }
 
 function draw() {
@@ -40,6 +53,11 @@ function draw() {
     ctx.fillStyle = "rgb(255,0,0)";
     players.forEach(p => {
         ctx.fillRect(p.x, p.y, p.width, p.height);
+    })
+
+    ctx.fillStyle ="rgb(18,116,2)"
+    bullets.forEach(b => {
+        ctx.fillRect(b.x, b.y, b.width, b.height);
     })
 
     obstacles.forEach(drawObstacle);
@@ -54,6 +72,12 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('keyup', (e) => {
     if (e.key in keys) {
         keys[e.key] = false;
+    }
+});
+
+document.addEventListener('keypress', (e) => {
+    if (e.key === " ") {
+        shoot();
     }
 });
 
@@ -90,3 +114,21 @@ function drawObstacle(obstacle) {
     ctx.lineWidth = 2;
     ctx.strokeRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
 }
+
+function shoot(){
+    if (keys.ArrowDown){
+        bullets.push(new Bullet(player.x,player.y,"ArrowDown"));
+    }
+    if (keys.ArrowUp){
+        bullets.push(new Bullet(player.x,player.y,"ArrowUp"));
+    }
+    if (keys.ArrowRight){
+        bullets.push(new Bullet(player.x,player.y,"ArrowRight"));
+    }
+    if (keys.ArrowLeft){
+        bullets.push(new Bullet(player.x,player.y,"ArrowLeft"));
+    }
+}
+
+
+
