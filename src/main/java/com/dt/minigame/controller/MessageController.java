@@ -1,7 +1,9 @@
 package com.dt.minigame.controller;
 
+import com.dt.minigame.model.Bullet;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.Player;
+import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -17,9 +19,11 @@ import java.util.Objects;
 public class MessageController {
 
     private final PlayerRepository playerRepository;
+    private final BulletRepository bulletRepository;
 
-    public MessageController(PlayerRepository playerRepository) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository) {
         this.playerRepository = playerRepository;
+        this.bulletRepository = bulletRepository;
     }
 
     @MessageMapping("/game.wrongAnswer/")
@@ -43,6 +47,19 @@ public class MessageController {
         String[] pos = message.getContent().split(",");
         Player player = new Player(message.getPlayer(),Integer.parseInt(pos[0]),Integer.parseInt(pos[1]));
         playerRepository.save(player);
+        return message;
+    }
+
+    @MessageMapping("/game.shoot/")
+    @SendTo("/start-game/game/")
+    public Message shoot(@Payload Message message){
+        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Bullet bullet = new Bullet();
+        bullet.setX(player.getX());
+        bullet.setY(player.getY());
+        bullet.setDir(Integer.parseInt(message.getContent()));
+        Bullet shotBullet = bulletRepository.save(bullet);
+        message.setContent(shotBullet.toString());
         return message;
     }
 

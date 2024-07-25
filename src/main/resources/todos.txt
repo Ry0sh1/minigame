@@ -1,4 +1,5 @@
 Game Codes
 Schießen
 Große Map
-eingeschränktes Sichtfeld das sich mit dem Player bewegt
+eingeschränktes Sichtfeld das sich mit dem Player bewegt.
+Bullets sollen verschwinden wenn sie etwas treffen.

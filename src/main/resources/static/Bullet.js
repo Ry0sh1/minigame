@@ -1,11 +1,13 @@
 class Bullet {
+    id;
     x;
     y;
     width;
     height;
     speed;
     direction;
-    constructor(x, y, direction) {
+    constructor(id,x, y, direction) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.width = 5;
@@ -15,13 +17,16 @@ class Bullet {
     }
 
     move(){
-        if (this.direction === "ArrowDown"){
-            this.y += this.speed;
-        }else if (this.direction ==="ArrowUp"){
+        if (this.direction === 0){
             this.y -= this.speed;
-        }else if (this.direction ==="ArrowRight"){
+        }
+        else if (this.direction === 1){
             this.x += this.speed;
-        }else if (this.direction ==="ArrowLeft"){
+        }
+        if (this.direction === 2){
+            this.y += this.speed;
+        }
+        else if (this.direction === 3){
             this.x -= this.speed;
         }
     }

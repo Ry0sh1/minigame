@@ -11,15 +11,11 @@ const keys = {
     a: false,
     s: false,
     d: false,
-
-    ArrowUp: false,
-    ArrowDown: false,
-    ArrowRight: false,
-    ArrowLeft: false
-
 };
 
-const bullets = []
+const dir = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"]
+
+const bullets = new Map();
 
 const obstacles  = [
     { x: 40, y: 40, width: 60, height: 5 },
@@ -42,9 +38,9 @@ function gameLoop(){
 
 function update() {
     updatePlayerPosition();
-    bullets.forEach(b => {
-        b.move();
-    })
+    for (let [key,value] of bullets){
+        value.move();
+    }
 }
 
 function draw() {
@@ -55,7 +51,10 @@ function draw() {
         ctx.fillRect(p.x, p.y, p.width, p.height);
     })
 
-    ctx.fillStyle ="rgb(18,116,2)"
+    ctx.fillStyle ="rgb(18,116,2)";
+    for (let [key,value] of bullets){
+        ctx.fillRect(value.x, value.y, value.width, value.height);
+    }
     bullets.forEach(b => {
         ctx.fillRect(b.x, b.y, b.width, b.height);
     })
@@ -66,6 +65,9 @@ function draw() {
 document.addEventListener('keydown', (e) => {
     if (e.key in keys) {
         keys[e.key] = true;
+    }
+    if(dir.includes(e.key)){
+        player.dir = dir.indexOf(e.key);
     }
 });
 
@@ -116,18 +118,10 @@ function drawObstacle(obstacle) {
 }
 
 function shoot(){
-    if (keys.ArrowDown){
-        bullets.push(new Bullet(player.x,player.y,"ArrowDown"));
-    }
-    if (keys.ArrowUp){
-        bullets.push(new Bullet(player.x,player.y,"ArrowUp"));
-    }
-    if (keys.ArrowRight){
-        bullets.push(new Bullet(player.x,player.y,"ArrowRight"));
-    }
-    if (keys.ArrowLeft){
-        bullets.push(new Bullet(player.x,player.y,"ArrowLeft"));
-    }
+    stompClient.send("/app/game.shoot/",
+        {},
+        JSON.stringify({type: 'SHOOT', player: player.username,content: player.dir})
+    );
 }
 
 
