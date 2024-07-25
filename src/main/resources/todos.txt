@@ -1,0 +1,4 @@
+Game Codes
+Schießen
+Große Map
+eingeschränktes Sichtfeld das sich mit dem Player bewegt

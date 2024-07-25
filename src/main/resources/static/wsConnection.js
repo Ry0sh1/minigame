@@ -45,6 +45,13 @@ function onMessageReceived(payload){
         }
         console.log(players)
     }
+    if (message.type === 'LEFT'){
+        for (let i = 0; i < players.length; i++){
+            if (message.player === players[i].username){
+                players.splice(i,1);
+            }
+        }
+    }
 }
 
 document.getElementById('join-button').addEventListener('click', () => {

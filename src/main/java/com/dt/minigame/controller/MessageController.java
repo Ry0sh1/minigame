@@ -6,11 +6,11 @@ import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Controller
 @CrossOrigin
@@ -30,7 +30,9 @@ public class MessageController {
 
     @MessageMapping("/game.join/")
     @SendTo("/start-game/game/")
-    public Message onJoin(@Payload Message message){
+    public Message onJoin(@Payload Message message, SimpMessageHeaderAccessor headerAccessor){
+        System.out.println(message.getPlayer() + " joined the game");
+        Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username",message.getPlayer());
         playerRepository.save(new Player(message.getPlayer(),0,0));
         return message;
     }
