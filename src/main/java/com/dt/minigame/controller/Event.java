@@ -1,7 +1,9 @@
 package com.dt.minigame.controller;
 
+import com.dt.minigame.model.Game;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
+import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -26,11 +28,11 @@ public class Event {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
-
+        String code = headerAccessor.getSessionAttributes().get("code").toString();
         System.out.println(username + " left the game");
         playerRepository.delete(playerRepository.findById(username).orElseThrow());
-        Message message = new Message(username, "Left the game", MessageType.LEFT);
-        messagingTemplate.convertAndSend("/start-game/game/", message);
+        Message message = new Message(username, "Left the game", MessageType.LEFT, code);
+        messagingTemplate.convertAndSend("/start-game/game/" + code, message);
     }
 
 }

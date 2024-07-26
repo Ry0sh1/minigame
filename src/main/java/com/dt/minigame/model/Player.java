@@ -2,6 +2,7 @@ package com.dt.minigame.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class Player {
     private String username;
     private int x;
     private int y;
+    @ManyToOne
+    private Game game;
 
     @Override
     public String toString() {

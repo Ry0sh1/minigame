@@ -3,7 +3,8 @@ const ctx = canvas.getContext("2d");
 const mapWidth = 2000;
 const mapHeight = 2000;
 
-let username;
+const code = localStorage.getItem("code");
+let username = localStorage.getItem("username");
 let player;
 let camera;
 
@@ -78,8 +79,8 @@ function shoot(){
     let bulX = (player.x + player.width / 2) - camera.x;
     let bulY  = (player.y + player.height / 2) - camera.y;
     const angle = Math.atan2(mouseY - bulY, mouseX - bulX);
-    stompClient.send("/app/game.shoot/",
+    stompClient.send("/app/game.shoot/" + code,
         {},
-        JSON.stringify({type: 'SHOOT', player: player.username,content: angle})
+        JSON.stringify({type: 'SHOOT', player: player.username,content: angle, code: code})
     );
 }

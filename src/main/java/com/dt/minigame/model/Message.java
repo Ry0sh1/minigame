@@ -13,4 +13,5 @@ public class Message {
     private String player;
     private String content;
     private MessageType type;
+    private String code;
 }

@@ -7,11 +7,11 @@ function onError(){
     console.log("Error trying to connect to a WebSocket")
 }
 function onConnected(){
-    stompClient.subscribe("/start-game/game/", onMessageReceived);
+    stompClient.subscribe("/start-game/game/" + code, onMessageReceived);
 
-    stompClient.send("/app/game.join/",
+    stompClient.send("/app/game.join/" + code,
         {},
-        JSON.stringify({player: username,content: 'Joined',type: 'JOIN'})
+        JSON.stringify({player: username,content: 'Joined',type: 'JOIN', code: code})
     );
 }
 
@@ -28,10 +28,11 @@ function onMessageReceived(payload){
     }
     if (message.type === 'JOIN'){
         if (message.player === username){
-            fetch("/get-all-player")
+            fetch("/get-all-player/" + code)
                 .then(response => response.json())
                 .then(data => {
                     for (let i = 0; i < data.length; i++){
+                        console.log(data[i].username === username)
                         if (data[i].username === username){
                             player = new Player(0,0,username);
                             players.push(player);
@@ -45,6 +46,7 @@ function onMessageReceived(payload){
             players.push(new Player(0,0,message.player));
         }
         console.log(players)
+        console.log(player)
     }
     if (message.type === 'LEFT'){
         for (let i = 0; i < players.length; i++){
@@ -60,10 +62,5 @@ function onMessageReceived(payload){
     }
 }
 
-document.getElementById('join-button').addEventListener('click', () => {
-    username = document.getElementById('username').value;
-    document.querySelector('.user-input').classList.add('hidden');
-    canvas.classList.remove('hidden');
-    connect();
-    requestAnimationFrame(gameLoop);
-})
+connect();
+requestAnimationFrame(gameLoop)

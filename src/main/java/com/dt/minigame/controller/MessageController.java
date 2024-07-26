@@ -4,6 +4,7 @@ import com.dt.minigame.model.Bullet;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.Player;
 import com.dt.minigame.repository.BulletRepository;
+import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -20,38 +21,35 @@ public class MessageController {
 
     private final PlayerRepository playerRepository;
     private final BulletRepository bulletRepository;
+    private final GameRepository gameRepository;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
+        this.gameRepository = gameRepository;
     }
 
-    @MessageMapping("/game.wrongAnswer/")
-    @SendTo("/start-game/game/")
-    public Message wrongAnswer(@Payload Message message){
-        return message;
-    }
-
-    @MessageMapping("/game.join/")
-    @SendTo("/start-game/game/")
+    @MessageMapping("/game.join/{code}")
+    @SendTo("/start-game/game/{code}")
     public Message onJoin(@Payload Message message, SimpMessageHeaderAccessor headerAccessor){
         System.out.println(message.getPlayer() + " joined the game");
-        Objects.requireNonNull(headerAccessor.getSessionAttributes()).put("username",message.getPlayer());
-        playerRepository.save(new Player(message.getPlayer(),0,0));
+        headerAccessor.getSessionAttributes().put("username", message.getPlayer());
+        headerAccessor.getSessionAttributes().put("code", message.getCode());
+        playerRepository.save(new Player(message.getPlayer(),0,0,gameRepository.findById(message.getCode()).orElseThrow()));
         return message;
     }
 
-    @MessageMapping("/game.pos/")
-    @SendTo("/start-game/game/")
+    @MessageMapping("/game.pos/{code}")
+    @SendTo("/start-game/game/{code}")
     public Message pos(@Payload Message message){
         String[] pos = message.getContent().split(",");
-        Player player = new Player(message.getPlayer(),Integer.parseInt(pos[0]),Integer.parseInt(pos[1]));
+        Player player = new Player(message.getPlayer(),Integer.parseInt(pos[0]),Integer.parseInt(pos[1]),gameRepository.findById(message.getCode()).orElseThrow());
         playerRepository.save(player);
         return message;
     }
 
-    @MessageMapping("/game.shoot/")
-    @SendTo("/start-game/game/")
+    @MessageMapping("/game.shoot/{code}")
+    @SendTo("/start-game/game/{code}")
     public Message shoot(@Payload Message message){
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
         Bullet bullet = new Bullet();
