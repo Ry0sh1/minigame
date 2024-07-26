@@ -21,17 +21,6 @@ const keys = {
 
 const bullets = new Map();
 
-const obstacles  = [
-    { x: 40, y: 40, width: 60, height: 5 },
-    { x: 40, y: 40, width: 5, height: 60 },
-    { x: 140, y: 40, width: 5, height: 60 },
-    { x: 200, y: 40, width: 5, height: 60 },
-    { x: 430, y: 40, width: 5, height: 60 },
-    { x: 243, y: 350, width: 5, height: 60 },
-    { x: 754, y: 930, width: 100, height: 10 },
-    { x: 854, y: 530, width: 50, height: 15 }
-]
-
 function gameLoop(){
     requestAnimationFrame(gameLoop);
 
@@ -40,7 +29,7 @@ function gameLoop(){
 }
 
 function update() {
-    updatePlayerPosition();
+    player.updatePlayerPosition();
     camera.follow(player);
     for (let [key,value] of bullets){
         value.move();
@@ -65,42 +54,7 @@ function draw() {
     obstacles.forEach(drawObstacle);
 }
 
-document.addEventListener('keydown', (e) => {
-    if (e.key in keys) {
-        keys[e.key] = true;
-    }
-});
 
-document.addEventListener('keyup', (e) => {
-    if (e.key in keys) {
-        keys[e.key] = false;
-    }
-});
-canvas.addEventListener('mousedown', (e) => {
-    shoot();
-});
-
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    mouseX = event.clientX - rect.left;
-    mouseY = event.clientY - rect.top;
-});
-
-function updatePlayerPosition() {
-    const proposedPosition = { ...player };
-
-    if (keys.w && player.y >0 ) proposedPosition.y -= player.speed;
-    if (keys.a && player.x >0 ) proposedPosition.x -= player.speed;
-    if (keys.s && player.y < mapHeight -player.height) proposedPosition.y += player.speed;
-    if (keys.d && player.x < mapWidth - player.width) proposedPosition.x += player.speed;
-
-    if (!isCollidingWithObstacle(proposedPosition) && (proposedPosition.x !== player.x || proposedPosition.y !== player.y)) {
-        stompClient.send("/app/game.pos/",
-            {},
-            JSON.stringify({type: 'POS', player: player.username,content: proposedPosition.x+','+proposedPosition.y})
-        );
-    }
-}
 
 function isCollidingWithObstacle(proposedPosition) {
     return obstacles.some(obstacle => {
