@@ -35,6 +35,7 @@ function onMessageReceived(payload){
                         if (data[i].username === username){
                             player = new Player(0,0,username);
                             players.push(player);
+                            camera = new Camera(0,0, canvas.width, canvas.height)
                         }else {
                             players.push(new Player(data[i].x,data[i].y,data[i].username));
                         }

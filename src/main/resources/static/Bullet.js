@@ -22,4 +22,3 @@ class Bullet {
 
 
 
-// Einmal Keydrücken dann bleibt die richtung zum schießen:::Mann kann nur in eine Richtung immer schießen::: Player speed and Colission

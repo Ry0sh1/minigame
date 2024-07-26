@@ -55,8 +55,9 @@ public class MessageController {
     public Message shoot(@Payload Message message){
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
         Bullet bullet = new Bullet();
-        bullet.setX(player.getX());
-        bullet.setY(player.getY());
+        //Player Width & Height / 2
+        bullet.setX(player.getX() + 5);
+        bullet.setY(player.getY() + 5);
         bullet.setAngle(Double.parseDouble(message.getContent()));
         Bullet shotBullet = bulletRepository.save(bullet);
         message.setContent(shotBullet.toString());

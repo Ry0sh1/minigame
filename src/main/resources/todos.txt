@@ -1,5 +1,10 @@
+<---DOMINIK--->
 Game Codes
 Schießen
 Große Map
 eingeschränktes Sichtfeld das sich mit dem Player bewegt.
-Bullets sollen verschwinden wenn sie etwas treffen.
+
+<---TIM--->
+Bullets sollen verschwinden, wenn sie etwas treffen.
+
+//Player speed and Collision
