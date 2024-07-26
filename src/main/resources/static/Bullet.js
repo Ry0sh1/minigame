@@ -2,33 +2,21 @@ class Bullet {
     id;
     x;
     y;
-    width;
-    height;
+    radius;
     speed;
-    direction;
-    constructor(id,x, y, direction) {
+    angle;
+    constructor(id,x, y, angle) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.width = 5;
-        this.height = 5;
+        this.radius = 3;
         this.speed = 4;
-        this.direction = direction;
+        this.angle = angle;
     }
 
     move(){
-        if (this.direction === 0){
-            this.y -= this.speed;
-        }
-        else if (this.direction === 1){
-            this.x += this.speed;
-        }
-        if (this.direction === 2){
-            this.y += this.speed;
-        }
-        else if (this.direction === 3){
-            this.x -= this.speed;
-        }
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
     }
 }
 

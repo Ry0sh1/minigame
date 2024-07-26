@@ -4,6 +4,9 @@ let username;
 
 let player;
 
+let mouseX = 0;
+let mouseY = 0;
+
 const players = [];
 
 const keys = {
@@ -12,8 +15,6 @@ const keys = {
     s: false,
     d: false,
 };
-
-const dir = ["ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"]
 
 const bullets = new Map();
 
@@ -33,7 +34,6 @@ function gameLoop(){
 
     update();
     draw();
-
 }
 
 function update() {
@@ -53,11 +53,10 @@ function draw() {
 
     ctx.fillStyle ="rgb(18,116,2)";
     for (let [key,value] of bullets){
-        ctx.fillRect(value.x, value.y, value.width, value.height);
+        ctx.beginPath();
+        ctx.arc(value.x, value.y, value.radius, 0, Math.PI * 2);
+        ctx.fill();
     }
-    bullets.forEach(b => {
-        ctx.fillRect(b.x, b.y, b.width, b.height);
-    })
 
     obstacles.forEach(drawObstacle);
 }
@@ -66,9 +65,6 @@ document.addEventListener('keydown', (e) => {
     if (e.key in keys) {
         keys[e.key] = true;
     }
-    if(dir.includes(e.key)){
-        player.dir = dir.indexOf(e.key);
-    }
 });
 
 document.addEventListener('keyup', (e) => {
@@ -76,11 +72,14 @@ document.addEventListener('keyup', (e) => {
         keys[e.key] = false;
     }
 });
+canvas.addEventListener('mousedown', (e) => {
+    shoot();
+});
 
-document.addEventListener('keypress', (e) => {
-    if (e.key === " ") {
-        shoot();
-    }
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
 });
 
 function updatePlayerPosition() {
@@ -118,9 +117,10 @@ function drawObstacle(obstacle) {
 }
 
 function shoot(){
+    const angle = Math.atan2(mouseY - player.y, mouseX - player.x);
     stompClient.send("/app/game.shoot/",
         {},
-        JSON.stringify({type: 'SHOOT', player: player.username,content: player.dir})
+        JSON.stringify({type: 'SHOOT', player: player.username,content: angle})
     );
 }
 

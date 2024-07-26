@@ -20,10 +20,10 @@ public class Bullet {
     private int id;
     private int x;
     private int y;
-    private int dir;
+    private double angle;
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"x\":" + x + ", \"y\":" + y + ", \"dir\":" + dir + "}";
+        return "{\"id\":\"" + id + "\", \"x\":" + x + ", \"y\":" + y + ", \"angle\":" + angle + "}";
     }
 }

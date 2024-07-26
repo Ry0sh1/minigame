@@ -57,7 +57,7 @@ public class MessageController {
         Bullet bullet = new Bullet();
         bullet.setX(player.getX());
         bullet.setY(player.getY());
-        bullet.setDir(Integer.parseInt(message.getContent()));
+        bullet.setAngle(Double.parseDouble(message.getContent()));
         Bullet shotBullet = bulletRepository.save(bullet);
         message.setContent(shotBullet.toString());
         return message;

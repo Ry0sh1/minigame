@@ -54,7 +54,7 @@ function onMessageReceived(payload){
     }
     if (message.type === 'SHOOT'){
         let bulletAttributes = (JSON.parse(message.content));
-        bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.dir))
+        bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle))
         console.log(bullets)
     }
 }
