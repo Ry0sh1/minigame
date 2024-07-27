@@ -1,6 +1,9 @@
 canvas {
     border: 1px solid #000;
 }
+canvas:hover{
+    cursor: crosshair;
+}
 body{
     display: flex;
     flex-direction: column;

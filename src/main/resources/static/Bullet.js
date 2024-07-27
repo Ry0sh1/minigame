@@ -10,7 +10,7 @@ class Bullet {
         this.x = x;
         this.y = y;
         this.radius = 3;
-        this.speed = 4;
+        this.speed = 8;
         this.angle = angle;
     }
 
