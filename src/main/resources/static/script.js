@@ -26,11 +26,20 @@ const keys = {
 const bullets = new Map();
 const playerBullets = new Map();
 
-function gameLoop(){
+let lastTime = 0;
+const fps = 60;
+const fpsInterval = 1000 / fps;
+
+function gameLoop(currentTime){
     requestAnimationFrame(gameLoop);
 
-    update();
-    draw();
+    const elapsed = currentTime - lastTime;
+
+    if (elapsed > fpsInterval) {
+        lastTime = currentTime - (elapsed % fpsInterval);
+        update();
+        draw();
+    }
 }
 
 function update() {
@@ -109,7 +118,7 @@ function drawVision() {
     let angle1 = angle + playerVisionAngle * Math.PI / 180;
     let angle2 = angle - playerVisionAngle * Math.PI / 180;
 
-    let length = 300;
+    let length = 1000;
     let x2_1 = x1 + length * Math.cos(angle1);
     let y2_1 = y1 + length * Math.sin(angle1);
     let x2_2 = x1 + length * Math.cos(angle2);
