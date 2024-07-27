@@ -23,9 +23,9 @@ class Player {
         if (keys.d && this.x < mapWidth - this.width) proposedPosition.x += this.speed;
 
         if (!isCollidingWithObstacle(proposedPosition) && (proposedPosition.x !== this.x || proposedPosition.y !== this.y)) {
-            stompClient.send("/app/game.pos/" + code,
+            stompClient.send("/app/game.position/" + code,
                 {},
-                JSON.stringify({type: 'POS', player: this.username,content: proposedPosition.x+','+proposedPosition.y, code: code})
+                JSON.stringify({type: 'POSITION', player: this.username,content: proposedPosition.x+','+proposedPosition.y, code: code})
             );
         }
     }

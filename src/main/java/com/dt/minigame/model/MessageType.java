@@ -1,8 +1,9 @@
 package com.dt.minigame.model;
 
 public enum MessageType {
-    POS,
+    POSITION,
     LEFT,
     JOIN,
     SHOOT,
+    DELETE_BULLET,
 }

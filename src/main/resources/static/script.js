@@ -38,6 +38,9 @@ function update() {
     for (let [key,value] of bullets){
         value.move();
     }
+    for (let [key,value] of playerBullets){
+        value.move();
+    }
 }
 
 function draw() {

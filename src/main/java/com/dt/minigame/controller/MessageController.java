@@ -39,7 +39,7 @@ public class MessageController {
         return message;
     }
 
-    @MessageMapping("/game.pos/{code}")
+    @MessageMapping("/game.position/{code}")
     @SendTo("/start-game/game/{code}")
     public Message pos(@Payload Message message){
         String[] pos = message.getContent().split(",");
@@ -59,6 +59,13 @@ public class MessageController {
         bullet.setAngle(Double.parseDouble(message.getContent()));
         Bullet shotBullet = bulletRepository.save(bullet);
         message.setContent(shotBullet.toString());
+        return message;
+    }
+
+    @MessageMapping("/game.delete-bullet/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message deleteBullet(@Payload Message message){
+        bulletRepository.deleteById(Integer.parseInt(message.getContent()));
         return message;
     }
 

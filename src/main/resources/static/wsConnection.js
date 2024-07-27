@@ -17,7 +17,7 @@ function onConnected(){
 
 function onMessageReceived(payload){
     let message = (JSON.parse(payload.body));
-    if (message.type === 'POS'){
+    if (message.type === 'POSITION'){
         let pos = message.content.split(',');
         players.forEach(p => {
             if (p.username === message.player){
@@ -61,6 +61,10 @@ function onMessageReceived(payload){
         else{
             bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle))
         }
+    }
+    if (message.type === 'DELETE_BULLET'){
+        if (bullets.has(message.content)) bullets.delete(message.content);
+        if (playerBullets.has(message.content)) playerBullets.delete(message.content);
     }
 }
 
