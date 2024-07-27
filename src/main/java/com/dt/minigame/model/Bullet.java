@@ -18,8 +18,8 @@ public class Bullet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private double angle;
 
     @Override

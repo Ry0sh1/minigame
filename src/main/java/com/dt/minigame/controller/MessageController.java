@@ -52,11 +52,11 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message shoot(@Payload Message message){
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        String[] content = message.getContent().split(",");
         Bullet bullet = new Bullet();
-        //Player Width & Height / 2
-        bullet.setX(player.getX() + 5);
-        bullet.setY(player.getY() + 5);
-        bullet.setAngle(Double.parseDouble(message.getContent()));
+        bullet.setX(Double.parseDouble(content[0]));
+        bullet.setY(Double.parseDouble(content[1]));
+        bullet.setAngle(Double.parseDouble(content[2]));
         Bullet shotBullet = bulletRepository.save(bullet);
         message.setContent(shotBullet.toString());
         return message;
@@ -66,6 +66,13 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message deleteBullet(@Payload Message message){
         bulletRepository.deleteById(Integer.parseInt(message.getContent()));
+        return message;
+    }
+
+    @MessageMapping("/game.player-hit/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message playerHit(@Payload Message message){
+        //TODO: Kill Counter in data bank
         return message;
     }
 

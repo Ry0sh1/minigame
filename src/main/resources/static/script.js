@@ -1,7 +1,8 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
-const playerVisionAngle = 35; //Winkel für das Sichtfeld
-const playerVisionRadius = 60; //Radius von dem Kreis der Vision
+const playerVisionAngle = 25; //Winkel für das Sichtfeld
+const playerVisionRadius = 40; //Radius von dem Kreis der Vision
+const shootRadius = 10 + 5;
 const mapWidth = 2000;
 const mapHeight = 2000;
 
@@ -40,6 +41,7 @@ function update() {
     }
     for (let [key,value] of playerBullets){
         value.move();
+        value.isCollapsing();
     }
 }
 
@@ -53,7 +55,29 @@ function draw() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    let rx = (player.x + player.width / 2) - camera.x;
+    let ry = (player.y + player.height / 2) - camera.y;
+
+    ctx.strokeStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(rx, ry, shootRadius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Berechne den Winkel zwischen Spieler und Mauszeiger
+    let angle = Math.atan2(mouseY - ry, mouseX - rx);
+
+    // Berechne die Position des Punktes auf dem Kreis
+    let pointX = rx + shootRadius * Math.cos(angle);
+    let pointY = ry + shootRadius * Math.sin(angle);
+
+    // Zeichne den Punkt
+    ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.arc(pointX, pointY, 3, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = "rgb(255,0,0)";
+
     players.forEach(p => {
         ctx.fillRect(p.x - camera.x, p.y - camera.y, p.width, p.height);
     })
@@ -121,11 +145,15 @@ function drawObstacle(obstacle) {
 }
 
 function shoot(){
-    let bulX = (player.x + player.width / 2) - camera.x;
-    let bulY  = (player.y + player.height / 2) - camera.y;
-    const angle = Math.atan2(mouseY - bulY, mouseX - bulX);
+    let bulX = (player.x + player.width / 2);
+    let bulY  = (player.y + player.height / 2);
+    const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
+
+    let pointX = bulX + shootRadius * Math.cos(angle);
+    let pointY = bulY + shootRadius * Math.sin(angle);
+
     stompClient.send("/app/game.shoot/" + code,
         {},
-        JSON.stringify({type: 'SHOOT', player: player.username,content: angle, code: code})
+        JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle, code: code})
     );
 }

@@ -6,4 +6,5 @@ public enum MessageType {
     JOIN,
     SHOOT,
     DELETE_BULLET,
+    PLAYER_HIT,
 }
