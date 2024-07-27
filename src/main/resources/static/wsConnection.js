@@ -45,8 +45,6 @@ function onMessageReceived(payload){
         }else {
             players.push(new Player(0,0,message.player));
         }
-        console.log(players)
-        console.log(player)
     }
     if (message.type === 'LEFT'){
         for (let i = 0; i < players.length; i++){
@@ -57,8 +55,12 @@ function onMessageReceived(payload){
     }
     if (message.type === 'SHOOT'){
         let bulletAttributes = (JSON.parse(message.content));
-        bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle))
-        console.log(bullets)
+        if (message.player === player.username){
+            playerBullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle))
+        }
+        else{
+            bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle))
+        }
     }
 }
 

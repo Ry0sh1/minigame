@@ -1,6 +1,7 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
-const vision = 35; //Winkel für das Sichtfeld
+const playerVisionAngle = 35; //Winkel für das Sichtfeld
+const playerVisionRadius = 60; //Radius von dem Kreis der Vision
 const mapWidth = 2000;
 const mapHeight = 2000;
 
@@ -22,6 +23,7 @@ const keys = {
 };
 
 const bullets = new Map();
+const playerBullets = new Map();
 
 function gameLoop(){
     requestAnimationFrame(gameLoop);
@@ -59,6 +61,11 @@ function draw() {
         ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
         ctx.fill();
     }
+    for (let [key, value] of playerBullets) {
+        ctx.beginPath();
+        ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
     obstacles.forEach(drawObstacle);
 
     ctx.restore();
@@ -72,8 +79,8 @@ function drawVision() {
 
     let angle = Math.atan2(mouseY - y1, mouseX - x1);
 
-    let angle1 = angle + vision * Math.PI / 180;
-    let angle2 = angle - vision * Math.PI / 180;
+    let angle1 = angle + playerVisionAngle * Math.PI / 180;
+    let angle2 = angle - playerVisionAngle * Math.PI / 180;
 
     let length = 300;
     let x2_1 = x1 + length * Math.cos(angle1);
@@ -82,7 +89,7 @@ function drawVision() {
     let y2_2 = y1 + length * Math.sin(angle2);
 
     ctx.beginPath();
-    ctx.arc(x1, y1, 50, angle1, angle2);
+    ctx.arc(x1, y1, playerVisionRadius, angle1, angle2);
     ctx.lineTo(x1, y1);
     ctx.lineTo(x2_1, y2_1);
     ctx.lineTo(x2_2, y2_2);
