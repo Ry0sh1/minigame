@@ -1,6 +1,6 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
-const vision = 25; //Winkel für das Sichtfeld
+const vision = 35; //Winkel für das Sichtfeld
 const mapWidth = 2000;
 const mapHeight = 2000;
 
@@ -75,7 +75,7 @@ function drawVision() {
     let angle1 = angle + vision * Math.PI / 180;
     let angle2 = angle - vision * Math.PI / 180;
 
-    let length = 200;
+    let length = 300;
     let x2_1 = x1 + length * Math.cos(angle1);
     let y2_1 = y1 + length * Math.sin(angle1);
     let x2_2 = x1 + length * Math.cos(angle2);
@@ -83,7 +83,7 @@ function drawVision() {
 
     ctx.beginPath();
     ctx.arc(x1, y1, 50, angle1, angle2);
-    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1, y1);
     ctx.lineTo(x2_1, y2_1);
     ctx.lineTo(x2_2, y2_2);
     ctx.lineTo(x1, y1);
