@@ -14,5 +14,7 @@ const shotgun = {
     speed: 4,
     range: 100,
     reloadFrames: 20,
-    damage: 10
+    damage: 10,
+    scatter: 60,
+    bullets: 8
 }

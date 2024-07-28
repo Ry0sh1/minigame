@@ -84,7 +84,7 @@ public class MessageController {
     @MessageMapping("/game.delete-bullet/{code}")
     @SendTo("/start-game/game/{code}")
     public Message deleteBullet(@Payload Message message){
-        bulletRepository.deleteById(Integer.parseInt(message.getContent()));
+        if (bulletRepository.existsById(Integer.parseInt(message.getContent()))) bulletRepository.deleteById(Integer.parseInt(message.getContent()));
         return message;
     }
 

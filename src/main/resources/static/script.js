@@ -171,15 +171,35 @@ function shoot(){
     if (!reloading){
         let bulX = (player.x + player.width / 2);
         let bulY  = (player.y + player.height / 2);
-        const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
-        let pointX = bulX + shootRadius * Math.cos(angle);
-        let pointY = bulY + shootRadius * Math.sin(angle);
+        if(weapon === shotgun){
+            console.log("SHOTGUN")
+            const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
-        stompClient.send("/app/game.shoot/" + code,
-            {},
-            JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
-        );
+            let bulletSpawnX = bulX + shootRadius * Math.cos(angle);
+            let bulletSpawnY = bulY + shootRadius * Math.sin(angle);
+
+            for (let i = 0; i <= shotgun.bullets; i++){
+                let randomMouseX = mouseX + Math.floor(Math.random() * shotgun.scatter * 2 - shotgun.scatter);
+                let randomMouseY = mouseY + Math.floor(Math.random() * shotgun.scatter * 2 - shotgun.scatter);
+                const bulAngle = Math.atan2(randomMouseY - (bulY - camera.y), randomMouseX - (bulX - camera.x));
+
+                stompClient.send("/app/game.shoot/" + code,
+                    {},
+                    JSON.stringify({type: 'SHOOT', player: player.username,content: bulletSpawnX + "," + bulletSpawnY + "," + bulAngle + "," + weapon.speed, code: code})
+                );
+            }
+
+        }else {
+            const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
+
+            let pointX = bulX + shootRadius * Math.cos(angle);
+            let pointY = bulY + shootRadius * Math.sin(angle);
+            stompClient.send("/app/game.shoot/" + code,
+                {},
+                JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
+            );
+        }
         reloading = true;
     }
 }
