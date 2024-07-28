@@ -10,7 +10,10 @@ document.addEventListener('keyup', (e) => {
     }
 });
 canvas.addEventListener('mousedown', (e) => {
-    shoot();
+    mouseDown = true;
+});
+canvas.addEventListener('mouseup', (e) => {
+    mouseDown = false;
 });
 
 canvas.addEventListener('mousemove', (event) => {

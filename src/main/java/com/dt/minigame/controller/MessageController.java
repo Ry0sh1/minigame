@@ -2,6 +2,7 @@ package com.dt.minigame.controller;
 
 import com.dt.minigame.model.Bullet;
 import com.dt.minigame.model.Message;
+import com.dt.minigame.model.MessageType;
 import com.dt.minigame.model.Player;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
@@ -35,7 +36,7 @@ public class MessageController {
         System.out.println(message.getPlayer() + " joined the game");
         headerAccessor.getSessionAttributes().put("username", message.getPlayer());
         headerAccessor.getSessionAttributes().put("code", message.getCode());
-        playerRepository.save(new Player(message.getPlayer(),0,0,gameRepository.findById(message.getCode()).orElseThrow()));
+        playerRepository.save(new Player(message.getPlayer(),0,0,gameRepository.findById(message.getCode()).orElseThrow(),0,0));
         return message;
     }
 
@@ -43,7 +44,9 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message pos(@Payload Message message){
         String[] pos = message.getContent().split(",");
-        Player player = new Player(message.getPlayer(),Integer.parseInt(pos[0]),Integer.parseInt(pos[1]),gameRepository.findById(message.getCode()).orElseThrow());
+        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        player.setX(Double.parseDouble(pos[0]));
+        player.setX(Double.parseDouble(pos[1]));
         playerRepository.save(player);
         return message;
     }
@@ -72,7 +75,17 @@ public class MessageController {
     @MessageMapping("/game.player-hit/{code}")
     @SendTo("/start-game/game/{code}")
     public Message playerHit(@Payload Message message){
-        //TODO: Kill Counter in data bank
+        Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Player shotPlayer = playerRepository.findById(message.getContent()).orElseThrow();
+        killer.setKillCounter(killer.getKillCounter() + 1);
+        shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
+        shotPlayer.setX(0);
+        shotPlayer.setY(0);
+        playerRepository.save(killer);
+        playerRepository.save(shotPlayer);
+        message.setType(MessageType.POSITION);
+        message.setContent(shotPlayer.getX() + "," + shotPlayer.getY());
+        message.setPlayer(shotPlayer.getUsername());
         return message;
     }
 

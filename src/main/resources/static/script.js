@@ -22,6 +22,7 @@ const keys = {
     s: false,
     d: false,
 };
+let mouseDown = false;
 
 const bullets = new Map();
 const playerBullets = new Map();
@@ -52,6 +53,7 @@ function update() {
         value.move();
         value.isCollapsing();
     }
+    if (mouseDown) shoot();
 }
 
 function draw() {
@@ -72,10 +74,8 @@ function draw() {
     ctx.arc(rx, ry, shootRadius, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Berechne den Winkel zwischen Spieler und Mauszeiger
     let angle = Math.atan2(mouseY - ry, mouseX - rx);
-
-    // Berechne die Position des Punktes auf dem Kreis
+    
     let pointX = rx + shootRadius * Math.cos(angle);
     let pointY = ry + shootRadius * Math.sin(angle);
 
@@ -102,9 +102,9 @@ function draw() {
         ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
         ctx.fill();
     }
-    obstacles.forEach(drawObstacle);
 
     ctx.restore();
+    obstacles.forEach(drawObstacle);
 }
 function drawVision() {
     ctx.strokeStyle = "rgba(0,0,0,0.5)";

@@ -16,10 +16,12 @@ import lombok.Setter;
 public class Player {
     @Id
     private String username;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     @ManyToOne
     private Game game;
+    private int killCounter;
+    private int deathCounter;
 
     @Override
     public String toString() {
