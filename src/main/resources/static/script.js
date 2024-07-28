@@ -33,10 +33,12 @@ let lastTime = 0;
 const fps = 60;
 const fpsInterval = 1000 / fps;
 
+let reloading = false;
+let reloadTime = 0;
+
 function gameLoop(currentTime){
     requestAnimationFrame(gameLoop);
     if (alive){
-
         const elapsed = currentTime - lastTime;
 
         if (elapsed > fpsInterval) {
@@ -48,6 +50,14 @@ function gameLoop(currentTime){
 }
 
 function update() {
+    if (reloading) {
+        reloadTime++;
+        if (reloadTime % weapon.reloadFrames === 0){
+            reloadTime = 0;
+            reloading = false;
+        }
+    }
+
     player.updatePlayerPosition();
     camera.follow(player);
     for (let [key,value] of bullets){
@@ -158,15 +168,18 @@ function drawObstacle(obstacle) {
 }
 
 function shoot(){
-    let bulX = (player.x + player.width / 2);
-    let bulY  = (player.y + player.height / 2);
-    const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
+    if (!reloading){
+        let bulX = (player.x + player.width / 2);
+        let bulY  = (player.y + player.height / 2);
+        const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
-    let pointX = bulX + shootRadius * Math.cos(angle);
-    let pointY = bulY + shootRadius * Math.sin(angle);
+        let pointX = bulX + shootRadius * Math.cos(angle);
+        let pointY = bulY + shootRadius * Math.sin(angle);
 
-    stompClient.send("/app/game.shoot/" + code,
-        {},
-        JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
-    );
+        stompClient.send("/app/game.shoot/" + code,
+            {},
+            JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
+        );
+        reloading = true;
+    }
 }
