@@ -5,6 +5,7 @@ class Bullet {
     radius;
     speed;
     angle;
+    distance = 0;
     constructor(id,x,y,angle,speed) {
         this.id = id;
         this.x = x;
@@ -15,8 +16,17 @@ class Bullet {
     }
 
     move(){
+        let xTemp = this.x;
+        let yTemp = this.y;
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
+        this.distance += Math.abs(this.x - xTemp) + Math.abs(this.y - yTemp);
+        if (this.distance >= weapon.range){
+            stompClient.send("/app/game.delete-bullet/" + code,
+                {},
+                JSON.stringify({type: 'DELETE_BULLET', player: player.username, content: this.id, code: code})
+            );
+        }
     }
 
     isCollapsing(){
