@@ -21,9 +21,10 @@ public class Bullet {
     private double x;
     private double y;
     private double angle;
+    private double speed;
 
     @Override
     public String toString() {
-        return "{\"id\":\"" + id + "\", \"x\":" + x + ", \"y\":" + y + ", \"angle\":" + angle + "}";
+        return "{\"id\":\"" + id + "\", \"x\":" + x + ", \"y\":" + y + ", \"angle\":" + angle + ", \"speed\":\"" + speed + "\"}";
     }
 }

@@ -36,7 +36,22 @@ public class MessageController {
         System.out.println(message.getPlayer() + " joined the game");
         headerAccessor.getSessionAttributes().put("username", message.getPlayer());
         headerAccessor.getSessionAttributes().put("code", message.getCode());
-        playerRepository.save(new Player(message.getPlayer(),0,0,gameRepository.findById(message.getCode()).orElseThrow(),0,0));
+        Player player = new Player();
+        player.setUsername(message.getPlayer());
+        player.setGame(gameRepository.findById(message.getCode()).orElseThrow());
+        player.setKillCounter(0);
+        player.setDeathCounter(0);
+        playerRepository.save(player);
+        //TODO: Handle Frontend
+        return message;
+    }
+
+    @MessageMapping("/game.spawn/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message onSpawn(@Payload Message message){
+        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        player.setX(0);
+        player.setY(0);
         return message;
     }
 
@@ -60,6 +75,7 @@ public class MessageController {
         bullet.setX(Double.parseDouble(content[0]));
         bullet.setY(Double.parseDouble(content[1]));
         bullet.setAngle(Double.parseDouble(content[2]));
+        bullet.setSpeed(Double.parseDouble(content[3]));
         Bullet shotBullet = bulletRepository.save(bullet);
         message.setContent(shotBullet.toString());
         return message;
@@ -83,9 +99,6 @@ public class MessageController {
         shotPlayer.setY(0);
         playerRepository.save(killer);
         playerRepository.save(shotPlayer);
-        message.setType(MessageType.POSITION);
-        message.setContent(shotPlayer.getX() + "," + shotPlayer.getY());
-        message.setPlayer(shotPlayer.getUsername());
         return message;
     }
 

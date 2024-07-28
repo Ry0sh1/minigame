@@ -5,12 +5,12 @@ class Bullet {
     radius;
     speed;
     angle;
-    constructor(id,x, y, angle) {
+    constructor(id,x,y,angle,speed) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.radius = 3;
-        this.speed = 8;
+        this.speed = speed;
         this.angle = angle;
     }
 
@@ -35,8 +35,8 @@ class Bullet {
                 break;
             }
         }
-        for (let i = 0; i < players.length; i++){
-            const p = players[i];
+        for (let [key, value] of players) {
+            const p = value;
             if (this.x + this.radius >= p.x &&
                 this.x <= p.x + p.width &&
                 this.y + this.radius >= p.y &&

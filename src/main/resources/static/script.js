@@ -9,12 +9,14 @@ const mapHeight = 2000;
 const code = localStorage.getItem("code");
 let username = localStorage.getItem("username");
 let player;
+let weapon;
 let camera;
+let alive = false;
 
 let mouseX = 0;
 let mouseY = 0;
 
-const players = [];
+const players = new Map();
 
 const keys = {
     w: false,
@@ -33,13 +35,15 @@ const fpsInterval = 1000 / fps;
 
 function gameLoop(currentTime){
     requestAnimationFrame(gameLoop);
+    if (alive){
 
-    const elapsed = currentTime - lastTime;
+        const elapsed = currentTime - lastTime;
 
-    if (elapsed > fpsInterval) {
-        lastTime = currentTime - (elapsed % fpsInterval);
-        update();
-        draw();
+        if (elapsed > fpsInterval) {
+            lastTime = currentTime - (elapsed % fpsInterval);
+            update();
+            draw();
+        }
     }
 }
 
@@ -75,7 +79,7 @@ function draw() {
     ctx.stroke();
 
     let angle = Math.atan2(mouseY - ry, mouseX - rx);
-    
+
     let pointX = rx + shootRadius * Math.cos(angle);
     let pointY = ry + shootRadius * Math.sin(angle);
 
@@ -87,9 +91,9 @@ function draw() {
 
     ctx.fillStyle = "rgb(255,0,0)";
 
-    players.forEach(p => {
-        ctx.fillRect(p.x - camera.x, p.y - camera.y, p.width, p.height);
-    })
+    for (let [key, value] of players) {
+        ctx.fillRect(value.x - camera.x, value.y - camera.y, value.width, value.height);
+    }
 
     ctx.fillStyle = "rgb(18,116,2)";
     for (let [key, value] of bullets) {
@@ -163,6 +167,6 @@ function shoot(){
 
     stompClient.send("/app/game.shoot/" + code,
         {},
-        JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle, code: code})
+        JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
     );
 }
