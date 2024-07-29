@@ -9,6 +9,7 @@ QOL:
 
 * Respawn timer
 * Respawn Punkte
+* Nicht durch Wände schauen
 
 <---TIM--->
 Maps
