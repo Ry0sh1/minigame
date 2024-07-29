@@ -60,11 +60,18 @@ function onMessageReceived(payload){
             players.set(username, player);
             camera = new Camera(0,0, canvas.width, canvas.height)
             alive = true;
+            document.getElementById('hp').innerText = player.hp;
         }else {
             players.set(message.player, new Player(0,0, message.player));
         }
     }
     if (message.type === 'PLAYER_HIT'){
+        if (message.content.split(",")[0] === username){
+            player.hp = player.hp - parseInt(message.content.split(",")[1]);
+            document.getElementById('hp').innerText = player.hp;
+        }
+    }
+    if (message.type === 'KILLED'){
         if (message.content === username){
             alive = false;
             document.getElementById('change-weapon').classList.remove('hidden');

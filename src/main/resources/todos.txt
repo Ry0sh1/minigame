@@ -1,6 +1,8 @@
 <---DOMINIK--->
 Bugs:
-    *
+    * Get All Player Position richtig fetchen
+    * Transactional Exception
+    * Pre Player not Spawned Bug
 QOL:
     * Movement, wenn man gegen Objekte läuft
     *

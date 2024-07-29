@@ -41,6 +41,7 @@ public class MessageController {
         player.setGame(gameRepository.findById(message.getCode()).orElseThrow());
         player.setKillCounter(0);
         player.setDeathCounter(0);
+        player.setHp(100);
         playerRepository.save(player);
         //TODO: Handle Frontend
         return message;
@@ -91,14 +92,24 @@ public class MessageController {
     @MessageMapping("/game.player-hit/{code}")
     @SendTo("/start-game/game/{code}")
     public Message playerHit(@Payload Message message){
+        String[] args = message.getContent().split(",");
         Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
-        Player shotPlayer = playerRepository.findById(message.getContent()).orElseThrow();
-        killer.setKillCounter(killer.getKillCounter() + 1);
-        shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
-        shotPlayer.setX(0);
-        shotPlayer.setY(0);
-        playerRepository.save(killer);
-        playerRepository.save(shotPlayer);
+        Player shotPlayer = playerRepository.findById(args[0]).orElseThrow();
+
+        if (shotPlayer.getHp() - Integer.parseInt(args[1]) <= 0){
+            killer.setKillCounter(killer.getKillCounter() + 1);
+            shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
+            shotPlayer.setX(0);
+            shotPlayer.setY(0);
+            shotPlayer.setHp(100);
+            playerRepository.save(killer);
+            playerRepository.save(shotPlayer);
+            message.setContent(shotPlayer.getUsername());
+            message.setType(MessageType.KILLED);
+        }else {
+            shotPlayer.setHp(shotPlayer.getHp() - Integer.parseInt(args[1]));
+            playerRepository.save(shotPlayer);
+        }
         return message;
     }
 

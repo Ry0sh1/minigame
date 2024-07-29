@@ -5,9 +5,11 @@ class Player {
     width;
     height;
     speed;
+    hp;
     constructor(x, y, username) {
         this.x = x;
         this.y = y;
+        this.hp = 100;
         this.username = username;
         this.width = settings.playerWidth;
         this.height = settings.playerHeight;

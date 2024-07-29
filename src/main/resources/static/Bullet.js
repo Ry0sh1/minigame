@@ -55,7 +55,7 @@ class Bullet {
                 collapsing = true;
                 stompClient.send("/app/game.player-hit/" + code,
                     {},
-                    JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username, code: code})
+                    JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username + "," + weapon.damage, code: code})
                 );
                 break;
             }

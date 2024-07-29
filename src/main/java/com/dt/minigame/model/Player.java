@@ -22,6 +22,7 @@ public class Player {
     private Game game;
     private int killCounter;
     private int deathCounter;
+    private int hp;
 
     @Override
     public String toString() {
