@@ -1,10 +1,5 @@
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext("2d");
-const playerVisionAngle = 25; //Winkel für das Sichtfeld
-const playerVisionRadius = 40; //Radius von dem Kreis der Vision
-const shootRadius = 10 + 5;
-const mapWidth = 2000;
-const mapHeight = 2000;
 
 const code = localStorage.getItem("code");
 let username = localStorage.getItem("username");
@@ -30,8 +25,7 @@ const bullets = new Map();
 const playerBullets = new Map();
 
 let lastTime = 0;
-const fps = 60;
-const fpsInterval = 1000 / fps;
+const fpsInterval = 1000 / settings.fps;
 
 let reloading = false;
 let reloadTime = 0;
@@ -85,13 +79,13 @@ function draw() {
 
     ctx.strokeStyle = 'black';
     ctx.beginPath();
-    ctx.arc(rx, ry, shootRadius, 0, Math.PI * 2);
+    ctx.arc(rx, ry, settings.shootRadius, 0, Math.PI * 2);
     ctx.stroke();
 
     let angle = Math.atan2(mouseY - ry, mouseX - rx);
 
-    let pointX = rx + shootRadius * Math.cos(angle);
-    let pointY = ry + shootRadius * Math.sin(angle);
+    let pointX = rx + settings.shootRadius * Math.cos(angle);
+    let pointY = ry + settings.shootRadius * Math.sin(angle);
 
     // Zeichne den Punkt
     ctx.fillStyle = 'red';
@@ -129,8 +123,8 @@ function drawVision() {
 
     let angle = Math.atan2(mouseY - y1, mouseX - x1);
 
-    let angle1 = angle + playerVisionAngle * Math.PI / 180;
-    let angle2 = angle - playerVisionAngle * Math.PI / 180;
+    let angle1 = angle + settings.playerVisionAngle * Math.PI / 180;
+    let angle2 = angle - settings.playerVisionAngle * Math.PI / 180;
 
     let length = 1000;
     let x2_1 = x1 + length * Math.cos(angle1);
@@ -139,7 +133,7 @@ function drawVision() {
     let y2_2 = y1 + length * Math.sin(angle2);
 
     ctx.beginPath();
-    ctx.arc(x1, y1, playerVisionRadius, angle1, angle2);
+    ctx.arc(x1, y1, settings.playerVisionRadius, angle1, angle2);
     ctx.lineTo(x1, y1);
     ctx.lineTo(x2_1, y2_1);
     ctx.lineTo(x2_2, y2_2);
@@ -176,8 +170,8 @@ function shoot(){
             console.log("SHOTGUN")
             const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
-            let bulletSpawnX = bulX + shootRadius * Math.cos(angle);
-            let bulletSpawnY = bulY + shootRadius * Math.sin(angle);
+            let bulletSpawnX = bulX + settings.shootRadius * Math.cos(angle);
+            let bulletSpawnY = bulY + settings.shootRadius * Math.sin(angle);
 
             for (let i = 0; i <= shotgun.bullets; i++){
                 let randomMouseX = mouseX + Math.floor(Math.random() * shotgun.scatter * 2 - shotgun.scatter);
@@ -193,8 +187,8 @@ function shoot(){
         }else {
             const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
-            let pointX = bulX + shootRadius * Math.cos(angle);
-            let pointY = bulY + shootRadius * Math.sin(angle);
+            let pointX = bulX + settings.shootRadius * Math.cos(angle);
+            let pointY = bulY + settings.shootRadius * Math.sin(angle);
             stompClient.send("/app/game.shoot/" + code,
                 {},
                 JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})

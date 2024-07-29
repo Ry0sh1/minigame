@@ -9,9 +9,9 @@ class Player {
         this.x = x;
         this.y = y;
         this.username = username;
-        this.width = 10;
-        this.height = 10;
-        this.speed = 1;
+        this.width = settings.playerWidth;
+        this.height = settings.playerHeight;
+        this.speed = settings.playerSpeed;
     }
 
     updatePlayerPosition() {
@@ -19,8 +19,8 @@ class Player {
 
         if (keys.w && this.y >0 ) proposedPosition.y -= this.speed;
         if (keys.a && this.x >0 ) proposedPosition.x -= this.speed;
-        if (keys.s && this.y < mapHeight -this.height) proposedPosition.y += this.speed;
-        if (keys.d && this.x < mapWidth - this.width) proposedPosition.x += this.speed;
+        if (keys.s && this.y < settings.mapHeight -this.height) proposedPosition.y += this.speed;
+        if (keys.d && this.x < settings.mapWidth - this.width) proposedPosition.x += this.speed;
 
         if (!isCollidingWithObstacle(proposedPosition) && (proposedPosition.x !== this.x || proposedPosition.y !== this.y)) {
             stompClient.send("/app/game.position/" + code,

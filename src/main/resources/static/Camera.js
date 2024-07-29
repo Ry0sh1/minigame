@@ -16,8 +16,8 @@ class Camera {
 
         if (this.x < 0) this.x = 0;
         if (this.y < 0) this.y = 0;
-        if (this.x + this.width > mapWidth) this.x = mapWidth - this.width;
-        if (this.y + this.height > mapHeight) this.y = mapHeight - this.height;
+        if (this.x + this.width > settings.mapWidth) this.x = settings.mapWidth - this.width;
+        if (this.y + this.height > settings.mapHeight) this.y = settings.mapHeight - this.height;
     }
 
 }

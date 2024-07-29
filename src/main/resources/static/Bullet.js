@@ -5,14 +5,15 @@ class Bullet {
     radius;
     speed;
     angle;
-    distance = 0;
+    distance;
     constructor(id,x,y,angle,speed) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.radius = 3;
+        this.radius = settings.bulletRadius;
         this.speed = speed;
         this.angle = angle;
+        this.distance = 0;
     }
 
     move(){
@@ -40,7 +41,7 @@ class Bullet {
                 collapsing = true;
                 break;
             }
-            if (this.x >= mapWidth || this.y >= mapHeight || this.x <= 0 || this.y <= 0){
+            if (this.x >= settings.mapWidth || this.y >= settings.mapHeight || this.x <= 0 || this.y <= 0){
                 collapsing = true;
                 break;
             }
