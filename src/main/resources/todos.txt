@@ -1,7 +1,16 @@
 <---DOMINIK--->
-Game Codes
+Bugs:
+    *
+QOL:
+    * Movement, wenn man gegen Objekte läuft
+    *
+
+* Respawn timer
+* Respawn Punkte
 
 <---TIM--->
-Bullets sollen verschwinden, wenn sie etwas treffen.
+Maps
+* Index schöner machen (CSS, HTML)
+* Waffenauswahl schöner (CSS, HTML)
 
 //Player speed and Collision
