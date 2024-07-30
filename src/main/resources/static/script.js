@@ -141,7 +141,14 @@ function drawVision() {
     ctx.closePath();
     ctx.clip();
 }
+function drawObstacle(obstacle) {
+    ctx.fillStyle = "rgb(93,120,85)";
+    ctx.fillRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
 
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
+}
 
 function isCollidingWithObstacle(proposedPosition) {
     return obstacles.some(obstacle => {
@@ -150,15 +157,6 @@ function isCollidingWithObstacle(proposedPosition) {
             proposedPosition.y + proposedPosition.height <= obstacle.y ||
             proposedPosition.y >= obstacle.y + obstacle.height);
     });
-}
-
-function drawObstacle(obstacle) {
-    ctx.fillStyle = "rgb(93,120,85)";
-    ctx.fillRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
-
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
 }
 
 function shoot(){
