@@ -114,33 +114,6 @@ function draw() {
     ctx.restore();
     obstacles.forEach(drawObstacle);
 }
-function drawVision() {
-    ctx.strokeStyle = "rgba(0,0,0,0.5)";
-    ctx.lineWidth = 1;
-
-    let x1 = (player.x + player.width / 2) - camera.x;
-    let y1 = (player.y + player.height / 2) - camera.y;
-
-    let angle = Math.atan2(mouseY - y1, mouseX - x1);
-
-    let angle1 = angle + settings.playerVisionAngle * Math.PI / 180;
-    let angle2 = angle - settings.playerVisionAngle * Math.PI / 180;
-
-    let length = 1000;
-    let x2_1 = x1 + length * Math.cos(angle1);
-    let y2_1 = y1 + length * Math.sin(angle1);
-    let x2_2 = x1 + length * Math.cos(angle2);
-    let y2_2 = y1 + length * Math.sin(angle2);
-
-    ctx.beginPath();
-    ctx.arc(x1, y1, settings.playerVisionRadius, angle1, angle2);
-    ctx.lineTo(x1, y1);
-    ctx.lineTo(x2_1, y2_1);
-    ctx.lineTo(x2_2, y2_2);
-    ctx.lineTo(x1, y1);
-    ctx.closePath();
-    ctx.clip();
-}
 function drawObstacle(obstacle) {
     ctx.fillStyle = "rgb(93,120,85)";
     ctx.fillRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
