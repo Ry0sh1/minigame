@@ -2,26 +2,22 @@ function drawVision() {
     ctx.strokeStyle = "rgba(0,0,0,0.5)";
     ctx.lineWidth = 1;
 
-    let playerVisionAngle = 40;
-
     let playerCenterX = (player.x + player.width / 2) - camera.x;
     let playerCenterY = (player.y + player.height / 2) - camera.y;
 
     let angle = Math.atan2(mouseY - playerCenterY, mouseX - playerCenterX);
 
-    let startAngle = angle + playerVisionAngle * Math.PI / 180;
-    let endAngle = angle - playerVisionAngle * Math.PI / 180;
+    let startAngle = angle + settings.playerVisionAngle * Math.PI / 180;
+    let endAngle = angle - settings.playerVisionAngle * Math.PI / 180;
 
-    let length = 200;
-    let numLines = 80;
-    let angleStep = (startAngle - endAngle) / (numLines - 1);
+    let angleStep = (startAngle - endAngle) / (settings.playerVisionSharpness - 1);
 
     let lines = [];
 
-    for (let i = 0; i < numLines; i++) {
+    for (let i = 0; i < settings.playerVisionSharpness; i++) {
         let currentAngle = startAngle - i * angleStep;
-        let x2 = playerCenterX + length * Math.cos(currentAngle);
-        let y2 = playerCenterY + length * Math.sin(currentAngle);
+        let x2 = playerCenterX + settings.playerVisionLength * Math.cos(currentAngle);
+        let y2 = playerCenterY + settings.playerVisionLength * Math.sin(currentAngle);
         let line = new Line(playerCenterX, playerCenterY, x2, y2);
 
         for (let obstacle of obstacles) {
@@ -29,9 +25,12 @@ function drawVision() {
             let intersection = lineIntersectsRect(line, obstacle);
             if (intersection !== null) {
                 collision = true;
-                x2 = intersection.x;
-                y2 = intersection.y;
-                break;
+                let currentIntersectionDistance = distance(playerCenterX, playerCenterY, x2, y2);
+                let newDis = distance(playerCenterX, playerCenterY, intersection.x, intersection.y);
+                if (currentIntersectionDistance > newDis){
+                    x2 = intersection.x;
+                    y2 = intersection.y;
+                }
             }
         }
 
@@ -51,8 +50,8 @@ function drawVision() {
 }
 
 function lineIntersectsRect(line, obstacle) {
-    let left = new Line(obstacle.x - camera.x, obstacle.y - camera.y - camera.y, obstacle.x - camera.x, obstacle.y + obstacle.height - camera.y);
-    let top = new Line(obstacle.x - camera.x, obstacle.y - camera.y - camera.y, obstacle.x + obstacle.width - camera.x, obstacle.y - camera.y);
+    let left = new Line(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.x - camera.x, obstacle.y + obstacle.height - camera.y);
+    let top = new Line(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.x + obstacle.width - camera.x, obstacle.y - camera.y);
     let right = new Line(obstacle.x + obstacle.width - camera.x, obstacle.y + obstacle.height - camera.y, obstacle.x + obstacle.width - camera.x, obstacle.y - camera.y);
     let bot = new Line(obstacle.x + obstacle.width - camera.x, obstacle.y + obstacle.height - camera.y, obstacle.x - camera.x, obstacle.y + obstacle.height- camera.y);
 
