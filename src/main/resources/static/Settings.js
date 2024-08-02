@@ -10,5 +10,5 @@ const settings = {
     playerSpeed: 3,
     bulletRadius: 3,
     playerVisionLength: 200,
-    playerVisionSharpness: 1000 //Diese Zahl runterschrauben wenn es zu sehr laggt!a
+    playerVisionSharpness: 1000 //Diese Zahl runterschrauben wenn es zu sehr laggt!
 }
