@@ -80,6 +80,28 @@ function onMessageReceived(payload){
         }
         if (players.has(message.content)) players.delete(message.content);
     }
+    if (message.type === 'HEAL'){
+        const healID = parseInt(message.content);
+        if (heal.has(healID)){
+            const h = heal.get(healID);
+            h.active = false;
+            heal.set(healID, h);
+            if (player.hp + settings.heal <= 100){
+                player.hp += settings.heal;
+            }else {
+                player.hp = 100;
+            }
+            document.getElementById('hp').innerText = `${player.hp}`;
+        }
+    }
+    if (message.type === 'REACTIVATE_HEAL'){
+        const healID = parseInt(message.content);
+        if (heal.has(healID)){
+            const h = heal.get(healID);
+            h.active = true;
+            heal.set(healID, h);
+        }
+    }
 }
 
 connect();

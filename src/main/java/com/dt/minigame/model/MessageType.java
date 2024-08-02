@@ -8,5 +8,7 @@ public enum MessageType {
     DELETE_BULLET,
     PLAYER_HIT,
     SPAWN,
-    KILLED
+    KILLED,
+    HEAL,
+    REACTIVATE_HEAL,
 }

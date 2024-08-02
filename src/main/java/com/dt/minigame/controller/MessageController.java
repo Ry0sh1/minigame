@@ -1,11 +1,9 @@
 package com.dt.minigame.controller;
 
-import com.dt.minigame.model.Bullet;
-import com.dt.minigame.model.Message;
-import com.dt.minigame.model.MessageType;
-import com.dt.minigame.model.Player;
+import com.dt.minigame.model.*;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
+import com.dt.minigame.repository.HealRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -23,11 +21,13 @@ public class MessageController {
     private final PlayerRepository playerRepository;
     private final BulletRepository bulletRepository;
     private final GameRepository gameRepository;
+    private final HealRepository healRepository;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
+        this.healRepository = healRepository;
     }
 
     @MessageMapping("/game.join/{code}")
@@ -42,6 +42,10 @@ public class MessageController {
         player.setKillCounter(0);
         player.setDeathCounter(0);
         player.setHp(100);
+
+        Heal heal = new Heal(gameRepository.findById(message.getCode()).orElseThrow(),true,0);
+        healRepository.save(heal);
+
         playerRepository.save(player);
         //TODO: Handle Frontend
         return message;
@@ -110,6 +114,20 @@ public class MessageController {
             shotPlayer.setHp(shotPlayer.getHp() - Integer.parseInt(args[1]));
             playerRepository.save(shotPlayer);
         }
+        return message;
+    }
+
+    @MessageMapping("/game.heal/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message heal(@Payload Message message){
+        System.out.println("Test");
+        Heal heal = healRepository.findById(Integer.parseInt(message.getContent())).orElseThrow();
+        heal.setActive(false);
+        heal.setCooldown(10);
+        healRepository.save(heal);
+        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        player.setHp(Math.min(player.getHp() + 30, 100));
+        playerRepository.save(player);
         return message;
     }
 

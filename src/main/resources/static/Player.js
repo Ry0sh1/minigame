@@ -30,6 +30,8 @@ class Player {
         if (keys.s && this.y < settings.mapHeight - this.height) proposedPosition.y += realSpeed;
         if (keys.d && this.x < settings.mapWidth - this.width) proposedPosition.x += realSpeed;
 
+        this.isTouchingHeal();
+
         proposedPosition = this.isCollidingWithObstacle(proposedPosition);
 
         if (proposedPosition.x !== this.x || proposedPosition.y !== this.y) {
@@ -39,6 +41,25 @@ class Player {
             );
             this.x = proposedPosition.x;
             this.y = proposedPosition.y;
+        }
+    }
+
+
+    isTouchingHeal(){
+        for (let [key, value] of heal){
+            const h = value;
+            if (h.active){
+                if (this.x >= h.x && this.x <= h.x + h.width && this.y >= h.y && this.y <= h.y + h.height ||
+                    this.x >= h.x && this.x <= h.x + h.width && this.y + this.height >= h.y && this.y + this.height <= h.y + h.height ||
+                    this.x + this.width >= h.x && this.x + this.width <= h.x + h.width && this.y + this.height >= h.y && this.y + this.height <= h.y + h.height ||
+                    this.x + this.width >= h.x && this.x + this.width <= h.x + h.width && this.y >= h.y && this.y <= h.y + h.height
+                ){
+                    stompClient.send("/app/game.heal/" + code,
+                        {},
+                        JSON.stringify({type: 'HEAL', player: this.username, content: h.id, code: code})
+                    );
+                }
+            }
         }
     }
 

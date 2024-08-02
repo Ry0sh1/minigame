@@ -19,6 +19,7 @@ const keys = {
     s: false,
     d: false,
 };
+
 let mouseDown = false;
 
 const bullets = new Map();
@@ -109,6 +110,12 @@ function draw() {
         ctx.beginPath();
         ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
         ctx.fill();
+    }
+    ctx.fillStyle = "rgb(138,243,40)";
+    for (let [key, value] of heal){
+        if (value.active){
+            ctx.fillRect(value.x - camera.x, value.y - camera.y, value.width, value.height);
+        }
     }
 
     ctx.restore();

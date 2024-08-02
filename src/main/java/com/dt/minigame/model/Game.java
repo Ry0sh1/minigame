@@ -21,5 +21,7 @@ public class Game {
     private String code;
     @OneToMany
     private List<Player> players;
+    @OneToMany
+    private List<Heal> heals;
 
 }

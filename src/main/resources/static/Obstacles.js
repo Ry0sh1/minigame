@@ -20,3 +20,8 @@ const obstacles  = [
     { x: 854, y: 310, width: 10, height: 55 },
     { x: 914, y: 370, width: 50, height: 5 }
 ]
+
+
+const heal = new Map();
+
+heal.set(1,new Heal(1,100,100, 10,10));
