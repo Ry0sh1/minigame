@@ -1,10 +1,4 @@
 class Heal{
-    id;
-    x;
-    y;
-    width;
-    height;
-    active;
     constructor(id,x,y,width,height) {
         this.id = id;
         this.x = x;

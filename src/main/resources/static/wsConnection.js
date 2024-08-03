@@ -30,11 +30,13 @@ function onMessageReceived(payload){
             fetch("/get-all-player/" + code)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     for (let i = 0; i < data.length; i++){
                         if (data[i].username !== username){
-                            players.set(data[i].username, new Player(data[i].x,data[i].y,data[i].username));
+                            players.set(data[i].username, new Player(parseInt(data[i].x),parseInt(data[i].y),data[i].username));
                         }
                     }
+                    console.log(players)
                 })
         }
     }

@@ -26,7 +26,7 @@ public class HealService {
             if (!heal.isActive()){
                 heal.setCooldown(heal.getCooldown() - 1);
                 if (heal.getCooldown() <= 0){
-                    heal.setActive(false);
+                    heal.setActive(true);
                     reactivateHeal(heal);
                 }
                 healRepository.save(heal);

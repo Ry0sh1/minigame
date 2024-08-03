@@ -1,11 +1,4 @@
 class Player {
-    x;
-    y;
-    username;
-    width;
-    height;
-    speed;
-    hp;
     constructor(x, y, username) {
         this.x = x;
         this.y = y;
@@ -39,8 +32,6 @@ class Player {
                 {},
                 JSON.stringify({type: 'POSITION', player: this.username, content: proposedPosition.x + ',' + proposedPosition.y, code: code})
             );
-            this.x = proposedPosition.x;
-            this.y = proposedPosition.y;
         }
     }
 

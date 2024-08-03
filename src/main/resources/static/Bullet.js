@@ -1,11 +1,4 @@
 class Bullet {
-    id;
-    x;
-    y;
-    radius;
-    speed;
-    angle;
-    distance;
     constructor(id,x,y,angle,speed) {
         this.id = id;
         this.x = x;

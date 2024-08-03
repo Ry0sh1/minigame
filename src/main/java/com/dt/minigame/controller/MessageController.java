@@ -66,7 +66,7 @@ public class MessageController {
         String[] pos = message.getContent().split(",");
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
         player.setX(Double.parseDouble(pos[0]));
-        player.setX(Double.parseDouble(pos[1]));
+        player.setY(Double.parseDouble(pos[1]));
         playerRepository.save(player);
         return message;
     }
@@ -120,7 +120,6 @@ public class MessageController {
     @MessageMapping("/game.heal/{code}")
     @SendTo("/start-game/game/{code}")
     public Message heal(@Payload Message message){
-        System.out.println("Test");
         Heal heal = healRepository.findById(Integer.parseInt(message.getContent())).orElseThrow();
         heal.setActive(false);
         heal.setCooldown(10);

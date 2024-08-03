@@ -1,22 +1,15 @@
 <---DOMINIK--->
+
 Bugs:
-    * Get All Player Position richtig fetchen
     * Transactional Exception
     * Pre Player not Spawned Bug
 QOL:
-    * Movement, wenn man gegen Objekte läuft
     *
 
 * Respawn timer
-* Respawn Punkte
-* Nicht durch Wände schauen
-
-<---TIM--->
-Maps
-* Index schöner machen (CSS, HTML)
-* Waffenauswahl schöner (CSS, HTML)
-
-//Player speed and Collision
+* Respawn Punkte weiter implementieren! Spieler sollen an Spawn Points spawnen
+* Design schöner machen
+*
 
 
 <---Weapons--->
