@@ -17,6 +17,7 @@ public class Heal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @ManyToOne
+    @JoinColumn(name = "game_code", nullable = false)
     private Game game;
     private boolean active;
     private int cooldown;

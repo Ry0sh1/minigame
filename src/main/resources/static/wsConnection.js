@@ -27,6 +27,14 @@ function onMessageReceived(payload){
     }
     if (message.type === 'JOIN'){
         if (message.player === username){
+            fetch("/get-game/" + code)
+                .then(response => response.json())
+                .then(data => {
+                    minusSeconds(data.time)
+                    window.setInterval(() => {
+                        minusSeconds(1);
+                    }, 1000)
+                })
             fetch("/get-all-player/" + code)
                 .then(response => response.json())
                 .then(data => {
@@ -110,7 +118,23 @@ function onMessageReceived(payload){
     if (message.type === 'EVENT'){
         //TODO: Each Event
     }
+    if (message.type === 'END_GAME'){
+        alive = false;
+        //TODO: End Screen
+    }
 }
+
+function minusSeconds(seconds){
+    let timeArr = document.getElementById("game-timer").innerText.split(":");
+    let timeInSeconds = parseInt(timeArr[0])*60 + parseInt(timeArr[1]);
+    let min = Math.floor((timeInSeconds - seconds) / 60);
+    let sec = (timeInSeconds - seconds) % 60;
+    if (sec < 10){
+        sec = `0${sec}`;
+    }
+    document.getElementById("game-timer").innerText = `0${min}:${sec}`;
+}
+
 fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {

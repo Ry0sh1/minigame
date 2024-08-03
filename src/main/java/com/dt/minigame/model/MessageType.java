@@ -12,4 +12,5 @@ public enum MessageType {
     HEAL,
     REACTIVATE_HEAL,
     EVENT,
+    END_GAME,
 }

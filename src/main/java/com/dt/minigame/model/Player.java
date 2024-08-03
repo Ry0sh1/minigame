@@ -2,6 +2,7 @@ package com.dt.minigame.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class Player {
     private double x;
     private double y;
     @ManyToOne
+    @JoinColumn(name = "game_code", nullable = false)
     private Game game;
     private int killCounter;
     private int deathCounter;

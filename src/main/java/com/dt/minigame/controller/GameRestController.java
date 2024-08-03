@@ -45,6 +45,7 @@ public class GameRestController {
         game.setCode(code.toString());
         game.setMap(mapService.convertJsonToMap(mapService.loadRandomMap()).getName());
         game.setTime(0);
+        game.setRunning(true);
         gameRepository.save(game);
         return code.toString();
     }
@@ -54,6 +55,11 @@ public class GameRestController {
         Game game = gameRepository.findById(code).orElseThrow();
         MapData mapData = mapService.convertJsonToMap(mapService.loadMapByName(game.getMap()));
         return mapData;
+    }
+
+    @GetMapping("/get-game/{code}")
+    public Game getGame(@PathVariable String code){
+        return gameRepository.findById(code).orElseThrow();
     }
 
 }
