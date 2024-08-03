@@ -27,8 +27,8 @@ class Player {
 
         if (keys.w && this.y > 0) proposedPosition.y -= realSpeed;
         if (keys.a && this.x > 0) proposedPosition.x -= realSpeed;
-        if (keys.s && this.y < settings.mapHeight - this.height) proposedPosition.y += realSpeed;
-        if (keys.d && this.x < settings.mapWidth - this.width) proposedPosition.x += realSpeed;
+        if (keys.s && this.y < map.height - this.height) proposedPosition.y += realSpeed;
+        if (keys.d && this.x < map.width - this.width) proposedPosition.x += realSpeed;
 
         this.isTouchingHeal();
 
@@ -68,20 +68,20 @@ class Player {
             pos.y = 0;
             return pos;
         }
-        if (pos.y > settings.mapHeight) {
-            pos.y = settings.mapHeight;
+        if (pos.y > map.height) {
+            pos.y = map.height;
             return pos;
         }
         if (pos.x < 0) {
             pos.x = 0;
             return pos;
         }
-        if (pos.x > settings.mapWidth) {
-            pos.x = settings.mapWidth;
+        if (pos.x > map.width) {
+            pos.x = map.width;
             return pos;
         }
 
-        obstacles.forEach(obstacle => {
+        map.obstacles.forEach(obstacle => {
 
             if (pos.x + player.width > obstacle.x && pos.x < obstacle.x &&
                 pos.y + player.height > obstacle.y && pos.y < obstacle.y + obstacle.height) {

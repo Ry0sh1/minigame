@@ -20,7 +20,7 @@ function drawVision() {
         let y2 = playerCenterY + settings.playerVisionLength * Math.sin(currentAngle);
         let line = new Line(playerCenterX, playerCenterY, x2, y2);
 
-        for (let obstacle of obstacles) {
+        for (let obstacle of map.obstacles) {
             let collision = false;
             let intersection = lineIntersectsRect(line, obstacle);
             if (intersection !== null) {

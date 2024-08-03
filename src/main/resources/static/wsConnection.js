@@ -103,6 +103,10 @@ function onMessageReceived(payload){
         }
     }
 }
-
-connect();
-requestAnimationFrame(gameLoop)
+fetch("/get-map-data/" + code, {method: 'GET'})
+    .then(response => response.json())
+    .then(data => {
+        map = data;
+        connect();
+        requestAnimationFrame(gameLoop)
+    })

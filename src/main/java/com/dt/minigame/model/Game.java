@@ -23,5 +23,6 @@ public class Game {
     private List<Player> players;
     @OneToMany
     private List<Heal> heals;
+    private String map;
 
 }

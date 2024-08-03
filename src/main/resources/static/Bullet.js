@@ -33,8 +33,8 @@ class Bullet {
 
     isCollapsing(){
         let collapsing = false;
-        for (let i = 0; i < obstacles.length; i++){
-            const obstacle = obstacles[i];
+        for (let i = 0; i < map.obstacles.length; i++){
+            const obstacle = map.obstacles[i];
             if (this.x + this.radius >= obstacle.x &&
                 this.x <= obstacle.x + obstacle.width &&
                 this.y + this.radius >= obstacle.y &&
@@ -42,7 +42,7 @@ class Bullet {
                 collapsing = true;
                 break;
             }
-            if (this.x >= settings.mapWidth || this.y >= settings.mapHeight || this.x <= 0 || this.y <= 0){
+            if (this.x >= map.width || this.y >= map.height || this.x <= 0 || this.y <= 0){
                 collapsing = true;
                 break;
             }

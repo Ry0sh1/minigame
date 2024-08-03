@@ -8,6 +8,12 @@ let weapon;
 let camera;
 let alive = false;
 
+let map;
+
+//TODO: REMOVE THIS!
+const heal = new Map();
+heal.set(1,new Heal(1,100,100, 10,10));
+
 let mouseX = 0;
 let mouseY = 0;
 
@@ -119,7 +125,7 @@ function draw() {
     }
 
     ctx.restore();
-    obstacles.forEach(drawObstacle);
+    map.obstacles.forEach(drawObstacle);
 }
 function drawObstacle(obstacle) {
     ctx.fillStyle = "rgb(93,120,85)";

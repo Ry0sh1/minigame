@@ -17,3 +17,22 @@ Maps
 * Waffenauswahl schöner (CSS, HTML)
 
 //Player speed and Collision
+
+
+<---Weapons--->
+Boomerang
+Rifle
+Shotgun
+Sniper
+
+<---Power Ups--->
+Laser der durch Wände schießen kann Lux Ult
+Kleiner Sprung durch eine Wand und wieder zurück Zoe Ult
+Kleiner Sprung flash
+Rocket Launcher
+Shield (Blockt nächsten Treffer)
+
+<---Event--->
+Dunkelheit
+Meteor
+Nicht stehen bleiben
