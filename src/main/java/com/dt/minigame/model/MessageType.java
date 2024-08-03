@@ -11,4 +11,5 @@ public enum MessageType {
     KILLED,
     HEAL,
     REACTIVATE_HEAL,
+    EVENT,
 }

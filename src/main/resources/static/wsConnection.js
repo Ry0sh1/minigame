@@ -58,7 +58,8 @@ function onMessageReceived(payload){
     }
     if (message.type === 'SPAWN'){
         if (message.player === username){
-            player = new Player(0,0,username);
+            const content = JSON.parse(message.content);
+            player = new Player(parseInt(content.x),parseInt(content.y),content.username);
             players.set(username, player);
             camera = new Camera(0,0, canvas.width, canvas.height)
             alive = true;
@@ -75,8 +76,10 @@ function onMessageReceived(payload){
     }
     if (message.type === 'KILLED'){
         if (message.content === username){
-            alive = false;
+            player.hp = 0;
+            document.getElementById('hp').innerText = player.hp;
             document.getElementById('change-weapon').classList.remove('hidden');
+            alive = false;
             player = null;
             camera = null;
         }
@@ -103,6 +106,9 @@ function onMessageReceived(payload){
             h.active = true;
             heal.set(healID, h);
         }
+    }
+    if (message.type === 'EVENT'){
+        //TODO: Each Event
     }
 }
 fetch("/get-map-data/" + code, {method: 'GET'})

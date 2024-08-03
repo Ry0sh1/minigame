@@ -1,10 +1,13 @@
 package com.dt.minigame.controller;
 
 import com.dt.minigame.model.*;
+import com.dt.minigame.model.map.MapData;
+import com.dt.minigame.model.map.Point;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.HealRepository;
 import com.dt.minigame.repository.PlayerRepository;
+import com.dt.minigame.service.MapService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -12,7 +15,9 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Random;
 
 @Controller
 @CrossOrigin
@@ -22,12 +27,14 @@ public class MessageController {
     private final BulletRepository bulletRepository;
     private final GameRepository gameRepository;
     private final HealRepository healRepository;
+    private final MapService mapService;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, MapService mapService) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
         this.healRepository = healRepository;
+        this.mapService = mapService;
     }
 
     @MessageMapping("/game.join/{code}")
@@ -53,10 +60,17 @@ public class MessageController {
 
     @MessageMapping("/game.spawn/{code}")
     @SendTo("/start-game/game/{code}")
-    public Message onSpawn(@Payload Message message){
+    public Message onSpawn(@Payload Message message) throws IOException {
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
-        player.setX(0);
-        player.setY(0);
+        MapData mapData = mapService.convertJsonToMap(mapService.loadMapByName(player.getGame().getMap()));
+        Random random = new Random();
+        int n = random.nextInt(mapData.getSpawn_points().size());
+        Point spawn = mapData.getSpawn_points().get(n);
+        System.out.println(n);
+        player.setX(spawn.getX());
+        player.setY(spawn.getY());
+        playerRepository.save(player);
+        message.setContent(player.toString());
         return message;
     }
 

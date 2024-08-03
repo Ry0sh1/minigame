@@ -24,5 +24,6 @@ public class Game {
     @OneToMany
     private List<Heal> heals;
     private String map;
+    private int time;
 
 }

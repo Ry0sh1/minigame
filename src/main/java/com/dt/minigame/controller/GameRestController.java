@@ -44,6 +44,7 @@ public class GameRestController {
         game = new Game();
         game.setCode(code.toString());
         game.setMap(mapService.convertJsonToMap(mapService.loadRandomMap()).getName());
+        game.setTime(0);
         gameRepository.save(game);
         return code.toString();
     }

@@ -135,6 +135,7 @@ function drawObstacle(obstacle) {
     ctx.lineWidth = 2;
     ctx.strokeRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
 }
+
 function shoot(){
     if (!reloading){
         let bulX = (player.x + player.width / 2);
