@@ -14,7 +14,7 @@ function drawVision() {
 
     let lines = [];
 
-    for (let i = 0; i < settings.playerVisionSharpness; i++) {
+    for (let i = 0; i < settings.playerVisionSharpness && player.nearsight !== true; i++) {
         let currentAngle = startAngle - i * angleStep;
         let x2 = playerCenterX + settings.playerVisionLength * Math.cos(currentAngle);
         let y2 = playerCenterY + settings.playerVisionLength * Math.sin(currentAngle);
@@ -38,12 +38,16 @@ function drawVision() {
     }
 
     ctx.beginPath();
-    ctx.arc(playerCenterX, playerCenterY, settings.playerVisionRadius, startAngle, endAngle);
-    ctx.lineTo(playerCenterX, playerCenterY);
-    for (let i = 0; i < lines.length - 1; i++){
-        ctx.moveTo(playerCenterX, playerCenterY);
-        ctx.lineTo(lines[i].x2, lines[i].y2);
-        ctx.lineTo(lines[i+1].x2, lines[i+1].y2);
+    if (!player.nearsight){
+        ctx.arc(playerCenterX, playerCenterY, settings.playerVisionRadius, startAngle, endAngle);
+        ctx.lineTo(playerCenterX, playerCenterY);
+        for (let i = 0; i < lines.length - 1; i++){
+            ctx.moveTo(playerCenterX, playerCenterY);
+            ctx.lineTo(lines[i].x2, lines[i].y2);
+            ctx.lineTo(lines[i+1].x2, lines[i+1].y2);
+        }
+    }else {
+        ctx.arc(playerCenterX, playerCenterY, settings.playerVisionRadius, 0, Math.PI * 2)
     }
     ctx.closePath();
     ctx.clip();

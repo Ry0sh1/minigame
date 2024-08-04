@@ -7,6 +7,7 @@ class Player {
         this.width = settings.playerWidth;
         this.height = settings.playerHeight;
         this.speed = settings.playerSpeed;
+        this.nearsight = false;
     }
 
     updatePlayerPosition() {
@@ -34,7 +35,6 @@ class Player {
             );
         }
     }
-
 
     isTouchingHeal(){
         for (let [key, value] of heal){

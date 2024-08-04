@@ -7,6 +7,7 @@ let player;
 let weapon;
 let camera;
 let alive = false;
+let currentEvent = null;
 
 let map;
 

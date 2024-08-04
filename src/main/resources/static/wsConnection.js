@@ -27,14 +27,9 @@ function onMessageReceived(payload){
     }
     if (message.type === 'JOIN'){
         if (message.player === username){
-            fetch("/get-game/" + code)
-                .then(response => response.json())
-                .then(data => {
-                    minusSeconds(data.time)
-                    window.setInterval(() => {
-                        minusSeconds(1);
-                    }, 1000)
-                })
+            const g= JSON.parse(message.content);
+            minusSeconds(g.time);
+            window.setInterval(() => {gameSec()}, 1000)
             fetch("/get-all-player/" + code)
                 .then(response => response.json())
                 .then(data => {
@@ -116,6 +111,13 @@ function onMessageReceived(payload){
         }
     }
     if (message.type === 'EVENT'){
+        if (message.content === 'Darkness'){
+            currentEvent = message.content;
+            player.nearsight = true;
+            document.getElementById('current_event').innerText = "Darkness!"
+            document.getElementById('event_information').classList.remove('hidden');
+            document.getElementById('current_event_timer').innerText = '30';
+        }
         //TODO: Each Event
     }
     if (message.type === 'END_GAME'){
@@ -133,6 +135,26 @@ function minusSeconds(seconds){
         sec = `0${sec}`;
     }
     document.getElementById("game-timer").innerText = `0${min}:${sec}`;
+}
+
+function stopEvent(){
+    if (currentEvent === 'Darkness'){
+        player.nearsight = false;
+    }
+}
+
+function gameSec(){
+    minusSeconds(1);
+    if (currentEvent != null){
+        let currentTime = document.getElementById('current_event_timer').innerText;
+        currentTime--;
+        if (currentTime <= 0){
+            stopEvent();
+            document.getElementById('event_information').classList.add('hidden');
+        }else {
+            document.getElementById('current_event_timer').innerText = currentTime;
+        }
+    }
 }
 
 fetch("/get-map-data/" + code, {method: 'GET'})

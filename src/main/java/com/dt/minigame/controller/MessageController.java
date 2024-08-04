@@ -8,6 +8,8 @@ import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.HealRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.MapService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -28,18 +30,20 @@ public class MessageController {
     private final GameRepository gameRepository;
     private final HealRepository healRepository;
     private final MapService mapService;
+    private final ObjectMapper objectMapper;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, MapService mapService) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, MapService mapService, ObjectMapper objectMapper) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
         this.healRepository = healRepository;
         this.mapService = mapService;
+        this.objectMapper = objectMapper;
     }
 
     @MessageMapping("/game.join/{code}")
     @SendTo("/start-game/game/{code}")
-    public Message onJoin(@Payload Message message, SimpMessageHeaderAccessor headerAccessor){
+    public Message onJoin(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) throws JsonProcessingException {
         System.out.println(message.getPlayer() + " joined the game");
         headerAccessor.getSessionAttributes().put("username", message.getPlayer());
         headerAccessor.getSessionAttributes().put("code", message.getCode());
@@ -54,6 +58,8 @@ public class MessageController {
         healRepository.save(heal);
 
         playerRepository.save(player);
+        message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
+        System.out.println(message.getContent());
         //TODO: Handle Frontend
         return message;
     }
