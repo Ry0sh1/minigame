@@ -2,13 +2,10 @@
 
 Bugs:
     * Transactional Exception
-    * Pre Player not Spawned Bug
-    * Kamera bewegt sich off Screen von der Map
 QOL:
     *
 
 * Respawn timer
-* Respawn Punkte weiter implementieren! Spieler sollen an Spawn Points spawnen
 * Design schöner machen
 * End Screen
 

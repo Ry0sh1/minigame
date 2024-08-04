@@ -44,7 +44,6 @@ public class MessageController {
     @MessageMapping("/game.join/{code}")
     @SendTo("/start-game/game/{code}")
     public Message onJoin(@Payload Message message, SimpMessageHeaderAccessor headerAccessor) throws JsonProcessingException {
-        System.out.println(message.getPlayer() + " joined the game");
         headerAccessor.getSessionAttributes().put("username", message.getPlayer());
         headerAccessor.getSessionAttributes().put("code", message.getCode());
         Player player = new Player();
@@ -59,7 +58,6 @@ public class MessageController {
 
         playerRepository.save(player);
         message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
-        System.out.println(message.getContent());
         //TODO: Handle Frontend
         return message;
     }
@@ -72,7 +70,6 @@ public class MessageController {
         Random random = new Random();
         int n = random.nextInt(mapData.getSpawn_points().size());
         Point spawn = mapData.getSpawn_points().get(n);
-        System.out.println(n);
         player.setX(spawn.getX());
         player.setY(spawn.getY());
         playerRepository.save(player);
@@ -94,7 +91,6 @@ public class MessageController {
     @MessageMapping("/game.shoot/{code}")
     @SendTo("/start-game/game/{code}")
     public Message shoot(@Payload Message message){
-        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
         String[] content = message.getContent().split(",");
         Bullet bullet = new Bullet();
         bullet.setX(Double.parseDouble(content[0]));
