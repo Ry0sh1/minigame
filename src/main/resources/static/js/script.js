@@ -72,6 +72,8 @@ function update() {
     if (mouseDown) shoot();
 }
 
+const characterImage = new Image();
+characterImage.src = "/texture/player_pistol.png";
 function draw() {
     ctx.fillStyle = 'rgb(51,51,51)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -85,27 +87,22 @@ function draw() {
     let rx = (player.x + player.width / 2) - camera.x;
     let ry = (player.y + player.height / 2) - camera.y;
 
-    ctx.strokeStyle = 'black';
-    ctx.beginPath();
-    ctx.arc(rx, ry, settings.shootRadius, 0, Math.PI * 2);
-    ctx.stroke();
-
-    let angle = Math.atan2(mouseY - ry, mouseX - rx);
-
-    let pointX = rx + settings.shootRadius * Math.cos(angle);
-    let pointY = ry + settings.shootRadius * Math.sin(angle);
-
-    // Zeichne den Punkt
-    ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.arc(pointX, pointY, 3, 0, Math.PI * 2);
-    ctx.fill();
-
     ctx.fillStyle = "rgb(255,0,0)";
 
+    let imgWidth = 24;
+    let imgHeight = 40;
     for (let [key, value] of players) {
-        ctx.fillRect(value.x - camera.x, value.y - camera.y, value.width, value.height);
+        if (value.username !== username){
+            ctx.drawImage(characterImage, value.x - camera.x - imgWidth / 3, value.y - camera.y - imgHeight/2, 77/2, 142/2);
+        }
     }
+
+    ctx.save();
+    ctx.translate(player.x - camera.x + 6, player.y - camera.y + 6);
+    let angle = Math.atan2(mouseY - ry, mouseX - rx);
+    ctx.rotate(angle + Math.PI / 2);
+    ctx.drawImage(characterImage, -12, -30, imgWidth, imgHeight);
+    ctx.restore();
 
     ctx.fillStyle = "rgb(18,116,2)";
     for (let [key, value] of bullets) {
