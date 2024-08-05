@@ -5,6 +5,7 @@ Bugs:
 QOL:
     *
 
+* Komplette Map Data soll gespeichert und gefetcht werden beim Joinen. (Welche Heal sind da oder Powerups bzw. welches Event und wie lange etc.)
 * Respawn timer
 * Design schöner machen
 * End Screen

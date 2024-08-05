@@ -1,11 +1,13 @@
 package com.dt.minigame.controller;
 
 import com.dt.minigame.model.Game;
+import com.dt.minigame.model.MapData.Heal;
+import com.dt.minigame.model.MapData.Obstacles;
 import com.dt.minigame.model.Player;
-import com.dt.minigame.model.map.MapData;
-import com.dt.minigame.repository.GameRepository;
-import com.dt.minigame.repository.PlayerRepository;
-import com.dt.minigame.service.MapService;
+import com.dt.minigame.model.MapData.MapData;
+import com.dt.minigame.repository.*;
+import com.dt.minigame.service.RawMapService;
+import com.dt.minigame.util.map.RawMapData;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -17,12 +19,18 @@ public class GameRestController {
 
     private final PlayerRepository playerRepository;
     private final GameRepository gameRepository;
-    private final MapService mapService;
+    private final RawMapService rawMapService;
+    private final HealRepository healRepository;
+    private final MapDataRepository mapDataRepository;
+    private final ObstacleRepository obstacleRepository;
 
-    public GameRestController(PlayerRepository playerRepository, GameRepository gameRepository, MapService mapService) {
+    public GameRestController(PlayerRepository playerRepository, GameRepository gameRepository, RawMapService rawMapService, HealRepository healRepository, MapDataRepository mapDataRepository, ObstacleRepository obstacleRepository) {
         this.playerRepository = playerRepository;
         this.gameRepository = gameRepository;
-        this.mapService = mapService;
+        this.rawMapService = rawMapService;
+        this.healRepository = healRepository;
+        this.mapDataRepository = mapDataRepository;
+        this.obstacleRepository = obstacleRepository;
     }
 
     @GetMapping("/get-all-player/{code}")
@@ -42,18 +50,45 @@ public class GameRestController {
 
         game = new Game();
         game.setCode(code.toString());
-        game.setMap(mapService.convertJsonToMap(mapService.loadRandomMap()).getName());
+        game.setMap(rawMapService.convertJsonToMap(rawMapService.loadRandomMap()).getName());
         game.setTime(0);
         game.setRunning(true);
         gameRepository.save(game);
+
+
+        RawMapData rawMapData = rawMapService.convertJsonToMap(rawMapService.loadRandomMap());
+
+        List<Heal> heals = new ArrayList<>();
+        for (int i = 0; i < rawMapData.getHeal_pad_spawn().size(); i++){
+            Heal heal = new Heal(
+                    rawMapData.getHeal_pad_spawn().get(i).getX(),
+                    rawMapData.getHeal_pad_spawn().get(i).getY(),
+                    true,
+                    0,
+                    code.toString());
+            heals.add(healRepository.save(heal));
+        }
+        List<Obstacles> obstacles = new ArrayList<>();
+        for (int i = 0; i < rawMapData.getObstacles().size(); i++){
+            Obstacles obstacle = new Obstacles(code.toString(),rawMapData.getObstacles().get(i),100);
+            obstacles.add(obstacleRepository.save(obstacle));
+        }
+
+        MapData mapData = new MapData(rawMapData);
+        mapData.setCode(code.toString());
+        mapData.setObstacles(obstacles);
+        mapData.setHeal_pads(heals);
+        mapDataRepository.save(mapData);
+
+
+        mapDataRepository.save(mapData);
+
         return code.toString();
     }
 
     @GetMapping("/get-map-data/{code}")
-    public MapData getTest(@PathVariable String code) throws IOException {
-        Game game = gameRepository.findById(code).orElseThrow();
-        MapData mapData = mapService.convertJsonToMap(mapService.loadMapByName(game.getMap()));
-        return mapData;
+    public MapData getTest(@PathVariable String code) {
+        return mapDataRepository.findById(code).orElseThrow();
     }
 
     @GetMapping("/get-game/{code}")

@@ -27,7 +27,8 @@ function onMessageReceived(payload){
     }
     if (message.type === 'JOIN'){
         if (message.player === username){
-            const g= JSON.parse(message.content);
+            const g = JSON.parse(message.content);
+
             minusSeconds(g.time);
             window.setInterval(() => {gameSec()}, 1000)
             fetch("/get-all-player/" + code)
@@ -161,6 +162,9 @@ fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
         map = data;
+        for (let i = 0; i < map.heal_pads.length; i++){
+            heal.set(map.heal_pads[i].id,new Heal(map.heal_pads[i].id,map.heal_pads[i].x,map.heal_pads[i].y,settings.healHitBoxWidth,settings.healHitBoxHeight));
+        }
         connect();
         requestAnimationFrame(gameLoop)
     })

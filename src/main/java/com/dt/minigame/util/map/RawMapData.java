@@ -1,4 +1,4 @@
-package com.dt.minigame.model.map;
+package com.dt.minigame.util.map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MapData {
+public class RawMapData {
 
     private String name;
     private int player;

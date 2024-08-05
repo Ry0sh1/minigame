@@ -10,4 +10,6 @@ const settings = {
     playerVisionLength: 200,
     playerVisionSharpness: 1000, //Diese Zahl runterschrauben wenn es zu sehr laggt!
     heal: 30,
+    healHitBoxWidth: 20,
+    healHitBoxHeight: 20,
 }

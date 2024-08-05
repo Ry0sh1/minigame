@@ -11,9 +11,7 @@ let currentEvent = null;
 
 let map;
 
-//TODO: REMOVE THIS!
 const heal = new Map();
-heal.set(1,new Heal(1,100,100, 10,10));
 
 let mouseX = 0;
 let mouseY = 0;
@@ -72,8 +70,7 @@ function update() {
     if (mouseDown) shoot();
 }
 
-const characterImage = new Image();
-characterImage.src = "/texture/player_pistol.png";
+
 function draw() {
     ctx.fillStyle = 'rgb(51,51,51)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -89,11 +86,9 @@ function draw() {
 
     ctx.fillStyle = "rgb(255,0,0)";
 
-    let imgWidth = 24;
-    let imgHeight = 40;
     for (let [key, value] of players) {
         if (value.username !== username){
-            ctx.drawImage(characterImage, value.x - camera.x - imgWidth / 3, value.y - camera.y - imgHeight/2, 77/2, 142/2);
+            ctx.drawImage(characterImage, value.x - camera.x - characterImage.width / 3, value.y - camera.y - characterImage.height/2, 77/2, 142/2);
         }
     }
 
@@ -101,7 +96,7 @@ function draw() {
     ctx.translate(player.x - camera.x + 6, player.y - camera.y + 6);
     let angle = Math.atan2(mouseY - ry, mouseX - rx);
     ctx.rotate(angle + Math.PI / 2);
-    ctx.drawImage(characterImage, -12, -30, imgWidth, imgHeight);
+    ctx.drawImage(characterImage, -12, -30, characterImage.width, characterImage.height);
     ctx.restore();
 
     ctx.fillStyle = "rgb(18,116,2)";
@@ -115,10 +110,9 @@ function draw() {
         ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
         ctx.fill();
     }
-    ctx.fillStyle = "rgb(138,243,40)";
     for (let [key, value] of heal){
         if (value.active){
-            ctx.fillRect(value.x - camera.x, value.y - camera.y, value.width, value.height);
+            ctx.drawImage(healImage, value.x - camera.x, value.y - camera.y, healImage.width, healImage.height);
         }
     }
 

@@ -1,13 +1,14 @@
 package com.dt.minigame.controller;
 
 import com.dt.minigame.model.*;
-import com.dt.minigame.model.map.MapData;
-import com.dt.minigame.model.map.Point;
+import com.dt.minigame.model.MapData.Heal;
+import com.dt.minigame.util.map.Point;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.HealRepository;
 import com.dt.minigame.repository.PlayerRepository;
-import com.dt.minigame.service.MapService;
+import com.dt.minigame.service.RawMapService;
+import com.dt.minigame.util.map.RawMapData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Random;
 
 @Controller
@@ -29,15 +29,15 @@ public class MessageController {
     private final BulletRepository bulletRepository;
     private final GameRepository gameRepository;
     private final HealRepository healRepository;
-    private final MapService mapService;
+    private final RawMapService rawMapService;
     private final ObjectMapper objectMapper;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, MapService mapService, ObjectMapper objectMapper) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
         this.healRepository = healRepository;
-        this.mapService = mapService;
+        this.rawMapService = rawMapService;
         this.objectMapper = objectMapper;
     }
 
@@ -52,10 +52,6 @@ public class MessageController {
         player.setKillCounter(0);
         player.setDeathCounter(0);
         player.setHp(100);
-
-        Heal heal = new Heal(gameRepository.findById(message.getCode()).orElseThrow(),true,0);
-        healRepository.save(heal);
-
         playerRepository.save(player);
         message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
         //TODO: Handle Frontend
@@ -66,7 +62,7 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message onSpawn(@Payload Message message) throws IOException {
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
-        MapData mapData = mapService.convertJsonToMap(mapService.loadMapByName(player.getGame().getMap()));
+        RawMapData mapData = rawMapService.convertJsonToMap(rawMapService.loadMapByName(player.getGame().getMap()));
         Random random = new Random();
         int n = random.nextInt(mapData.getSpawn_points().size());
         Point spawn = mapData.getSpawn_points().get(n);

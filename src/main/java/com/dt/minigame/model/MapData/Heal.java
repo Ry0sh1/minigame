@@ -1,4 +1,4 @@
-package com.dt.minigame.model;
+package com.dt.minigame.model.MapData;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,15 +16,17 @@ public class Heal {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @ManyToOne
-    @JoinColumn(name = "game_code", nullable = false)
-    private Game game;
     private boolean active;
     private int cooldown;
+    private double x;
+    private double y;
+    private String code;
 
-    public Heal(Game game, boolean active, int cooldown) {
-        this.game = game;
+    public Heal(double x, double y, boolean active, int cooldown, String code) {
         this.active = active;
         this.cooldown = cooldown;
+        this.code = code;
+        this.x = x;
+        this.y = y;
     }
 }

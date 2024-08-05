@@ -1,4 +1,4 @@
-package com.dt.minigame.model.map;
+package com.dt.minigame.util.map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Point {
+public class Obstacles {
 
     private double x;
     private double y;
+    private int width;
+    private int height;
 
 }

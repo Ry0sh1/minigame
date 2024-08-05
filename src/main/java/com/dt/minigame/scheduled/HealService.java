@@ -1,6 +1,6 @@
 package com.dt.minigame.scheduled;
 
-import com.dt.minigame.model.Heal;
+import com.dt.minigame.model.MapData.Heal;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
 import com.dt.minigame.repository.HealRepository;
@@ -37,10 +37,10 @@ public class HealService {
     public void reactivateHeal(Heal heal){
         Message message = new Message();
         message.setPlayer("server");
-        message.setCode(heal.getGame().getCode());
+        message.setCode(heal.getCode());
         message.setType(MessageType.REACTIVATE_HEAL);
         message.setContent(String.valueOf(heal.getId()));
-        messagingTemplate.convertAndSend("/start-game/game/"+heal.getGame().getCode(),message);
+        messagingTemplate.convertAndSend("/start-game/game/"+heal.getCode(),message);
     }
 
 }
