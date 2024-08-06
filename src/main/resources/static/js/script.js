@@ -81,23 +81,13 @@ function draw() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    let rx = (player.x + player.width / 2) - camera.x;
-    let ry = (player.y + player.height / 2) - camera.y;
-
-    ctx.fillStyle = "rgb(255,0,0)";
-
     for (let [key, value] of players) {
-        if (value.username !== username){
-            ctx.drawImage(characterImage, value.x - camera.x - characterImage.width / 3, value.y - camera.y - characterImage.height/2, 77/2, 142/2);
-        }
+        ctx.save();
+        ctx.translate(value.x - camera.x + 6, value.y - camera.y + 6);
+        ctx.rotate(value.angle + Math.PI / 2);
+        ctx.drawImage(characterImage, -12, -30, characterImage.width, characterImage.height);
+        ctx.restore();
     }
-
-    ctx.save();
-    ctx.translate(player.x - camera.x + 6, player.y - camera.y + 6);
-    let angle = Math.atan2(mouseY - ry, mouseX - rx);
-    ctx.rotate(angle + Math.PI / 2);
-    ctx.drawImage(characterImage, -12, -30, characterImage.width, characterImage.height);
-    ctx.restore();
 
     ctx.fillStyle = "rgb(18,116,2)";
     for (let [key, value] of bullets) {
@@ -128,6 +118,7 @@ function drawObstacle(obstacle) {
     ctx.strokeRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
 }
 
+//TODO Zum Server hinzufügen! Dadurch, dass der Angle jetzt auch dem Server übergeben wird.
 function shoot(){
     if (!reloading){
         let bulX = (player.x + player.width / 2);

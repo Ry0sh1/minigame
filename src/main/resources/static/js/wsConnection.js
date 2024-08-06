@@ -63,13 +63,13 @@ function onMessageReceived(payload){
     if (message.type === 'SPAWN'){
         if (message.player === username){
             const content = JSON.parse(message.content);
-            player = new Player(parseInt(content.x),parseInt(content.y),content.username);
+            player = new Player(parseInt(content.x),parseInt(content.y),content.username, 0);
             players.set(username, player);
             camera = new Camera(0,0, canvas.width, canvas.height)
             alive = true;
             document.getElementById('hp').innerText = player.hp;
         }else {
-            players.set(message.player, new Player(0,0, message.player));
+            players.set(message.player, new Player(0,0, message.player, 0));
         }
     }
     if (message.type === 'PLAYER_HIT'){
@@ -124,6 +124,11 @@ function onMessageReceived(payload){
     if (message.type === 'END_GAME'){
         alive = false;
         //TODO: End Screen
+    }
+    if (message.type === 'VIEW_ANGLE'){
+        const p = players.get(message.player);
+        p.angle = parseFloat(message.content);
+        players.set(message.player, p);
     }
 }
 

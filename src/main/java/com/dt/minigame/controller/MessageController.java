@@ -142,4 +142,10 @@ public class MessageController {
         return message;
     }
 
+    @MessageMapping("/game.view-angle/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message viewAngle(@Payload Message message){
+        return message;
+    }
+
 }

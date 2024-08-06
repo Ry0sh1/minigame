@@ -20,6 +20,15 @@ canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = event.clientX - rect.left;
     mouseY = event.clientY - rect.top;
+
+    let rx = (player.x + player.width / 2) - camera.x;
+    let ry = (player.y + player.height / 2) - camera.y;
+    let angle = Math.atan2(mouseY - ry, mouseX - rx);
+
+    stompClient.send("/app/game.view-angle/" + code,
+        {},
+        JSON.stringify({type: 'VIEW_ANGLE', player: username,content: angle, code: code})
+    );
 });
 
 document.getElementById('rifle').addEventListener("click", () => {
