@@ -18,6 +18,6 @@ const shotgun = {
     range: 100,
     reloadFrames: 20,
     damage: 20,
-    scatter: 40,
+    scatter: Math.PI / 8, //45 Grad
     bullets: 8
 }

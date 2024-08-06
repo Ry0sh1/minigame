@@ -5,10 +5,8 @@ function drawVision() {
     let playerCenterX = (player.x + player.width / 2) - camera.x;
     let playerCenterY = (player.y + player.height / 2) - camera.y;
 
-    let angle = Math.atan2(mouseY - playerCenterY, mouseX - playerCenterX);
-
-    let startAngle = angle + settings.playerVisionAngle * Math.PI / 180;
-    let endAngle = angle - settings.playerVisionAngle * Math.PI / 180;
+    let startAngle = player.angle + settings.playerVisionAngle * Math.PI / 180;
+    let endAngle = player.angle - settings.playerVisionAngle * Math.PI / 180;
 
     let angleStep = (startAngle - endAngle) / (settings.playerVisionSharpness - 1);
 
