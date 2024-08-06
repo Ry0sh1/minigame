@@ -15,7 +15,7 @@ class Bullet {
         this.x += Math.cos(this.angle) * this.speed;
         this.y += Math.sin(this.angle) * this.speed;
         this.distance += Math.abs(this.x - xTemp) + Math.abs(this.y - yTemp);
-        if (this.distance >= weapon.range){
+        if (this.distance >= player.weapon.range){
             if (playerBullets.has(this.id)) playerBullets.delete(this.id)
             stompClient.send("/app/game.delete-bullet/" + code,
                 {},
@@ -49,7 +49,7 @@ class Bullet {
                 collapsing = true;
                 stompClient.send("/app/game.player-hit/" + code,
                     {},
-                    JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username + "," + weapon.damage, code: code})
+                    JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username + "," + player.weapon.damage, code: code})
                 );
                 break;
             }

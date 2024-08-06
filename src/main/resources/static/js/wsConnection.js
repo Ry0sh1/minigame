@@ -28,19 +28,16 @@ function onMessageReceived(payload){
     if (message.type === 'JOIN'){
         if (message.player === username){
             const g = JSON.parse(message.content);
-
             minusSeconds(g.time);
             window.setInterval(() => {gameSec()}, 1000)
             fetch("/get-all-player/" + code)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     for (let i = 0; i < data.length; i++){
                         if (data[i].username !== username){
-                            players.set(data[i].username, new Player(parseInt(data[i].x),parseInt(data[i].y),data[i].username));
+                            players.set(data[i].username, new Player(parseInt(data[i].x),parseInt(data[i].y),data[i].username, data[i].angle, getWeaponFromString(data[i].weapon)));
                         }
                     }
-                    console.log(players)
                 })
         }
     }
@@ -61,15 +58,15 @@ function onMessageReceived(payload){
         if (playerBullets.has(message.content)) playerBullets.delete(message.content);
     }
     if (message.type === 'SPAWN'){
+        const content = JSON.parse(message.content);
         if (message.player === username){
-            const content = JSON.parse(message.content);
-            player = new Player(parseInt(content.x),parseInt(content.y),content.username, 0);
+            player = new Player(parseInt(content.x),parseInt(content.y),content.username, 0, getWeaponFromString(content.weapon));
             players.set(username, player);
             camera = new Camera(0,0, canvas.width, canvas.height)
             alive = true;
             document.getElementById('hp').innerText = player.hp;
         }else {
-            players.set(message.player, new Player(0,0, message.player, 0));
+            players.set(message.player, new Player(content.x,content.y, message.player, 0, getWeaponFromString(content.weapon)));
         }
     }
     if (message.type === 'PLAYER_HIT'){
@@ -173,3 +170,11 @@ fetch("/get-map-data/" + code, {method: 'GET'})
         connect();
         requestAnimationFrame(gameLoop)
     })
+
+function getWeaponFromString(weaponString){
+    switch (weaponString){
+        case 'shotgun': return shotgun;
+        case 'sniper': return sniper;
+        case 'rifle': return rifle;
+    }
+}

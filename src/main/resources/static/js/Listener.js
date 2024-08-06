@@ -32,22 +32,19 @@ canvas.addEventListener('mousemove', (event) => {
 });
 
 document.getElementById('rifle').addEventListener("click", () => {
-    weapon = rifle;
-    spawn();
+    spawn('rifle');
 })
 document.getElementById('sniper').addEventListener("click", () => {
-    weapon = sniper;
-    spawn();
+    spawn('sniper');
 })
 document.getElementById('shotgun').addEventListener("click", () => {
-    weapon = shotgun;
-    spawn();
+    spawn('shotgun');
 })
 
-function spawn(){
+function spawn(weapon){
     document.getElementById('change-weapon').classList.add('hidden');
     stompClient.send("/app/game.spawn/" + code,
         {},
-        JSON.stringify({type: 'SPAWN', player: username,content: " spawned", code: code})
+        JSON.stringify({type: 'SPAWN', player: username,content: weapon, code: code})
     );
 }

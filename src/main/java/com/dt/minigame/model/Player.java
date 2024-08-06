@@ -25,9 +25,13 @@ public class Player {
     private int killCounter;
     private int deathCounter;
     private int hp;
+    private String weapon;
 
     @Override
     public String toString() {
-        return "{\"username\":\"" + username + "\", \"x\":\"" + x + "\", \"y\":\"" + y + "\"}";
+        return "{\"username\":\"" + username + "\"," +
+                " \"x\":\"" + x + "\"," +
+                " \"y\":\"" + y + "\"," +
+                " \"weapon\":\"" + weapon + "\"}";
     }
 }

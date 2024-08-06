@@ -62,6 +62,7 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message onSpawn(@Payload Message message) throws IOException {
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        player.setWeapon(message.getContent());
         RawMapData mapData = rawMapService.convertJsonToMap(rawMapService.loadMapByName(player.getGame().getMap()));
         Random random = new Random();
         int n = random.nextInt(mapData.getSpawn_points().size());

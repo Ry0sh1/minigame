@@ -1,7 +1,7 @@
 class Player {
     angle;
     weapon;
-    constructor(x, y, username, angle) {
+    constructor(x, y, username, angle, weapon) {
         this.x = x;
         this.y = y;
         this.hp = 100;
@@ -11,6 +11,7 @@ class Player {
         this.speed = settings.playerSpeed;
         this.nearsight = false;
         this.angle = angle;
+        this.weapon = weapon;
     }
 
     updatePlayerPosition() {

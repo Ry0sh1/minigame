@@ -4,7 +4,6 @@ const ctx = canvas.getContext("2d");
 const code = localStorage.getItem("code");
 let username = localStorage.getItem("username");
 let player;
-let weapon;
 let camera;
 let alive = false;
 let currentEvent = null;
@@ -52,7 +51,7 @@ function gameLoop(currentTime){
 function update() {
     if (reloading) {
         reloadTime++;
-        if (reloadTime % weapon.reloadFrames === 0){
+        if (reloadTime % player.weapon.reloadFrames === 0){
             reloadTime = 0;
             reloading = false;
         }
@@ -85,7 +84,14 @@ function draw() {
         ctx.save();
         ctx.translate(value.x - camera.x + 6, value.y - camera.y + 6);
         ctx.rotate(value.angle + Math.PI / 2);
-        ctx.drawImage(characterImage, -12, -30, characterImage.width, characterImage.height);
+        let currentImg = characterRifle;
+        console.log(value.weapon)
+        switch (value.weapon) {
+            case shotgun: currentImg = characterShotgun; break;
+            case sniper: currentImg = characterSniper; break;
+            case rifle: currentImg = characterRifle; break;
+        }
+        ctx.drawImage(currentImg, -12, -30, currentImg.width, currentImg.height);
         ctx.restore();
     }
 
@@ -124,8 +130,7 @@ function shoot(){
         let bulX = (player.x + player.width / 2);
         let bulY  = (player.y + player.height / 2);
 
-        if(weapon === shotgun){
-            console.log("SHOTGUN")
+        if(player.weapon === shotgun){
             const angle = Math.atan2(mouseY - (bulY - camera.y), mouseX - (bulX - camera.x));
 
             let bulletSpawnX = bulX + settings.shootRadius * Math.cos(angle);
@@ -138,7 +143,7 @@ function shoot(){
 
                 stompClient.send("/app/game.shoot/" + code,
                     {},
-                    JSON.stringify({type: 'SHOOT', player: player.username,content: bulletSpawnX + "," + bulletSpawnY + "," + bulAngle + "," + weapon.speed, code: code})
+                    JSON.stringify({type: 'SHOOT', player: player.username,content: bulletSpawnX + "," + bulletSpawnY + "," + bulAngle + "," + player.weapon.speed, code: code})
                 );
             }
 
@@ -149,7 +154,7 @@ function shoot(){
             let pointY = bulY + settings.shootRadius * Math.sin(angle);
             stompClient.send("/app/game.shoot/" + code,
                 {},
-                JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + weapon.speed, code: code})
+                JSON.stringify({type: 'SHOOT', player: player.username,content: pointX + "," + pointY + "," + angle + "," + player.weapon.speed, code: code})
             );
         }
         reloading = true;
