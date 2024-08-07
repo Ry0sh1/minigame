@@ -18,6 +18,37 @@ body{
     padding: 20px;
     gap: 4px;
 }
+.card-image{
+    transform: rotate(45deg);
+    height: 300px;
+    object-fit: contain;
+}
+.card{
+    width: 340px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.card:hover{
+    box-shadow: 0 0 12px 12px rgba(0, 0, 0, 0.1);
+}
+.bx{
+    font-size: 2rem;
+}
+.stat-list li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+.stat-list li p{
+    vertical-align: middle;
+    margin: 0;
+}
 .hidden{
-    display: none;
+    display: none !important;
+}
+#change-weapon{
+    display: flex;
 }
