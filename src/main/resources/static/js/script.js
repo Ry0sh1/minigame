@@ -7,6 +7,8 @@ let player;
 let camera;
 let alive = false;
 let currentEvent = null;
+let currentDeathTimer = 0;
+let firstSpawn = true;
 
 let map;
 

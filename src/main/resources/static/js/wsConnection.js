@@ -50,6 +50,7 @@ function onMessageReceived(payload){
                             players.set(data[i].username, new Player(parseInt(data[i].x),parseInt(data[i].y),data[i].username, data[i].angle, getWeaponFromString(data[i].weapon)));
                         }
                     }
+                    player = new Player(-1000, -1000, username, 0, rifle);
                 })
         }
     }
@@ -72,11 +73,14 @@ function onMessageReceived(payload){
     if (message.type === 'SPAWN'){
         const content = JSON.parse(message.content);
         if (message.player === username){
-            player = new Player(parseInt(content.x),parseInt(content.y),content.username, 0, getWeaponFromString(content.weapon));
+            player.x = parseInt(content.x);
+            player.y = parseInt(content.y);
+            player.angle = 0;
+            player.weapon = getWeaponFromString(content.weapon);
             players.set(username, player);
-            camera = new Camera(0,0, canvas.width, canvas.height)
-            alive = true;
+            camera = new Camera(0,0, canvas.width, canvas.height);
             document.getElementById('hp').innerText = player.hp;
+            alive = true;
         }else {
             players.set(message.player, new Player(content.x,content.y, message.player, 0, getWeaponFromString(content.weapon)));
         }
@@ -91,10 +95,11 @@ function onMessageReceived(payload){
         if (message.content === username){
             player.hp = 0;
             document.getElementById('hp').innerText = player.hp;
-            document.getElementById('change-weapon').classList.remove('hidden');
             alive = false;
-            player = null;
             camera = null;
+            document.getElementById('change-weapon-button').classList.remove('hidden');
+            document.getElementById('respawn-timer').classList.remove('hidden');
+            currentDeathTimer = settings.respawnTimer;
         }
         if (players.has(message.content)) players.delete(message.content);
     }
@@ -131,7 +136,6 @@ function onMessageReceived(payload){
         //TODO: Each Event
     }
     if (message.type === 'END_GAME'){
-        alive = false;
         //TODO: End Screen
     }
     if (message.type === 'VIEW_ANGLE'){
@@ -160,6 +164,17 @@ function stopEvent(){
 
 function gameSec(){
     minusSeconds(1);
+    if (!alive && !firstSpawn){
+        currentDeathTimer--;
+        document.getElementById('respawn-timer').innerText = `${currentDeathTimer}`;
+        if (currentDeathTimer <= 0){
+            stompClient.send("/app/game.spawn/" + code,
+                {},
+                JSON.stringify({type: 'SPAWN', player: username,content: player.weapon.name, code: code})
+            );
+            document.getElementById('respawn-timer').classList.add('hidden');
+        }
+    }
     if (currentEvent != null){
         let currentTime = document.getElementById('current_event_timer').innerText;
         currentTime--;
@@ -171,7 +186,13 @@ function gameSec(){
         }
     }
 }
-
+function getWeaponFromString(weaponString){
+    switch (weaponString){
+        case 'shotgun': return shotgun;
+        case 'sniper': return sniper;
+        case 'rifle': return rifle;
+    }
+}
 fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
@@ -182,11 +203,3 @@ fetch("/get-map-data/" + code, {method: 'GET'})
         connect();
         requestAnimationFrame(gameLoop)
     })
-
-function getWeaponFromString(weaponString){
-    switch (weaponString){
-        case 'shotgun': return shotgun;
-        case 'sniper': return sniper;
-        case 'rifle': return rifle;
-    }
-}

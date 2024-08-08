@@ -10,6 +10,8 @@ QOL:
 * Design schöner machen
 * End Screen
 
+* Waffen auswahl Design: Bild Links Stats rechts. Waffe dreht sich. object-fit: contain. Bild fixed größe. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)
+
 
 <---Weapons--->
 Boomerang
