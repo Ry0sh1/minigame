@@ -58,6 +58,7 @@ function weaponChange(weapon){
         );
         document.getElementById('change-weapon').classList.add('hidden')
         firstSpawn = false;
+        document.getElementById('game-main').classList.remove('hidden');
     }else {
         player.weapon = weapon;
         document.getElementById('change-weapon').classList.add('hidden')

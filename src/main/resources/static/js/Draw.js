@@ -1,3 +1,55 @@
+function draw() {
+    ctx.fillStyle = 'rgb(51,51,51)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.save();
+    drawVision();
+
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let [key, value] of players) {
+        ctx.save();
+        ctx.translate(value.x - camera.x + 6, value.y - camera.y + 6);
+        ctx.rotate(value.angle + Math.PI / 2);
+        let currentImg = characterRifle;
+        switch (value.weapon) {
+            case shotgun: currentImg = characterShotgun; break;
+            case sniper: currentImg = characterSniper; break;
+            case rifle: currentImg = characterRifle; break;
+        }
+        ctx.drawImage(currentImg, -12, -30, currentImg.width, currentImg.height);
+        ctx.restore();
+    }
+
+    ctx.fillStyle = "rgb(18,116,2)";
+    for (let [key, value] of bullets) {
+        ctx.beginPath();
+        ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    for (let [key, value] of playerBullets) {
+        ctx.beginPath();
+        ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    for (let [key, value] of heal){
+        if (value.active){
+            ctx.drawImage(healImage, value.x - camera.x, value.y - camera.y, healImage.width, healImage.height);
+        }
+    }
+
+    ctx.restore();
+    map.obstacles.forEach(drawObstacle);
+}
+function drawObstacle(obstacle) {
+    ctx.fillStyle = "rgb(93,120,85)";
+    ctx.fillRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
+
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
+}
 function drawVision() {
     ctx.strokeStyle = "rgba(0,0,0,0.5)";
     ctx.lineWidth = 1;

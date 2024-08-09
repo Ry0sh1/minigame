@@ -8,10 +8,12 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body class="p-5">
-<h1 id="game-timer">08:00</h1>
-<h1 id="event_information" class="hidden"><span id="current_event">Darkness</span><span id="current_event_timer"> 30</span></h1>
-<canvas id="game-canvas" width="400px" height="400px"></canvas>
-<h1><span id="hp">100</span> HP</h1>
+<h1 id="game-info"><span id="game-code"></span><span id="game-timer">08:00</span></h1>
+<div id="game-main" class="hidden">
+    <h1 id="event_information" class="hidden"><span id="current_event">Darkness</span><span id="current_event_timer"> 30</span></h1>
+    <canvas id="game-canvas" width="400px" height="400px"></canvas>
+    <h1><span id="hp">100</span> HP</h1>
+</div>
 <h1 id="respawn-timer"></h1>
 <button id="change-weapon-button" class="hidden">Change Weapon</button>
 <div id="change-weapon" class="justify-content-center flex-row gap-5">
@@ -61,17 +63,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script src="/js/Settings.js"></script>
-<script src="/js/Pictures.js"></script>
-<script src="/js/Heal.js"></script>
-<script src="/js/Weapon.js"></script>
-<script src="/js/Line.js"></script>
-<script src="/js/Player.js"></script>
-<script src="/js/Bullet.js"></script>
-<script src="/js/Camera.js"></script>
-<script src="/js/Vision.js"></script>
+<script src="/js/constant/Settings.js"></script>
+<script src="/js/constant/Pictures.js"></script>
+<script src="/js/model/Heal.js"></script>
+<script src="/js/constant/Weapon.js"></script>
+<script src="/js/model/Line.js"></script>
+<script src="/js/model/Player.js"></script>
+<script src="/js/model/Bullet.js"></script>
+<script src="/js/model/Camera.js"></script>
+<script src="/js/Draw.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/DELETE_BULLET.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/END_GAME.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/EVENT.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/HEAL.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/JOIN.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/KILLED.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/LEFT.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/PLAYER_HIT.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/POSITION.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/REACTIVATE_HEAL.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/SHOOT.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/SPAWN.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/VIEW_ANGLE.js"></script>
+<script src="/js/config/wsConnection.js"></script>
 <script src="/js/script.js"></script>
-<script src="/js/wsConnection.js"></script>
 <script src="/js/Listener.js"></script>
 </body>
 </html>

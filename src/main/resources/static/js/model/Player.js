@@ -102,6 +102,4 @@ class Player {
         return pos;
     }
 
-
-
 }
