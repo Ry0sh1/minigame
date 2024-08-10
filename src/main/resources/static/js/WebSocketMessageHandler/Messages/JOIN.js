@@ -49,10 +49,10 @@ function gameSec(){
                 {},
                 JSON.stringify({type: 'SPAWN', player: username,content: player.weapon.name, code: code})
             );
-            document.getElementById('respawn-timer').classList.add('hidden');
-            document.getElementById('death-text').classList.add('hidden');
+            document.getElementById('death-info').classList.add('hidden');
             document.getElementById('game-main').classList.remove('hidden');
-            document.getElementById('change-weapon').classList.add('hidden');
+            document.getElementById('change-weapon-button').classList.add('hidden')
+            document.getElementById('change-weapon').classList.add('hidden')
         }
     }
     if (currentEvent != null){

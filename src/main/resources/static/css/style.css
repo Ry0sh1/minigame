@@ -77,3 +77,6 @@ body{
     flex-direction: column;
     gap: 20px;
 }
+#change-weapon-button{
+    margin: 10px auto;
+}

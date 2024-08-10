@@ -5,8 +5,7 @@ function KILLED(message){
         alive = false;
         camera = null;
         document.getElementById('change-weapon-button').classList.remove('hidden');
-        document.getElementById('respawn-timer').classList.remove('hidden');
-        document.getElementById('death-text').classList.remove('hidden');
+        document.getElementById('death-info').classList.remove('hidden');
         document.getElementById('game-main').classList.add('hidden');
         currentDeathTimer = settings.respawnTimer;
     }

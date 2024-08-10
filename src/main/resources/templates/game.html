@@ -15,54 +15,60 @@
     </div>
     <div id="game-content">
         <h2 id="game-info" class="text-center"><span id="game-timer">08:00</span></h2>
-        <h2 id="death-text" class="hidden text-center">You died!</h2>
+        <div id="death-info" class="hidden">
+            <h2 id="death-text" class="hidden text-center">You died!</h2>
+            <h2 class="text-center">Respawn in <span id="respawn-timer"></span> Seconds</h2>
+        </div>
         <div id="game-main" class="hidden">
             <h2 id="event_information" class="hidden"><span id="current_event">Darkness</span><span id="current_event_timer"> 30</span></h2>
             <canvas id="game-canvas" width="400px" height="400px"></canvas>
             <h2><span id="hp">100</span> HP</h2>
         </div>
-        <h2 id="respawn-timer"></h2>
-        <button id="change-weapon-button" class="hidden">Change Weapon</button>
-        <div id="change-weapon" class="justify-content-center flex-row gap-5">
-            <div class="card" id="sniper">
-                <img src="/texture/sniper.png" class="card-img-top card-image" alt="Sniper Picture">
-                <div class="card-body">
-                    <h3 class="card-title text-center">Sniper</h3>
-                    <div>
-                        <ul class="stat-list list-unstyled px-5 w-75 m-auto">
-                            <li><i class='bx bxs-chevrons-right'></i><p>8</p></li>
-                            <li><i class='bx bx-revision' ></i><p>30</p></li>
-                            <li><i class='bx bx-cross' ></i><p>60</p></li>
-                            <li><i class='bx bx-trending-up' ></i><p>400</p></li>
-                        </ul>
+        <div id="change-weapon-info">
+            <div class="d-flex justify-content-center align-items-center">
+                <button id="change-weapon-button" class="hidden">Change Weapon</button>
+            </div>
+            <div id="change-weapon" class="justify-content-center flex-row gap-5">
+                <div class="card" id="sniper">
+                    <img src="/texture/sniper.png" class="card-img-top card-image" alt="Sniper Picture">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Sniper</h3>
+                        <div>
+                            <ul class="stat-list list-unstyled px-5 w-75 m-auto">
+                                <li><i class='bx bxs-chevrons-right'></i><p>8</p></li>
+                                <li><i class='bx bx-revision' ></i><p>30</p></li>
+                                <li><i class='bx bx-cross' ></i><p>60</p></li>
+                                <li><i class='bx bx-trending-up' ></i><p>400</p></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card" id="shotgun">
-                <img src="/texture/shotgun.png" class="card-img-top card-image" alt="Shotgun Picture">
-                <div class="card-body">
-                    <h3 class="card-title text-center">Shotgun</h3>
-                    <div>
-                        <ul class="stat-list list-unstyled px-5 w-75 m-auto">
-                            <li><i class='bx bxs-chevrons-right'></i><p>4</p></li>
-                            <li><i class='bx bx-revision' ></i><p>20</p></li>
-                            <li><i class='bx bx-cross' ></i><p>20 * 8</p></li>
-                            <li><i class='bx bx-trending-up' ></i><p>100</p></li>
-                        </ul>
+                <div class="card" id="shotgun">
+                    <img src="/texture/shotgun.png" class="card-img-top card-image" alt="Shotgun Picture">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Shotgun</h3>
+                        <div>
+                            <ul class="stat-list list-unstyled px-5 w-75 m-auto">
+                                <li><i class='bx bxs-chevrons-right'></i><p>4</p></li>
+                                <li><i class='bx bx-revision' ></i><p>20</p></li>
+                                <li><i class='bx bx-cross' ></i><p>20 * 8</p></li>
+                                <li><i class='bx bx-trending-up' ></i><p>100</p></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card" id="rifle">
-                <img src="/texture/rifle.png" class="card-img-top card-image" alt="Rifle Picture">
-                <div class="card-body">
-                    <h3 class="card-title text-center">Rifle</h3>
-                    <div>
-                        <ul class="stat-list list-unstyled px-5 w-75 m-auto">
-                            <li><i class='bx bxs-chevrons-right'></i><p>6</p></li>
-                            <li><i class='bx bx-revision' ></i><p>10</p></li>
-                            <li><i class='bx bx-cross' ></i><p>20</p></li>
-                            <li><i class='bx bx-trending-up' ></i><p>200</p></li>
-                        </ul>
+                <div class="card" id="rifle">
+                    <img src="/texture/rifle.png" class="card-img-top card-image" alt="Rifle Picture">
+                    <div class="card-body">
+                        <h3 class="card-title text-center">Rifle</h3>
+                        <div>
+                            <ul class="stat-list list-unstyled px-5 w-75 m-auto">
+                                <li><i class='bx bxs-chevrons-right'></i><p>6</p></li>
+                                <li><i class='bx bx-revision' ></i><p>10</p></li>
+                                <li><i class='bx bx-cross' ></i><p>20</p></li>
+                                <li><i class='bx bx-trending-up' ></i><p>200</p></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
