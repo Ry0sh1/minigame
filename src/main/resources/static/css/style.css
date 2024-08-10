@@ -52,3 +52,28 @@ body{
 #change-weapon{
     display: flex;
 }
+.player-card{
+    box-shadow: 0 0 8px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: rgba(0, 0, 0, 0.25) solid 1px;
+    padding: 10px 20px;
+    width: 260px;
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    flex-direction: column;
+}
+.player-card p{
+    margin: 0;
+}
+.player-card-username{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+#player{
+    padding: 40px;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    gap: 20px;
+}

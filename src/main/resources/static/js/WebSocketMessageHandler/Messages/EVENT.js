@@ -8,3 +8,9 @@ function EVENT(message){
     }
     //TODO: Each Event
 }
+
+function stopEvent(){
+    if (currentEvent === 'Darkness'){
+        player.nearsight = false;
+    }
+}
