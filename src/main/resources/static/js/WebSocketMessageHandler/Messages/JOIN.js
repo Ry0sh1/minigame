@@ -56,13 +56,13 @@ function gameSec(){
         }
     }
     if (currentEvent != null){
-        let currentTime = document.getElementById('current_event_timer').innerText;
+        let currentTime = parseInt(document.getElementById('current_event_timer').innerText);
         currentTime--;
         if (currentTime <= 0){
             stopEvent();
             document.getElementById('event_information').classList.add('hidden');
         }else {
-            document.getElementById('current_event_timer').innerText = currentTime;
+            document.getElementById('current_event_timer').innerText = `${currentTime}`;
         }
     }
 }
