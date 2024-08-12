@@ -27,6 +27,7 @@ public class Player {
     private int hp;
     private String weapon;
     private boolean alive;
+    private int respawnTimer;
 
     @Override
     public String toString() {

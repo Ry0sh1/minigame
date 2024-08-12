@@ -8,6 +8,10 @@ function KILLED(message){
         document.getElementById('death-info').classList.remove('hidden');
         document.getElementById('game-main').classList.add('hidden');
         currentDeathTimer = settings.respawnTimer;
+
+        //TODO: Folgendes
+        window.setInterval(() => {deathTimer()}, 1000)
+        document.getElementById('respawn-timer').innerText = settings.respawnTimer;
     }
     players.get(message.player).killCounter += 1;
     const deathPlayer = players.get(message.content);
@@ -15,4 +19,8 @@ function KILLED(message){
     document.getElementById('player-card-'+message.player+"-kills").innerText = `${players.get(message.player).killCounter}`;
     document.getElementById('player-card-'+message.content+"-deaths").innerText = `${deathPlayer.deathCounter}`;
     deathPlayer.alive = false;
+}
+
+function deathTimer(){
+    document.getElementById('respawn-timer').innerText = `${parseInt(document.getElementById('respawn-timer').innerText) - 1}`;
 }

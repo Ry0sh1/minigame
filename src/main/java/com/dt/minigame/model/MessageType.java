@@ -13,5 +13,8 @@ public enum MessageType {
     REACTIVATE_HEAL,
     EVENT,
     END_GAME,
-    VIEW_ANGLE
+    TIMER,
+    VIEW_ANGLE,
+    STOP_EVENT,
+    CHANGE_WEAPON,
 }

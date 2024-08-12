@@ -20,5 +20,8 @@ public class Game {
     private String map;
     private int time;
     private boolean running;
+    private String currentEvent;
+    private boolean isEvent;
+    private int currentEventTime;
 
 }

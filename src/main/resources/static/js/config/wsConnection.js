@@ -1,14 +1,13 @@
-// Speichern der Original-Konsole
+/*
 const originalConsoleLog = console.log;
 
-// Temporäres Umleiten von console.log
 console.log = function(message) {
     if (typeof message === 'string' && (message.includes('destination:/start-game/game/') || message.includes('destination:/app/'))) {
-        // Unterdrücke Nachrichten, die die spezifische Destination enthalten
         return;
     }
     originalConsoleLog.apply(console, arguments);
 };
+ */
 
 function connect(){
     let socket = new SockJS("/ws");
@@ -67,5 +66,11 @@ function onMessageReceived(payload){
     }
     if (message.type === 'VIEW_ANGLE'){
         VIEW_ANGLE(message);
+    }
+    if (message.type === 'TIMER'){
+        TIMER(message);
+    }
+    if (message.type === 'STOP_EVENT'){
+        STOP_EVENT(message);
     }
 }

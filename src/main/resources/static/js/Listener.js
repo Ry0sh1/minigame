@@ -61,5 +61,9 @@ function weaponChange(weapon){
         firstSpawn = false;
     }else {
         document.getElementById('change-weapon-button').classList.remove('hidden');
+        stompClient.send("/app/game.change-weapon/" + code,
+            {},
+            JSON.stringify({type: 'CHANGE_WEAPON', player: username,content: player.weapon.name, code: code})
+        );
     }
 }

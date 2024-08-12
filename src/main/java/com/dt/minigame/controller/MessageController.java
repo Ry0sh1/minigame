@@ -2,13 +2,13 @@ package com.dt.minigame.controller;
 
 import com.dt.minigame.model.*;
 import com.dt.minigame.model.MapData.Heal;
-import com.dt.minigame.util.map.Point;
+import com.dt.minigame.scheduled.GameTimer;
+import com.dt.minigame.util.Constant;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.HealRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.RawMapService;
-import com.dt.minigame.util.map.RawMapData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
-import java.util.Random;
 
 @Controller
 @CrossOrigin
@@ -51,8 +50,8 @@ public class MessageController {
         player.setGame(gameRepository.findById(message.getCode()).orElseThrow());
         player.setKillCounter(0);
         player.setDeathCounter(0);
-        player.setHp(100);
-        player.setAlive(false);
+        player.setHp(Constant.MAX_HP);
+        player.setAlive(true);
         playerRepository.save(player);
         message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
         //TODO: Handle Frontend
@@ -64,12 +63,7 @@ public class MessageController {
     public Message onSpawn(@Payload Message message) throws IOException {
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
         player.setWeapon(message.getContent());
-        RawMapData mapData = rawMapService.convertJsonToMap(rawMapService.loadMapByName(player.getGame().getMap()));
-        Random random = new Random();
-        int n = random.nextInt(mapData.getSpawn_points().size());
-        Point spawn = mapData.getSpawn_points().get(n);
-        player.setX(spawn.getX());
-        player.setY(spawn.getY());
+        GameTimer.playerSetRandomSpawnPoint(player, rawMapService);
         player.setAlive(true);
         playerRepository.save(player);
         message.setContent(player.toString());
@@ -121,7 +115,8 @@ public class MessageController {
             shotPlayer.setAlive(false);
             shotPlayer.setX(0);
             shotPlayer.setY(0);
-            shotPlayer.setHp(100);
+            shotPlayer.setHp(Constant.MAX_HP);
+            shotPlayer.setRespawnTimer(Constant.RESPAWN_TIMER);
             playerRepository.save(killer);
             playerRepository.save(shotPlayer);
             message.setContent(shotPlayer.getUsername());
@@ -138,10 +133,10 @@ public class MessageController {
     public Message heal(@Payload Message message){
         Heal heal = healRepository.findById(Integer.parseInt(message.getContent())).orElseThrow();
         heal.setActive(false);
-        heal.setCooldown(10);
+        heal.setCooldown(Constant.HEAL_COOLDOWN);
         healRepository.save(heal);
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
-        player.setHp(Math.min(player.getHp() + 30, 100));
+        player.setHp(Math.min(player.getHp() + Constant.HEAL, Constant.MAX_HP));
         playerRepository.save(player);
         return message;
     }
@@ -150,6 +145,13 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message viewAngle(@Payload Message message){
         return message;
+    }
+
+    @MessageMapping("/game.change-weapon/{code}")
+    public void changeWeapon(@Payload Message message){
+        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        player.setWeapon(message.getContent());
+        playerRepository.save(player);
     }
 
 }

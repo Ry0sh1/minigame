@@ -23,7 +23,7 @@
             <h2><span id="player-winner"></span> has won the game!</h2>
         </div>
         <div id="game-main" class="hidden">
-            <h2 id="event_information" class="hidden"><span id="current_event">Darkness</span><span id="current_event_timer"> 30</span></h2>
+            <h2 id="event_information" class="hidden"><span id="current_event">Darkness</span></h2>
             <canvas id="game-canvas" width="400px" height="400px"></canvas>
             <h2><span id="hp">100</span> HP</h2>
         </div>
@@ -103,6 +103,8 @@
 <script src="/js/WebSocketMessageHandler/Messages/SHOOT.js"></script>
 <script src="/js/WebSocketMessageHandler/Messages/SPAWN.js"></script>
 <script src="/js/WebSocketMessageHandler/Messages/VIEW_ANGLE.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/TIMER.js"></script>
+<script src="/js/WebSocketMessageHandler/Messages/STOP_EVENT.js"></script>
 <script src="/js/config/wsConnection.js"></script>
 <script src="/js/script.js"></script>
 <script src="/js/Listener.js"></script>
