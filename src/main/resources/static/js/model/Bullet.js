@@ -41,17 +41,19 @@ class Bullet {
             }
         }
         for (let [key, value] of players) {
-            const p = value;
-            if (this.x + this.radius >= p.x &&
-                this.x <= p.x + p.width &&
-                this.y + this.radius >= p.y &&
-                this.y <= p.y + p.height){
-                collapsing = true;
-                stompClient.send("/app/game.player-hit/" + code,
-                    {},
-                    JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username + "," + player.weapon.damage, code: code})
-                );
-                break;
+            if (value.alive){
+                const p = value;
+                if (this.x + this.radius >= p.x &&
+                    this.x <= p.x + p.width &&
+                    this.y + this.radius >= p.y &&
+                    this.y <= p.y + p.height){
+                    collapsing = true;
+                    stompClient.send("/app/game.player-hit/" + code,
+                        {},
+                        JSON.stringify({type: 'PLAYER_HIT', player: player.username, content: p.username + "," + player.weapon.damage, code: code})
+                    );
+                    break;
+                }
             }
         }
         if (collapsing){

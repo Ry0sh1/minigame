@@ -5,7 +5,6 @@ const code = localStorage.getItem("code");
 let username = localStorage.getItem("username");
 let player;
 let camera;
-let alive = false;
 let currentEvent = null;
 let currentDeathTimer = 0;
 let firstSpawn = true;
@@ -39,7 +38,7 @@ let reloadTime = 0;
 
 function gameLoop(currentTime){
     requestAnimationFrame(gameLoop);
-    if (alive){
+    if (!firstSpawn && player.alive){
         const elapsed = currentTime - lastTime;
 
         if (elapsed > fpsInterval) {

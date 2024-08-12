@@ -1,17 +1,18 @@
 class Player {
-    angle;
+    username;
+    alive = false;
+    width = settings.playerWidth;
+    height = settings.playerHeight;
+    x;
+    y;
+    speed = settings.playerSpeed;
+    angle = 0;
     weapon;
-    constructor(x, y, username, angle, weapon) {
-        this.x = x;
-        this.y = y;
-        this.hp = 100;
+    nearSight = false;
+    killCounter = 0;
+    deathCounter = 0;
+    constructor(username) {
         this.username = username;
-        this.width = settings.playerWidth;
-        this.height = settings.playerHeight;
-        this.speed = settings.playerSpeed;
-        this.nearsight = false;
-        this.angle = angle;
-        this.weapon = weapon;
     }
 
     updatePlayerPosition() {

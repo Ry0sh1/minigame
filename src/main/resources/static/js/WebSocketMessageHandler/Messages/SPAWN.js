@@ -6,13 +6,17 @@ function SPAWN(message){
         player.angle = 0;
         player.weapon = getWeaponFromString(content.weapon);
         player.hp = 100;
-        players.set(username, player);
+        player.alive = true;
         camera = new Camera(0,0, canvas.width, canvas.height);
         document.getElementById('hp').innerText = player.hp;
-        alive = true;
         document.getElementById('change-weapon-button').classList.add('hidden');
         document.getElementById('change-weapon').classList.add('hidden');
     }else {
-        players.set(message.player, new Player(content.x,content.y, message.player, 0, getWeaponFromString(content.weapon)));
+        const p = players.get(message.player);
+        p.alive = true;
+        p.weapon = content.weapon;
+        p.x = content.x;
+        p.y = content.y;
+        p.angle = 0;
     }
 }

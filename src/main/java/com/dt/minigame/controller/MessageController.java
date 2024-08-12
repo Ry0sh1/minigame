@@ -52,6 +52,7 @@ public class MessageController {
         player.setKillCounter(0);
         player.setDeathCounter(0);
         player.setHp(100);
+        player.setAlive(false);
         playerRepository.save(player);
         message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
         //TODO: Handle Frontend
@@ -69,6 +70,7 @@ public class MessageController {
         Point spawn = mapData.getSpawn_points().get(n);
         player.setX(spawn.getX());
         player.setY(spawn.getY());
+        player.setAlive(true);
         playerRepository.save(player);
         message.setContent(player.toString());
         return message;
@@ -116,6 +118,7 @@ public class MessageController {
         if (shotPlayer.getHp() - Integer.parseInt(args[1]) <= 0){
             killer.setKillCounter(killer.getKillCounter() + 1);
             shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
+            shotPlayer.setAlive(false);
             shotPlayer.setX(0);
             shotPlayer.setY(0);
             shotPlayer.setHp(100);

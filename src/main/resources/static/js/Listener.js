@@ -20,7 +20,7 @@ canvas.addEventListener('mouseup', (e) => {
 });
 
 canvas.addEventListener('mousemove', (event) => {
-    if (alive){
+    if (player.alive){
         const rect = canvas.getBoundingClientRect();
         mouseX = event.clientX - rect.left;
         mouseY = event.clientY - rect.top;
@@ -50,18 +50,16 @@ document.getElementById('change-weapon-button').addEventListener("click", () => 
     document.getElementById('change-weapon-button').classList.add("hidden");
 })
 function weaponChange(weapon){
+    player.weapon = weapon;
+    document.getElementById('change-weapon').classList.add('hidden');
     if (firstSpawn){
-        player = new Player(0,0,username,0,weapon);
         stompClient.send("/app/game.spawn/" + code,
             {},
             JSON.stringify({type: 'SPAWN', player: username,content: player.weapon.name, code: code})
         );
-        document.getElementById('change-weapon').classList.add('hidden')
-        firstSpawn = false;
         document.getElementById('game-main').classList.remove('hidden');
+        firstSpawn = false;
     }else {
-        player.weapon = weapon;
-        document.getElementById('change-weapon').classList.add('hidden')
-        document.getElementById('change-weapon-button').classList.remove("hidden");
+        document.getElementById('change-weapon-button').classList.remove('hidden');
     }
 }

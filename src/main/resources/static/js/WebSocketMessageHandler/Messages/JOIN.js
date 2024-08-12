@@ -9,22 +9,33 @@ function JOIN(message){
             .then(data => {
                 for (let i = 0; i < data.length; i++){
                     if (data[i].username !== username){
-                        players.set(data[i].username, new Player(parseInt(data[i].x),parseInt(data[i].y),data[i].username, data[i].angle, getWeaponFromString(data[i].weapon)));
+                        const p = new Player(data[i].username);
+                        p.weapon = getWeaponFromString(data[i].weapon);
+                        p.x = data[i].x;
+                        p.angle = data[i].angle;
+                        p.killCounter = data[i].killCounter;
+                        p.deathCounter = data[i].deathCounter;
+                        p.alive = data[i].alive;
+                        players.set(p.username,p);
+                        addPlayerCard(p);
                     }
-                    addPlayerCard(data[i].username);
                 }
-                player = new Player(-1000, -1000, username, 0, rifle);
+                player = new Player(username);
+                players.set(username, player);
+                addPlayerCard(player);
             })
     }else {
-        addPlayerCard(message.player)
+        const p = new Player(message.player);
+        addPlayerCard(p);
+        players.set(p.username, p);
     }
 }
 
-function addPlayerCard(username){
+function addPlayerCard(p){
     const template = `
-        <div class="player-card" id="${username}-card">
-          <p class="player-card-username" id="player-card-username-${username}">${username}</p>
-          <p>Kills: <span id="player-card-${username}-kills">0 </span>Deaths: <span id="player-card-${username}-deaths">0 </span></p>
+        <div class="player-card" id="${p.username}-card">
+          <p class="player-card-username" id="player-card-username-${p.username}">${p.username}</p>
+          <p>Kills: <span id="player-card-${p.username}-kills">${p.killCounter} </span>Deaths: <span id="player-card-${p.username}-deaths">${p.deathCounter} </span></p>
         </div>`
     document.getElementById('player').insertAdjacentHTML('beforeend', template);
 }
@@ -41,7 +52,7 @@ function minusSeconds(seconds){
 }
 function gameSec(){
     minusSeconds(1);
-    if (!alive && !firstSpawn){
+    if (!player.alive && !firstSpawn){
         currentDeathTimer--;
         document.getElementById('respawn-timer').innerText = `${currentDeathTimer}`;
         if (currentDeathTimer <= 0){
