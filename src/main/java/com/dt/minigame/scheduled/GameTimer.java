@@ -51,6 +51,8 @@ public class GameTimer {
     }
 
     public void stopGame(Game game){
+        game.setRunning(false);
+        gameRepository.save(game);
         Message message = new Message();
         message.setPlayer("server");
         message.setCode(game.getCode());
@@ -62,7 +64,17 @@ public class GameTimer {
                 max = players.get(i);
             }
         }
-        message.setContent(max.getUsername());
+        List<Player> winner = new ArrayList<>();
+        for (Player player : players) {
+            if (max.getKillCounter() == player.getKillCounter() && max.getDeathCounter() == player.getDeathCounter()) {
+                winner.add(player);
+            }
+        }
+        StringBuilder winnerList = new StringBuilder(winner.get(0).getUsername());
+        for (int i = 1; i < winner.size(); i++){
+            winnerList.append(",").append(winner.get(i));
+        }
+        message.setContent(winnerList.toString());
         messagingTemplate.convertAndSend("/start-game/game/"+game.getCode(),message);
     }
 
