@@ -3,6 +3,7 @@ package com.dt.minigame.controller;
 import com.dt.minigame.model.*;
 import com.dt.minigame.model.MapData.Heal;
 import com.dt.minigame.scheduled.GameTimer;
+import com.dt.minigame.service.AsyncService;
 import com.dt.minigame.util.Constant;
 import com.dt.minigame.repository.BulletRepository;
 import com.dt.minigame.repository.GameRepository;
@@ -15,10 +16,13 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @CrossOrigin
@@ -30,14 +34,18 @@ public class MessageController {
     private final HealRepository healRepository;
     private final RawMapService rawMapService;
     private final ObjectMapper objectMapper;
+    private final AsyncService asyncService;
+    private final SimpMessageSendingOperations messagingTemplate;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
         this.healRepository = healRepository;
         this.rawMapService = rawMapService;
         this.objectMapper = objectMapper;
+        this.asyncService = asyncService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @MessageMapping("/game.join/{code}")
@@ -102,29 +110,45 @@ public class MessageController {
         return message;
     }
 
+    @MessageMapping("/game.shotgun-shot/{code}")
+    public void shotgunShot(@Payload Message message){
+        Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Map<String, Integer> nameCountMap = new HashMap<>();
+        for (String username : message.getContent().split(",")){
+            if (username != null){
+                nameCountMap.put(username, nameCountMap.getOrDefault(username, 0) + 1);
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : nameCountMap.entrySet()) {
+            Player shotPlayer = playerRepository.findById(entry.getKey()).orElseThrow();
+            Message hitMessage = new Message();
+            int damage = entry.getValue() * Constant.SHOTGUN_DAMAGE;
+            hitMessage.setContent(shotPlayer.getUsername() + "," + damage);
+            hitMessage.setCode(message.getCode());
+            hitMessage.setPlayer(message.getPlayer());
+            if (shotPlayer.getHp() - damage <= 0){
+                hitMessage.setType(MessageType.KILLED);
+                hitMessage.setContent(shotPlayer.getUsername());
+            }else {
+                hitMessage.setType(MessageType.PLAYER_HIT);
+            }
+            asyncService.processPlayerHit(killer, shotPlayer, damage);
+            messagingTemplate.convertAndSend("/start-game/game/"+hitMessage.getCode(),hitMessage);
+        }
+    }
     @MessageMapping("/game.player-hit/{code}")
     @SendTo("/start-game/game/{code}")
-    public Message playerHit(@Payload Message message){
+    public Message playerHit(@Payload Message message) {
         String[] args = message.getContent().split(",");
         Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
         Player shotPlayer = playerRepository.findById(args[0]).orElseThrow();
-
-        if (shotPlayer.getHp() - Integer.parseInt(args[1]) <= 0){
-            killer.setKillCounter(killer.getKillCounter() + 1);
-            shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
-            shotPlayer.setAlive(false);
-            shotPlayer.setX(0);
-            shotPlayer.setY(0);
-            shotPlayer.setHp(Constant.MAX_HP);
-            shotPlayer.setRespawnTimer(Constant.RESPAWN_TIMER);
-            playerRepository.save(killer);
-            playerRepository.save(shotPlayer);
-            message.setContent(shotPlayer.getUsername());
+        int damage = Integer.parseInt(args[1]);
+        if (shotPlayer.getHp() - damage <= 0){
             message.setType(MessageType.KILLED);
-        }else {
-            shotPlayer.setHp(shotPlayer.getHp() - Integer.parseInt(args[1]));
-            playerRepository.save(shotPlayer);
+            message.setContent(shotPlayer.getUsername());
         }
+        asyncService.processPlayerHit(killer, shotPlayer, damage);
         return message;
     }
 

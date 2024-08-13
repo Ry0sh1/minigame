@@ -17,4 +17,5 @@ public enum MessageType {
     VIEW_ANGLE,
     STOP_EVENT,
     CHANGE_WEAPON,
+    SHOTGUN_SHOT,
 }

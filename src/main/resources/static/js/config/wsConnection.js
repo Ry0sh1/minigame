@@ -1,4 +1,4 @@
-/*
+
 const originalConsoleLog = console.log;
 
 console.log = function(message) {
@@ -7,7 +7,7 @@ console.log = function(message) {
     }
     originalConsoleLog.apply(console, arguments);
 };
- */
+
 
 function connect(){
     let socket = new SockJS("/ws");

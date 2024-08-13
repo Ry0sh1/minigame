@@ -2,6 +2,7 @@
 
 Bugs:
     * Transactional Exception
+    * Spieler hält Pistole statt Shotgun in der Hand
 QOL:
     *
 

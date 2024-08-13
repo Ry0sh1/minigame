@@ -65,11 +65,38 @@ function update() {
     }
     for (let [key,value] of playerBullets){
         value.move();
-        value.isCollapsing();
+        if (player.weapon !== shotgun){
+            value.isCollapsing();
+        }
+    }
+    if (player.weapon === shotgun){
+       shotgunCollapsing();
     }
     if (mouseDown) shoot();
 }
 
+let temp = [];
+function shotgunCollapsing(){
+    for (let [key, value] of playerBullets) {
+        let shotPlayer = value.isCollapsingWithPlayer();
+        if (shotPlayer != null){
+            temp.push(shotPlayer.username);
+            playerBullets.delete(key);
+            value.deleteBullet(key);
+        }else if (value.isCollapsingWithObstacle() || value.distance >= player.weapon.range){
+            temp.push(null);
+            playerBullets.delete(key);
+            value.deleteBullet(key);
+        }
+    }
+    if (temp.length >= shotgun.bullets && playerBullets.size === 0){
+        stompClient.send("/app/game.shotgun-shot/" + code,
+            {},
+            JSON.stringify({type: 'SHOTGUN_SHOT', player: player.username, content: temp.join(), code: code})
+        );
+        temp = [];
+    }
+}
 
 //TODO Zum Server hinzufügen! Dadurch, dass der Angle jetzt auch dem Server übergeben wird.
 function shoot(){

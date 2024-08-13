@@ -7,5 +7,6 @@ public class Constant {
     public static int HEAL = 30;
     public static int HEAL_COOLDOWN = 10;
     public static int EVENT_TIME = 30;
+    public static int SHOTGUN_DAMAGE = 20;
 
 }

@@ -19,12 +19,11 @@ body{
     gap: 4px;
 }
 .card-image{
-    transform: rotate(45deg);
-    height: 300px;
-    object-fit: contain;
+    height: 240px;
+    object-fit: scale-down;
 }
 .card{
-    width: 340px;
+    width: 300px;
     cursor: pointer;
     transition: all 0.15s;
 }

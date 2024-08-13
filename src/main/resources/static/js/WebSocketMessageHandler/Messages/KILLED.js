@@ -11,8 +11,8 @@ function KILLED(message){
         currentDeathTimer = settings.respawnTimer;
 
         //TODO: Folgendes
-        interval = window.setInterval(() => {deathTimer()}, 1000)
         document.getElementById('respawn-timer').innerText = settings.respawnTimer;
+        interval = window.setInterval(() => {deathTimer()}, 1000)
     }
     players.get(message.player).killCounter += 1;
     const deathPlayer = players.get(message.content);
