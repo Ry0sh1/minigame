@@ -2,15 +2,14 @@
 
 Bugs:
     * Transactional Exception
-    * Spieler hält Pistole statt Shotgun in der Hand
+    * Shotgun weird bug. Teste die Shotgun!
 QOL:
-    *
+    * Design schöner machen
 
-* Komplette Map Data soll gespeichert und gefetcht werden beim Joinen. (Welche Heal sind da oder Powerups bzw. welches Event und wie lange etc.)
-* Design schöner machen
 * End Screen
-
-* Waffen auswahl Design: Bild Links Stats rechts. Waffe dreht sich. object-fit: contain. Bild fixed größe. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)
+* Waffen auswahl Design: Bild Links. Stats rechts. Waffe dreht sich. object-fit: contain. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)
+* Laser Waffe
+* Power-Ups
 
 
 <---Weapons--->
