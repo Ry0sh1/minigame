@@ -10,6 +10,7 @@ function JOIN(message){
                         const p = new Player(data[i].username);
                         p.weapon = getWeaponFromString(data[i].weapon);
                         p.x = data[i].x;
+                        p.y = data[i].y;
                         p.angle = data[i].angle;
                         p.killCounter = data[i].killCounter;
                         p.deathCounter = data[i].deathCounter;

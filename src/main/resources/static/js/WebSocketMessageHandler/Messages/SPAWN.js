@@ -15,6 +15,9 @@ function SPAWN(message){
         document.getElementById('game-main').classList.remove('hidden');
         document.getElementById('change-weapon-button').classList.add('hidden');
         document.getElementById('change-weapon').classList.add('hidden');
+        if (interval != null){
+            clearInterval(interval);
+        }
     }else {
         const p = players.get(message.player);
         p.alive = true;

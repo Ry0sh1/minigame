@@ -1,3 +1,4 @@
+let interval = null;
 function KILLED(message){
     if (message.content === username){
         player.hp = 0;
@@ -10,7 +11,7 @@ function KILLED(message){
         currentDeathTimer = settings.respawnTimer;
 
         //TODO: Folgendes
-        window.setInterval(() => {deathTimer()}, 1000)
+        interval = window.setInterval(() => {deathTimer()}, 1000)
         document.getElementById('respawn-timer').innerText = settings.respawnTimer;
     }
     players.get(message.player).killCounter += 1;
