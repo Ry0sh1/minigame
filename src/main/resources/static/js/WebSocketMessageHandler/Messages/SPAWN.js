@@ -21,7 +21,7 @@ function SPAWN(message){
     }else {
         const p = players.get(message.player);
         p.alive = true;
-        p.weapon = content.weapon;
+        p.weapon = getWeaponFromString(content.weapon);
         p.x = content.x;
         p.y = content.y;
         p.angle = 0;
