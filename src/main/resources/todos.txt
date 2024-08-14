@@ -3,6 +3,7 @@
 Bugs:
     * Transactional Exception
     * Shotgun weird bug. Teste die Shotgun!
+    * Game wird nicht gelöscht wenn alle leaven.
 QOL:
     * Design schöner machen
 
@@ -10,7 +11,6 @@ QOL:
 * Waffen auswahl Design: Bild Links. Stats rechts. Waffe dreht sich. object-fit: contain. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)
 * Laser Waffe
 * Power-Ups
-
 
 <---Weapons--->
 Boomerang
@@ -27,6 +27,5 @@ Shield (Blockt nächsten Treffer)
 Rapid Boots
 
 <---Event--->
-Dunkelheit
 Meteor
 Nicht stehen bleiben

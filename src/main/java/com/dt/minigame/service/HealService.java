@@ -1,4 +1,4 @@
-package com.dt.minigame.scheduled;
+package com.dt.minigame.service;
 
 import com.dt.minigame.model.MapData.Heal;
 import com.dt.minigame.model.Message;
@@ -7,31 +7,20 @@ import com.dt.minigame.repository.HealRepository;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 
-@Component
+@Service
 public class HealService {
 
-    private final SimpMessageSendingOperations messagingTemplate;
     private final HealRepository healRepository;
-
-    public HealService(SimpMessageSendingOperations messagingTemplate, HealRepository healRepository) {
-        this.messagingTemplate = messagingTemplate;
+    private final SimpMessageSendingOperations messagingTemplate;
+    public HealService(HealRepository healRepository, SimpMessageSendingOperations messagingTemplate) {
         this.healRepository = healRepository;
-    }
-
-    @Scheduled(fixedRate = 1000) //Jede Sekunde
-    public void heal(){
-        healRepository.findAll().forEach(heal -> {
-            if (!heal.isActive()){
-                heal.setCooldown(heal.getCooldown() - 1);
-                if (heal.getCooldown() <= 0){
-                    heal.setActive(true);
-                    reactivateHeal(heal);
-                }
-                healRepository.save(heal);
-            }
-        });
+        this.messagingTemplate = messagingTemplate;
     }
 
     public void reactivateHeal(Heal heal){
@@ -41,6 +30,16 @@ public class HealService {
         message.setType(MessageType.REACTIVATE_HEAL);
         message.setContent(String.valueOf(heal.getId()));
         messagingTemplate.convertAndSend("/start-game/game/"+heal.getCode(),message);
+    }
+
+    public ArrayList<Heal> findAll() {
+        ArrayList<Heal> heals = new ArrayList<>();
+        healRepository.findAll().forEach(heals::add);
+        return heals;
+    }
+
+    public void save(Heal heal) {
+        healRepository.save(heal);
     }
 
 }

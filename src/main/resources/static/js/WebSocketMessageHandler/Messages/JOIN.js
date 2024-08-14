@@ -42,6 +42,5 @@ function addPlayerCard(p){
         let span = document.createElement('span');
         span.innerText = " (You)";
         document.getElementById(`player-card-username-${p.username}`).append(span);
-
     }
 }

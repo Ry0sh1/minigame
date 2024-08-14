@@ -7,7 +7,9 @@ import com.dt.minigame.model.Player;
 import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.EventService;
+import com.dt.minigame.service.HealService;
 import com.dt.minigame.service.RawMapService;
+import com.dt.minigame.util.Constant;
 import com.dt.minigame.util.map.Point;
 import com.dt.minigame.util.map.RawMapData;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -27,21 +29,33 @@ public class GameTimer {
     private final EventService eventService;
     private final PlayerRepository playerRepository;
     private final RawMapService rawMapService;
+    private final HealService healService;
 
-    public GameTimer(SimpMessageSendingOperations messagingTemplate, GameRepository gameRepository, EventService eventService, PlayerRepository playerRepository, RawMapService rawMapService) {
+    public GameTimer(SimpMessageSendingOperations messagingTemplate, GameRepository gameRepository, EventService eventService, PlayerRepository playerRepository, RawMapService rawMapService, HealService healService) {
         this.messagingTemplate = messagingTemplate;
         this.gameRepository = gameRepository;
         this.eventService = eventService;
         this.playerRepository = playerRepository;
         this.rawMapService = rawMapService;
+        this.healService = healService;
     }
 
     @Scheduled(fixedRate = 1000)
     public void updateGameTimer(){
+        healService.findAll().forEach(heal -> {
+            if (!heal.isActive()){
+                heal.setCooldown(heal.getCooldown() - 1);
+                if (heal.getCooldown() <= 0){
+                    heal.setActive(true);
+                    healService.reactivateHeal(heal);
+                }
+                healService.save(heal);
+            }
+        });
         gameRepository.findAll().forEach(game -> {
             if (game.isRunning()){
                 game.setTime(game.getTime()+1);
-                if (game.getTime() % 120 == 0){ //Alle 2 Minuten spawnt ein Event
+                if (game.getTime() % Constant.EVENT_INTERVAL == 0){
                     try {
                         System.out.println("Event spawn");
                         eventService.sendEventMessage(game);
@@ -49,7 +63,10 @@ public class GameTimer {
                         throw new RuntimeException(e);
                     }
                 }
-                if (game.getTime() >= 60*8){
+                if (game.getTime() % Constant.POWERUP_INTERVAL == 0){
+
+                }
+                if (game.getTime() >= Constant.GAME_TIME){
                     stopGame(game);
                 }
                 if (game.isEvent()){

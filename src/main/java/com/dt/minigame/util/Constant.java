@@ -8,5 +8,8 @@ public class Constant {
     public static int HEAL_COOLDOWN = 10;
     public static int EVENT_TIME = 30;
     public static int SHOTGUN_DAMAGE = 20;
+    public static int EVENT_INTERVAL = 120;
+    public static int POWERUP_INTERVAL = 20;
+    public static int GAME_TIME = 480;
 
 }

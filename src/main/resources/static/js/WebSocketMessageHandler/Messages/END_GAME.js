@@ -1,5 +1,5 @@
 function END_GAME(message){
-    alive = false;
+    player.alive = false;
     if (players.has(message.content)){
         const winner = message.content.split(",");
         document.getElementById('player-winner').innerText = winner;
