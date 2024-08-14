@@ -3,6 +3,8 @@ class PowerUp {
     name;
     x;
     y;
+    width = settings.powerUpHitBoxWidth;
+    height = settings.powerUpHitBoxHeight;
     constructor(id,name,x,y) {
         this.id = id;
         this.name = name;

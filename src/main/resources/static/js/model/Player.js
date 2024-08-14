@@ -30,6 +30,7 @@ class Player {
         if (keys.d && this.x < map.width - this.width) proposedPosition.x += realSpeed;
 
         this.isTouchingHeal();
+        this.isTouchingPowerUp();
 
         proposedPosition = this.isCollidingWithObstacle(proposedPosition);
 
@@ -52,9 +53,24 @@ class Player {
                 ){
                     stompClient.send("/app/game.heal/" + code,
                         {},
-                        JSON.stringify({type: 'HEAL', player: this.username, content: h.id, code: code})
+                        JSON.stringify({type: 'HEAL', player: this.username, content: key, code: code})
                     );
                 }
+            }
+        }
+    }
+    isTouchingPowerUp(){
+        for (let [key, value] of powerUps){
+            const p = value;
+            if (this.x >= p.x && this.x <= p.x + p.width && this.y >= p.y && this.y <= p.y + p.height ||
+                this.x >= p.x && this.x <= p.x + p.width && this.y + this.height >= p.y && this.y + this.height <= p.y + p.height ||
+                this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y + this.height >= p.y && this.y + this.height <= p.y + p.height ||
+                this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y >= p.y && this.y <= p.y + p.height
+            ){
+                stompClient.send("/app/game.take-powerup/" + code,
+                    {},
+                    JSON.stringify({type: 'TAKE_POWERUP', player: this.username, content: key, code: code})
+                );
             }
         }
     }

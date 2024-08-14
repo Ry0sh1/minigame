@@ -1,7 +1,6 @@
 package com.dt.minigame.service;
 
 import com.dt.minigame.model.Game;
-import com.dt.minigame.model.JSON.JustName;
 import com.dt.minigame.model.MapData.MapData;
 import com.dt.minigame.model.MapData.PowerUp;
 import com.dt.minigame.model.Message;
@@ -11,8 +10,6 @@ import com.dt.minigame.repository.PowerUpRepository;
 import com.dt.minigame.util.FileUtil;
 import com.dt.minigame.util.map.Point;
 import com.dt.minigame.util.map.RawMapData;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +61,16 @@ public class PowerUpService {
         powerUpRepository.save(powerUp);
         mapDataRepository.save(mapData);
         sendPowerUpSpawnMessage(powerUp);
+    }
+
+    @Transactional
+    public void deletePowerUpById(int id){
+        PowerUp powerUp = powerUpRepository.findById(id).orElseThrow();
+        MapData mapData = mapDataRepository.findById(powerUp.getCode()).orElseThrow();
+        List<PowerUp> powerUps = mapData.getPower_ups();
+        powerUps.remove(powerUp);
+        powerUpRepository.delete(powerUp);
+        mapDataRepository.save(mapData);
     }
 
     private void sendPowerUpSpawnMessage(PowerUp powerUp) {

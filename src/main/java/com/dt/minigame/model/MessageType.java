@@ -18,5 +18,6 @@ public enum MessageType {
     STOP_EVENT,
     CHANGE_WEAPON,
     SHOTGUN_SHOT,
-    SPAWN_POWERUP
+    SPAWN_POWERUP,
+    TAKE_POWERUP,
 }

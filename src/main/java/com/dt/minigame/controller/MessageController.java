@@ -2,13 +2,13 @@ package com.dt.minigame.controller;
 
 import com.dt.minigame.model.*;
 import com.dt.minigame.model.MapData.Heal;
+import com.dt.minigame.model.MapData.MapData;
+import com.dt.minigame.model.MapData.PowerUp;
+import com.dt.minigame.repository.*;
 import com.dt.minigame.scheduled.GameTimer;
 import com.dt.minigame.service.AsyncService;
+import com.dt.minigame.service.PowerUpService;
 import com.dt.minigame.util.Constant;
-import com.dt.minigame.repository.BulletRepository;
-import com.dt.minigame.repository.GameRepository;
-import com.dt.minigame.repository.HealRepository;
-import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.RawMapService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -36,8 +37,10 @@ public class MessageController {
     private final ObjectMapper objectMapper;
     private final AsyncService asyncService;
     private final SimpMessageSendingOperations messagingTemplate;
+    private final MapDataRepository mapDataRepository;
+    private final PowerUpService powerUpService;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate, MapDataRepository mapDataRepository, PowerUpService powerUpService) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
@@ -46,6 +49,8 @@ public class MessageController {
         this.objectMapper = objectMapper;
         this.asyncService = asyncService;
         this.messagingTemplate = messagingTemplate;
+        this.mapDataRepository = mapDataRepository;
+        this.powerUpService = powerUpService;
     }
 
     @MessageMapping("/game.join/{code}")
@@ -171,6 +176,12 @@ public class MessageController {
         return message;
     }
 
+    @MessageMapping("/game.take-powerup/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message takePowerUp(@Payload Message message){
+        powerUpService.deletePowerUpById(Integer.parseInt(message.getContent()));
+        return message;
+    }
     @MessageMapping("/game.change-weapon/{code}")
     public void changeWeapon(@Payload Message message){
         Player player = playerRepository.findById(message.getPlayer()).orElseThrow();

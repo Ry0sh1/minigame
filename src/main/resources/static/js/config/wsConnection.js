@@ -76,4 +76,7 @@ function onMessageReceived(payload){
     if (message.type === 'SPAWN_POWERUP'){
         SPAWN_POWERUP(message);
     }
+    if (message.type === 'TAKE_POWERUP'){
+        TAKE_POWERUP(message);
+    }
 }
