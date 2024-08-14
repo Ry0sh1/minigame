@@ -24,4 +24,11 @@ public class PowerUp {
     private double y;
     private String code;
 
+    @Override
+    public String toString() {
+        return "{\"id\":\"" + id + "\", " +
+                "\"name\":\"" + name + "\", " +
+                "\"x\":\"" + x + "\", " +
+                "\"y\":\"" + y + "\"}";
+    }
 }

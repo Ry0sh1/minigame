@@ -78,6 +78,7 @@ public class GameRestController {
         mapData.setCode(code.toString());
         mapData.setObstacles(obstacles);
         mapData.setHeal_pads(heals);
+        mapData.setPower_ups(null);
         mapDataRepository.save(mapData);
 
 

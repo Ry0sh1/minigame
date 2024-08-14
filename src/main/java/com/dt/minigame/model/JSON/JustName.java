@@ -1,4 +1,4 @@
-package com.dt.minigame.model.event;
+package com.dt.minigame.model.JSON;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Event {
+public class JustName {
 
     private String name;
 

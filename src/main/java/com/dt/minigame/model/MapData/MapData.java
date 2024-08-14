@@ -23,11 +23,12 @@ public class MapData {
     private String name;
     private int width;
     private int height;
-    //private List<PowerUp> power_ups;
     @OneToMany
     private List<Heal> heal_pads;
     @OneToMany
     private List<Obstacles> obstacles;
+    @OneToMany
+    private List<PowerUp> power_ups;
 
     public MapData(RawMapData rawMapData){
         this.width = rawMapData.getWidth();

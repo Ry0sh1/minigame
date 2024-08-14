@@ -40,6 +40,9 @@ function draw() {
             ctx.drawImage(healImage, value.x - camera.x, value.y - camera.y, healImage.width, healImage.height);
         }
     }
+    for (let [key, value] of powerUps){
+        value.drawPowerup(ctx);
+    }
 
     ctx.restore();
     map.obstacles.forEach(drawObstacle);

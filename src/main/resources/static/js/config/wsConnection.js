@@ -73,4 +73,7 @@ function onMessageReceived(payload){
     if (message.type === 'STOP_EVENT'){
         STOP_EVENT(message);
     }
+    if (message.type === 'SPAWN_POWERUP'){
+        SPAWN_POWERUP(message);
+    }
 }

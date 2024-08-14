@@ -13,4 +13,6 @@ const settings = {
     healHitBoxWidth: 20,
     healHitBoxHeight: 20,
     respawnTimer: 15,
+    powerUpHitBoxWidth: 20,
+    powerUpHitBoxHeight: 20,
 }

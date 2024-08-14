@@ -12,6 +12,7 @@ let firstSpawn = true;
 let map;
 
 const heal = new Map();
+const powerUps = new Map();
 
 let mouseX = 0;
 let mouseY = 0;

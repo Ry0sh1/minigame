@@ -8,6 +8,7 @@ import com.dt.minigame.repository.GameRepository;
 import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.EventService;
 import com.dt.minigame.service.HealService;
+import com.dt.minigame.service.PowerUpService;
 import com.dt.minigame.service.RawMapService;
 import com.dt.minigame.util.Constant;
 import com.dt.minigame.util.map.Point;
@@ -30,14 +31,16 @@ public class GameTimer {
     private final PlayerRepository playerRepository;
     private final RawMapService rawMapService;
     private final HealService healService;
+    private final PowerUpService powerUpService;
 
-    public GameTimer(SimpMessageSendingOperations messagingTemplate, GameRepository gameRepository, EventService eventService, PlayerRepository playerRepository, RawMapService rawMapService, HealService healService) {
+    public GameTimer(SimpMessageSendingOperations messagingTemplate, GameRepository gameRepository, EventService eventService, PlayerRepository playerRepository, RawMapService rawMapService, HealService healService, PowerUpService powerUpService) {
         this.messagingTemplate = messagingTemplate;
         this.gameRepository = gameRepository;
         this.eventService = eventService;
         this.playerRepository = playerRepository;
         this.rawMapService = rawMapService;
         this.healService = healService;
+        this.powerUpService = powerUpService;
     }
 
     @Scheduled(fixedRate = 1000)
@@ -64,7 +67,11 @@ public class GameTimer {
                     }
                 }
                 if (game.getTime() % Constant.POWERUP_INTERVAL == 0){
-
+                    try {
+                        powerUpService.spawnPowerUp(game);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 if (game.getTime() >= Constant.GAME_TIME){
                     stopGame(game);
