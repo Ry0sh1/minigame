@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -44,23 +46,44 @@ public class PowerUpService {
         RawMapData rawMapData = rawMapService.convertJsonToMap(rawMapService.loadMapByName(game.getMap()));
         MapData mapData = mapDataRepository.findById(game.getCode()).orElseThrow();
         List<PowerUp> powerUpList = mapData.getPower_ups();
-        if (powerUpList != null && !powerUpList.isEmpty() && rawMapData.getPower_up_spawn().size() <= powerUpList.size()){
+        if (rawMapData.getPower_up_spawn().size() <= powerUpList.size()){
             //Erstelle kein neues Powerup
             return;
         }
+        List<Point> possibleSpawnPoints = calculatePossibleSpawnPoints(rawMapData, mapData);
         PowerUp powerUp = new PowerUp();
         Random random = new Random();
-        int n = random.nextInt(rawMapData.getPower_up_spawn().size());
-        Point powerUpSpawn = rawMapData.getPower_up_spawn().get(n);
+        int n = random.nextInt(possibleSpawnPoints.size());
+        Point powerUpSpawn = possibleSpawnPoints.get(n);
         powerUp.setX(powerUpSpawn.getX());
         powerUp.setY(powerUpSpawn.getY());
         powerUp.setCode(game.getCode());
         powerUp.setName(fileUtil.convertJsonToJustName(fileUtil.getRandomJSONFromDirectory("classpath:assets/powerups")).getName());
+        System.out.println(powerUp.getName());
         powerUpList.add(powerUp);
         mapData.setPower_ups(powerUpList);
         powerUpRepository.save(powerUp);
         mapDataRepository.save(mapData);
         sendPowerUpSpawnMessage(powerUp);
+    }
+
+    private List<Point> calculatePossibleSpawnPoints(RawMapData rawMapData, MapData mapData){
+        ArrayList<Point> possibleSpawnPoints = new ArrayList<>();
+        List<Point> allPowerUpSpawnPoints = rawMapData.getPower_up_spawn();
+        List<PowerUp> currentPowerUps = mapData.getPower_ups();
+        for (Point point : allPowerUpSpawnPoints){
+            boolean possible = true;
+            for (PowerUp powerUp : currentPowerUps){
+                if (point.getX() == powerUp.getX() && point.getY() == point.getY()) {
+                    possible = false;
+                    break;
+                }
+            }
+            if (possible) {
+                possibleSpawnPoints.add(point);
+            }
+        }
+        return possibleSpawnPoints;
     }
 
     @Transactional
