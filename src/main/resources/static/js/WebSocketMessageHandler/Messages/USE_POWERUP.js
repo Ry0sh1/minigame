@@ -9,21 +9,24 @@ function USE_POWERUP(message) {
 
 function bomb(message){
     if (message.player === username){
-
+        player.currentPowerup = null;
     }
+    let newBomb=  new Bomb(message.content, players.get(message.player).x, players.get(message.player).y,false);
+    bombs.set(message.content, newBomb);
 }
 function laserGun(message){
     if (message.player === username){
-
+        player.currentPowerup = null;
     }
 }
 function speed(message){
     if (message.player === username){
         player.speed += 2;
+        player.currentPowerup = null;
     }
 }
 function shield(message){
     if (message.player === username){
-
+        player.currentPowerup = null;
     }
 }

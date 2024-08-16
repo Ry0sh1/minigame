@@ -43,7 +43,9 @@ function draw() {
     for (let [key, value] of powerUps){
         value.drawPowerup(ctx);
     }
-
+    for (let [key, value] of bombs){
+        value.draw();
+    }
     ctx.restore();
     map.obstacles.forEach(drawObstacle);
 }

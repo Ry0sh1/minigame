@@ -15,4 +15,8 @@ const settings = {
     respawnTimer: 15,
     powerUpHitBoxWidth: 20,
     powerUpHitBoxHeight: 20,
+    bombTimer: 120,
+    bombDamage: 50,
+    bombRadius: 200,
+    bombAfterLifeTimer: 30,
 }

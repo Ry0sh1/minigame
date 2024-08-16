@@ -30,6 +30,7 @@ let mouseDown = false;
 
 const bullets = new Map();
 const playerBullets = new Map();
+const bombs = new Map();
 
 let lastTime = 0;
 const fpsInterval = 1000 / settings.fps;
@@ -74,6 +75,9 @@ function update() {
        shotgunCollapsing();
     }
     if (mouseDown) shoot();
+    for (let [key,value] of bombs){
+        value.update();
+    }
 }
 
 let temp = [];
