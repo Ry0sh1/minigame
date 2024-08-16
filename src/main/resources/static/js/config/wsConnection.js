@@ -79,4 +79,7 @@ function onMessageReceived(payload){
     if (message.type === 'TAKE_POWERUP'){
         TAKE_POWERUP(message);
     }
+    if (message.type === 'USE_POWERUP'){
+        USE_POWERUP(message);
+    }
 }

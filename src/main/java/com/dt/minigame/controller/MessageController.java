@@ -37,10 +37,9 @@ public class MessageController {
     private final ObjectMapper objectMapper;
     private final AsyncService asyncService;
     private final SimpMessageSendingOperations messagingTemplate;
-    private final MapDataRepository mapDataRepository;
     private final PowerUpService powerUpService;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate, MapDataRepository mapDataRepository, PowerUpService powerUpService) {
+    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate, PowerUpService powerUpService) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
@@ -49,7 +48,6 @@ public class MessageController {
         this.objectMapper = objectMapper;
         this.asyncService = asyncService;
         this.messagingTemplate = messagingTemplate;
-        this.mapDataRepository = mapDataRepository;
         this.powerUpService = powerUpService;
     }
 
@@ -180,6 +178,13 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message takePowerUp(@Payload Message message){
         powerUpService.deletePowerUpById(Integer.parseInt(message.getContent()));
+        return message;
+    }
+
+    @MessageMapping("/game.use-powerup/{code}")
+    @SendTo("/start-game/game/{code}")
+    public Message usePowerUp(@Payload Message message){
+        //TODO
         return message;
     }
     @MessageMapping("/game.change-weapon/{code}")

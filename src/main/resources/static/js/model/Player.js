@@ -11,6 +11,7 @@ class Player {
     nearSight = false;
     killCounter = 0;
     deathCounter = 0;
+    currentPowerup;
     constructor(username) {
         this.username = username;
     }
@@ -67,6 +68,7 @@ class Player {
                 this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y + this.height >= p.y && this.y + this.height <= p.y + p.height ||
                 this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y >= p.y && this.y <= p.y + p.height
             ){
+                this.currentPowerup = p.name;
                 stompClient.send("/app/game.take-powerup/" + code,
                     {},
                     JSON.stringify({type: 'TAKE_POWERUP', player: this.username, content: key, code: code})

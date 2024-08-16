@@ -8,6 +8,16 @@ document.addEventListener('keyup', (e) => {
         keys[e.key] = false;
     }
 });
+document.addEventListener('keypress', (e) => {
+    if (e.key === "e") {
+        if (player.currentPowerup != null){
+            stompClient.send("/app/game.use-powerup/" + code,
+                {},
+                JSON.stringify({type: 'USE_POWERUP', player: username,content: player.currentPowerup, code: code})
+            );
+        }
+    }
+});
 canvas.addEventListener('mousedown', (e) => {
     if (e.button === 0){
         mouseDown = true;
