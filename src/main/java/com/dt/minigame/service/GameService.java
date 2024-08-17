@@ -1,10 +1,9 @@
 package com.dt.minigame.service;
 
 import com.dt.minigame.model.Game;
-import com.dt.minigame.repository.GameRepository;
-import com.dt.minigame.repository.HealRepository;
-import com.dt.minigame.repository.MapDataRepository;
+import com.dt.minigame.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GameService {
@@ -12,17 +11,28 @@ public class GameService {
     private final GameRepository gameRepository;
     private final HealRepository healRepository;
     private final MapDataRepository mapDataRepository;
+    private final ObstacleRepository obstacleRepository;
+    private final PowerUpService powerUpService;
 
-    public GameService(GameRepository gameRepository, HealRepository healRepository, MapDataRepository mapDataRepository) {
+    public GameService(GameRepository gameRepository,
+                       HealRepository healRepository,
+                       MapDataRepository mapDataRepository,
+                       ObstacleRepository obstacleRepository,
+                       PowerUpService powerUpService) {
         this.gameRepository = gameRepository;
         this.healRepository = healRepository;
         this.mapDataRepository = mapDataRepository;
+        this.obstacleRepository = obstacleRepository;
+        this.powerUpService = powerUpService;
     }
 
+    @Transactional
     public void deleteGame(String code){
-        Game game = gameRepository.findById(code).orElseThrow();
-        healRepository.deleteAll(mapDataRepository.findById(code).orElseThrow().getHeal_pads());
-        gameRepository.delete(game);
+        gameRepository.deleteByCode(code);
+        mapDataRepository.deleteById(code);
+        healRepository.deleteAllByCode(code);
+        powerUpService.deleteAllByGame(code);
+        obstacleRepository.deleteAllByCode(code);
     }
 
     public Game findByCode(String code) {

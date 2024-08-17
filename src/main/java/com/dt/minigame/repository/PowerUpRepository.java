@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PowerUpRepository extends CrudRepository<PowerUp, Integer> {
-
+    void deleteAllByCode(String code);
 }

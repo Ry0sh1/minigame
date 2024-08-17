@@ -15,6 +15,8 @@ document.addEventListener('keypress', (e) => {
                 {},
                 JSON.stringify({type: 'USE_POWERUP', player: username,content: player.currentPowerup, code: code})
             );
+            player.currentPowerup = null;
+            document.getElementById('powerup-display').remove();
         }
     }
 });

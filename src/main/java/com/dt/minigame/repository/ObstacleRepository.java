@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ObstacleRepository extends CrudRepository<Obstacles, Integer> {
+    void deleteAllByCode(String code);
 }

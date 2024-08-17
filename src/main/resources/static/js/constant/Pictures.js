@@ -14,3 +14,5 @@ const speedImage = new Image(30, 30);
 speedImage.src = "/texture/speed.png";
 const shieldImage = new Image(20, 25);
 shieldImage.src = "/texture/shield.png";
+const flashImage = new Image(40, 25);
+flashImage.src = "/texture/flash.png";

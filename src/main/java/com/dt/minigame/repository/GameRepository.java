@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GameRepository extends CrudRepository<Game, String> {
+    void deleteByCode(String code);
 }

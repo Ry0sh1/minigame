@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HealRepository extends CrudRepository<Heal, Integer> {
+    void deleteAllByCode(String code);
 }

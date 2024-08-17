@@ -59,7 +59,6 @@ public class PowerUpService {
         powerUp.setY(powerUpSpawn.getY());
         powerUp.setCode(game.getCode());
         powerUp.setName(fileUtil.convertJsonToJustName(fileUtil.getRandomJSONFromDirectory("classpath:assets/powerups")).getName());
-        System.out.println(powerUp.getName());
         powerUpList.add(powerUp);
         mapData.setPower_ups(powerUpList);
         powerUpRepository.save(powerUp);
@@ -105,4 +104,7 @@ public class PowerUpService {
         messagingTemplate.convertAndSend("/start-game/game/"+powerUp.getCode(),message);
     }
 
+    public void deleteAllByGame(String code) {
+        powerUpRepository.deleteAllByCode(code);
+    }
 }

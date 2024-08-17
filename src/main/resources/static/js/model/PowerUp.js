@@ -21,7 +21,9 @@ class PowerUp {
             ctx.drawImage(bombImage, this.x - camera.x, this.y - camera.y, bombImage.width, bombImage.height);
         } else if(this.name === "speed"){
             ctx.drawImage(speedImage, this.x - camera.x, this.y - camera.y, speedImage.width, speedImage.height);
-        } else{
+        } else if(this.name === "flash"){
+            ctx.drawImage(flashImage, this.x - camera.x, this.y - camera.y, flashImage.width, flashImage.height);
+        }else{
             //No texture
             ctx.fillStyle = "rgb(255,0,0)";
             ctx.fillRect(this.x - camera.x, this.y - camera.y, laserImage.width, laserImage.height);

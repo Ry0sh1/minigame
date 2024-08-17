@@ -23,7 +23,9 @@ public class AsyncService {
     @Async
     public void processPlayerHit(Player killer, Player shotPlayer, int damage) {
         if ((shotPlayer.getHp() + shotPlayer.getShield()) - damage <= 0) {
-            killer.setKillCounter(killer.getKillCounter() + 1);
+            if (!killer.getUsername().equals(shotPlayer.getUsername())){
+                killer.setKillCounter(killer.getKillCounter() + 1);
+            }
             shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
             shotPlayer.setAlive(false);
             shotPlayer.setX(0);

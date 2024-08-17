@@ -78,6 +78,7 @@ class Player {
                     case "laser-gun": src = laserImage.src; break;
                     case "speed": src = speedImage.src; break;
                     case "shield": src = shieldImage.src; break;
+                    case "flash": src = flashImage.src; break;
                 }
                 let template = `<img id="powerup-display" src="${src}" alt="${p.name} Powerup Display">`;
                 document.getElementById('powerup-box').insertAdjacentHTML('beforeend', template);

@@ -1,14 +1,13 @@
 <---DOMINIK--->
 
 Bugs:
-    * Transactional Exception
     * Bombe zeiht im Frontend zweimal Leben ab obwohl einmal im Backend
-    * Game wird nicht gelöscht wenn alle leaven.
     * Respawn Timer sind komisch im Frontend. (Lasergun)
-    * KillCounter und DeathCounter sind komisch im Frontend. (Lasergun)
+    * KillCounter, DeathCounter und Respawn Timer sind komisch im Frontend. (Lasergun)
+    * Wenn man ein Item aufhebt bevor man sein vorheriges benutzt werden beide im Display angezeigt
 QOL:
     * Design schöner machen
-    * Entweder Lasergun kann sich beim aufladen bewegen, oder Spieler muss stehen bleiben beim aufladen
+    * Entweder Lasergun kann sich beim Aufladen bewegen, oder Spieler muss stehen bleiben beim aufladen
     * Aussehen von der Explosion und dem Laser ändern
 
 * End Screen
@@ -18,17 +17,11 @@ QOL:
 
 <---Weapons--->
 Boomerang
-Rifle
-Shotgun
-Sniper
 
 <---Power Ups--->
-Laser der durch Wände schießen kann Lux Ult
 Wormhole: Kleiner Sprung durch eine Wand und wieder zurück Zoe Ult
 Teleport: Kleiner Sprung flash
 Rocket Launcher
-Shield (Blockt nächsten Treffer)
-Rapid Boots
 
 <---Event--->
 Meteor
