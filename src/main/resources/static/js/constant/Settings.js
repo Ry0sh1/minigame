@@ -19,4 +19,7 @@ const settings = {
     bombDamage: 50,
     bombRadius: 200,
     bombAfterLifeTimer: 30,
+    laserGunLoadingFrames: 30,
+    laserGunBeamFrames: 30,
+    laserGunDamage: 100,
 }

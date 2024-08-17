@@ -2,8 +2,10 @@
 
 Bugs:
     * Transactional Exception
-    * Shotgun weird bug. Teste die Shotgun!
+    * Bombe zeiht im Frontend zweimal Leben ab obwohl einmal im Backend
     * Game wird nicht gelöscht wenn alle leaven.
+    * Respawn Timer sind komisch im Frontend. (Lasergun)
+    * KillCounter und DeathCounter sind komisch im Frontend. (Lasergun)
 QOL:
     * Design schöner machen
 

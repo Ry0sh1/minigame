@@ -46,6 +46,9 @@ function draw() {
     for (let [key, value] of bombs){
         value.draw();
     }
+    for (let [key, value] of laserGuns){
+        value.draw();
+    }
     ctx.restore();
     map.obstacles.forEach(drawObstacle);
 }

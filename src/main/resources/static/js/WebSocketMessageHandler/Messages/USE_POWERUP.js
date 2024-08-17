@@ -18,6 +18,9 @@ function laserGun(message){
     if (message.player === username){
         player.currentPowerup = null;
     }
+    let newLaserGun = new LaserGun(message.content, players.get(message.player).x, players.get(message.player).y,players.get(message.player).angle,true)
+    laserGuns.set(message.content, newLaserGun);
+    console.log(newLaserGun)
 }
 function speed(message){
     if (message.player === username){

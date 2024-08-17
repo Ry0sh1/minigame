@@ -31,6 +31,7 @@ let mouseDown = false;
 const bullets = new Map();
 const playerBullets = new Map();
 const bombs = new Map();
+const laserGuns = new Map();
 
 let lastTime = 0;
 const fpsInterval = 1000 / settings.fps;
@@ -76,6 +77,9 @@ function update() {
     }
     if (mouseDown) shoot();
     for (let [key,value] of bombs){
+        value.update();
+    }
+    for (let [key,value] of laserGuns){
         value.update();
     }
 }
