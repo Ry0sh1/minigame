@@ -22,7 +22,7 @@ public class AsyncService {
 
     @Async
     public void processPlayerHit(Player killer, Player shotPlayer, int damage) {
-        if (shotPlayer.getHp() - damage <= 0) {
+        if ((shotPlayer.getHp() + shotPlayer.getShield()) - damage <= 0) {
             killer.setKillCounter(killer.getKillCounter() + 1);
             shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
             shotPlayer.setAlive(false);
@@ -32,7 +32,12 @@ public class AsyncService {
             shotPlayer.setRespawnTimer(Constant.RESPAWN_TIMER);
             playerRepository.saveAll(List.of(killer, shotPlayer));
         } else {
-            shotPlayer.setHp(shotPlayer.getHp() - damage);
+            int rest = shotPlayer.getShield() - damage;
+            shotPlayer.setShield(shotPlayer.getShield() - damage);
+            if (shotPlayer.getShield() < 0){
+                shotPlayer.setHp(shotPlayer.getHp() - Math.abs(rest));
+                shotPlayer.setShield(0);
+            }
             playerRepository.save(shotPlayer);
         }
     }

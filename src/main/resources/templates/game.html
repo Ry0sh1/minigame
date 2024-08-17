@@ -25,7 +25,10 @@
         <div id="game-main" class="hidden">
             <h2 id="event_information" class="hidden"><span id="current_event">Darkness</span></h2>
             <canvas id="game-canvas" width="400px" height="400px"></canvas>
-            <h2><span id="hp">100</span> HP</h2>
+            <div class="d-flex justify-content-between align-items-center">
+                <h2><span id="hp">100</span> HP <span id="shield"> 0</span> SH</h2>
+                <div id="powerup-box" class="powerup-box"></div>
+            </div>
         </div>
         <div id="change-weapon-info">
             <div class="d-flex justify-content-center align-items-center">

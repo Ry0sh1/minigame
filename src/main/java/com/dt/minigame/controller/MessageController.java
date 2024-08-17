@@ -39,7 +39,15 @@ public class MessageController {
     private final SimpMessageSendingOperations messagingTemplate;
     private final PowerUpService powerUpService;
 
-    public MessageController(PlayerRepository playerRepository, BulletRepository bulletRepository, GameRepository gameRepository, HealRepository healRepository, RawMapService rawMapService, ObjectMapper objectMapper, AsyncService asyncService, SimpMessageSendingOperations messagingTemplate, PowerUpService powerUpService) {
+    public MessageController(PlayerRepository playerRepository,
+                             BulletRepository bulletRepository,
+                             GameRepository gameRepository,
+                             HealRepository healRepository,
+                             RawMapService rawMapService,
+                             ObjectMapper objectMapper,
+                             AsyncService asyncService,
+                             SimpMessageSendingOperations messagingTemplate,
+                             PowerUpService powerUpService) {
         this.playerRepository = playerRepository;
         this.bulletRepository = bulletRepository;
         this.gameRepository = gameRepository;
@@ -147,7 +155,8 @@ public class MessageController {
         Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
         Player shotPlayer = playerRepository.findById(args[0]).orElseThrow();
         int damage = Integer.parseInt(args[1]);
-        if (shotPlayer.getHp() - damage <= 0){
+        int allHP = shotPlayer.getHp() + shotPlayer.getShield();
+        if (allHP - damage <= 0){
             message.setType(MessageType.KILLED);
             message.setContent(shotPlayer.getUsername());
         }
@@ -184,7 +193,13 @@ public class MessageController {
     @MessageMapping("/game.use-powerup/{code}")
     @SendTo("/start-game/game/{code}")
     public Message usePowerUp(@Payload Message message){
-        //TODO
+        if (message.getContent().equals("shield")){
+            Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+            if (player.getShield() + Constant.SHIELD_AMOUNT <= 100){
+                player.setShield(player.getShield() + Constant.SHIELD_AMOUNT);
+                playerRepository.save(player);
+            }
+        }
         return message;
     }
     @MessageMapping("/game.change-weapon/{code}")

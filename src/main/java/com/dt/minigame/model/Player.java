@@ -25,6 +25,7 @@ public class Player {
     private int killCounter;
     private int deathCounter;
     private int hp;
+    private int shield;
     private String weapon;
     private boolean alive;
     private int respawnTimer;

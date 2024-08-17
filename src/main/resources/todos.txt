@@ -8,6 +8,8 @@ Bugs:
     * KillCounter und DeathCounter sind komisch im Frontend. (Lasergun)
 QOL:
     * Design schöner machen
+    * Entweder Lasergun kann sich beim aufladen bewegen, oder Spieler muss stehen bleiben beim aufladen
+    * Aussehen von der Explosion und dem Laser ändern
 
 * End Screen
 * Waffen auswahl Design: Bild Links. Stats rechts. Waffe dreht sich. object-fit: contain. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)

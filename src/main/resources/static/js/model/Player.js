@@ -12,8 +12,10 @@ class Player {
     killCounter = 0;
     deathCounter = 0;
     currentPowerup;
+    shield;
     constructor(username) {
         this.username = username;
+        this.shield = 0;
     }
 
     updatePlayerPosition() {
@@ -68,6 +70,17 @@ class Player {
                 this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y + this.height >= p.y && this.y + this.height <= p.y + p.height ||
                 this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y >= p.y && this.y <= p.y + p.height
             ){
+
+                if(document.getElementById('power-display') != null) document.getElementById('powerup-display').remove();
+                let src = "";
+                switch (p.name){
+                    case "bomb": src = bombImage.src; break;
+                    case "laser-gun": src = laserImage.src; break;
+                    case "speed": src = speedImage.src; break;
+                    case "shield": src = shieldImage.src; break;
+                }
+                let template = `<img id="powerup-display" src="${src}" alt="${p.name} Powerup Display">`;
+                document.getElementById('powerup-box').insertAdjacentHTML('beforeend', template);
                 this.currentPowerup = p.name;
                 stompClient.send("/app/game.take-powerup/" + code,
                     {},
