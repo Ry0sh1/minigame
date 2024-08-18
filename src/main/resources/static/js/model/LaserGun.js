@@ -1,4 +1,5 @@
 class LaserGun {
+    p;
     id;
     x;
     y;
@@ -8,7 +9,8 @@ class LaserGun {
     beamFrames;
     damage;
     copyPlayers;
-    constructor(id,x,y,angle,loading) {
+    constructor(p,id,x,y,angle,loading) {
+        this.p = p;
         this.id = id;
         let playerCenterX = (x + player.width / 2);
         let playerCenterY  = (y + player.height / 2);
@@ -51,7 +53,9 @@ class LaserGun {
                 laserGuns.delete(this.id);
                 return;
             }
-
+            if (this.p !== username){
+                return;
+            }
             for (let [key,value] of this.copyPlayers){
                 if (this.isPlayerInBeam(value)){
                     stompClient.send("/app/game.player-hit/" + code,

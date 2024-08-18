@@ -9,11 +9,11 @@ function USE_POWERUP(message) {
 }
 
 function bomb(message){
-    let newBomb=  new Bomb(message.content, players.get(message.player).x, players.get(message.player).y,false);
+    let newBomb=  new Bomb(message.player, message.content, players.get(message.player).x, players.get(message.player).y,false);
     bombs.set(message.content, newBomb);
 }
 function laserGun(message){
-    let newLaserGun = new LaserGun(message.content, players.get(message.player).x, players.get(message.player).y,players.get(message.player).angle,true)
+    let newLaserGun = new LaserGun(message.player, message.content, players.get(message.player).x, players.get(message.player).y,players.get(message.player).angle,true)
     laserGuns.set(message.content, newLaserGun);
 }
 function speed(message){

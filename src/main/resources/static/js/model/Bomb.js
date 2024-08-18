@@ -1,4 +1,5 @@
 class Bomb{
+    p;
     id;
     x;
     y;
@@ -7,7 +8,8 @@ class Bomb{
     damage;
     exploded;
     bombAfterLifeTimer;
-    constructor(id,x,y,ex) {
+    constructor(p,id,x,y,ex) {
+        this.p = p;
         this.id = id;
         this.x = x;
         this.y = y;
@@ -40,6 +42,10 @@ class Bomb{
     }
 
     explode(){
+        this.exploded = true;
+        if (this.p !== username){
+            return;
+        }
         for (let [key,value] of players){
             if (this.isPlayerInRadius(value)){
                 stompClient.send("/app/game.player-hit/" + code,
@@ -48,7 +54,6 @@ class Bomb{
                 );
             }
         }
-        this.exploded = true;
     }
 
     isPlayerInRadius(p) {

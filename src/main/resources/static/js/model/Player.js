@@ -71,7 +71,9 @@ class Player {
                 this.x + this.width >= p.x && this.x + this.width <= p.x + p.width && this.y >= p.y && this.y <= p.y + p.height
             ){
 
-                if(document.getElementById('power-display') != null) document.getElementById('powerup-display').remove();
+                if(document.getElementById('powerup-display') != null){
+                    document.getElementById('powerup-display').remove();
+                }
                 let src = "";
                 switch (p.name){
                     case "bomb": src = bombImage.src; break;

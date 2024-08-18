@@ -60,7 +60,6 @@ public class GameTimer {
                 game.setTime(game.getTime()+1);
                 if (game.getTime() % Constant.EVENT_INTERVAL == 0){
                     try {
-                        System.out.println("Event spawn");
                         eventService.sendEventMessage(game);
                     } catch (IOException e) {
                         throw new RuntimeException(e);

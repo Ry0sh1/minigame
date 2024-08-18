@@ -14,7 +14,9 @@ function KILLED(message){
         document.getElementById('respawn-timer').innerText = settings.respawnTimer;
         interval = window.setInterval(() => {deathTimer()}, 1000)
     }
-    players.get(message.player).killCounter += 1;
+    if (message.player !== message.content){
+        players.get(message.player).killCounter += 1;
+    }
     const deathPlayer = players.get(message.content);
     deathPlayer.deathCounter += 1;
     document.getElementById('player-card-'+message.player+"-kills").innerText = `${players.get(message.player).killCounter}`;

@@ -8,7 +8,7 @@ const settings = {
     playerSpeed: 3,
     bulletRadius: 3,
     playerVisionLength: 260,
-    playerVisionSharpness: 200, //Diese Zahl runterschrauben wenn es zu sehr laggt!
+    playerVisionSharpness: 60, //Diese Zahl runterschrauben wenn es zu sehr laggt!
     heal: 30,
     healHitBoxWidth: 20,
     healHitBoxHeight: 20,
