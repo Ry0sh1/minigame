@@ -21,7 +21,6 @@ Boomerang
 
 <---Power Ups--->
 Wormhole: Kleiner Sprung durch eine Wand und wieder zurück Zoe Ult
-Teleport: Kleiner Sprung flash
 Rocket Launcher
 
 <---Event--->
