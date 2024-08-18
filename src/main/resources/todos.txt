@@ -1,10 +1,11 @@
 <---DOMINIK--->
 
 Bugs:
-    * Bombe zeiht im Frontend zweimal Leben ab obwohl einmal im Backend
+    * Bombe zeiht im Frontend zweimal Leben ab obwohl einmal im Backend (Frontend)
     * Respawn Timer sind komisch im Frontend. (Lasergun)
     * KillCounter, DeathCounter und Respawn Timer sind komisch im Frontend. (Lasergun)
-    * Wenn man ein Item aufhebt bevor man sein vorheriges benutzt werden beide im Display angezeigt
+    * Wenn man ein Item aufhebt bevor man sein vorheriges benutzt werden beide im Display angezeigt (Frontend)
+    * Wenn jemand anderes ein Heal aufnimmt wird bei jedem nur im Frontend die HP erhöht. (Frontend)
 QOL:
     * Design schöner machen
     * Entweder Lasergun kann sich beim Aufladen bewegen, oder Spieler muss stehen bleiben beim aufladen

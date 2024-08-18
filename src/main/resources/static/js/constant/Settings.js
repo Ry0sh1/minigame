@@ -23,4 +23,5 @@ const settings = {
     laserGunBeamFrames: 30,
     laserGunDamage: 100,
     shieldAmount: 50,
+    flashDistance: 100,
 }

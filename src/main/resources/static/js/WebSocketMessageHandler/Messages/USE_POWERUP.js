@@ -4,6 +4,7 @@ function USE_POWERUP(message) {
         case "laser-gun": laserGun(message); break;
         case "speed": speed(message); break;
         case "shield": shield(message); break;
+        case "flash": flash(message); break;
     }
 }
 
@@ -26,5 +27,16 @@ function shield(message){
             player.shield += settings.shieldAmount;
             document.getElementById('shield').innerText = `${player.shield}`;
         }
+    }
+}
+function flash(message){
+    if (message.player === username){
+        const p = players.get(message.player);
+        p.x += Math.cos(p.angle) * settings.flashDistance;
+        p.y += Math.sin(p.angle) * settings.flashDistance;
+        stompClient.send("/app/game.position/" + code,
+            {},
+            JSON.stringify({type: 'POSITION', player: p.username, content: p.x + ',' + p.y, code: code})
+        );
     }
 }
