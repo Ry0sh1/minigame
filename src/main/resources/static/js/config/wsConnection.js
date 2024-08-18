@@ -1,14 +1,3 @@
-
-const originalConsoleLog = console.log;
-
-console.log = function(message) {
-    if (typeof message === 'string' && (message.includes('destination:/start-game/game/') || message.includes('destination:/app/'))) {
-        return;
-    }
-    originalConsoleLog.apply(console, arguments);
-};
-
-
 function connect(){
     let socket = new SockJS("/ws");
     stompClient = Stomp.over(socket);

@@ -1,16 +1,13 @@
-<---DOMINIK--->
+<---Changes--->
 
 Bugs:
-    *
+    * Player bewegt sich online sehr langsam game.dominik-fischer.net testen
 QOL:
     * Design schöner machen
     * Entweder Lasergun kann sich beim Aufladen bewegen, oder Spieler muss stehen bleiben beim aufladen
     * Aussehen von der Explosion und dem Laser ändern
 
 * End Screen
-* Waffen auswahl Design: Bild Links. Stats rechts. Waffe dreht sich. object-fit: contain. Keine Zahl bei den Stats, sondern Striche (wie in Tboi)
-* Laser Waffe
-* Power-Ups
 
 <---Weapons--->
 Boomerang

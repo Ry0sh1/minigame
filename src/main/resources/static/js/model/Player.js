@@ -21,16 +21,10 @@ class Player {
     updatePlayerPosition() {
         let proposedPosition = {x: this.x, y: this.y};
 
-        let realSpeed = this.speed;
-
-        if ((keys.w || keys.s) && (keys.a || keys.d)) {
-            realSpeed /= Math.sqrt(2);
-        }
-
-        if (keys.w && this.y > 0) proposedPosition.y -= realSpeed;
-        if (keys.a && this.x > 0) proposedPosition.x -= realSpeed;
-        if (keys.s && this.y < map.height - this.height) proposedPosition.y += realSpeed;
-        if (keys.d && this.x < map.width - this.width) proposedPosition.x += realSpeed;
+        if (keys.w && this.y > 0) proposedPosition.y -= this.speed;
+        if (keys.a && this.x > 0) proposedPosition.x -= this.speed;
+        if (keys.s && this.y < map.height - this.height) proposedPosition.y += this.speed;
+        if (keys.d && this.x < map.width - this.width) proposedPosition.x += this.speed;
 
         this.isTouchingHeal();
         this.isTouchingPowerUp();
