@@ -150,6 +150,27 @@ fetch("/get-map-data/" + code, {method: 'GET'})
         for (let i = 0; i < map.heal_pads.length; i++){
             heal.set(map.heal_pads[i].id,new Heal(map.heal_pads[i].id,map.heal_pads[i].x,map.heal_pads[i].y,settings.healHitBoxWidth,settings.healHitBoxHeight));
         }
-        connect();
-        requestAnimationFrame(gameLoop)
+        fetch("/get-all-player/" + code)
+            .then(response => response.json())
+            .then(data => {
+                for (let i = 0; i < data.length; i++){
+                    if (data[i].username !== username){
+                        const p = new Player(data[i].username);
+                        p.weapon = getWeaponFromString(data[i].weapon);
+                        p.x = data[i].x;
+                        p.y = data[i].y;
+                        p.angle = data[i].angle;
+                        p.killCounter = data[i].killCounter;
+                        p.deathCounter = data[i].deathCounter;
+                        p.alive = data[i].alive;
+                        players.set(p.username,p);
+                        addPlayerCard(p);
+                    }
+                }
+                player = new Player(username);
+                players.set(username, player);
+                addPlayerCard(player);
+                connect();
+                requestAnimationFrame(gameLoop)
+            })
     })

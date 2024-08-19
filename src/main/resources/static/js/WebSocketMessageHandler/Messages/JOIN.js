@@ -1,28 +1,6 @@
 function JOIN(message){
     if (message.player === username){
         document.getElementById('game-code').innerText = code;
-        const g = JSON.parse(message.content);
-        fetch("/get-all-player/" + code)
-            .then(response => response.json())
-            .then(data => {
-                for (let i = 0; i < data.length; i++){
-                    if (data[i].username !== username){
-                        const p = new Player(data[i].username);
-                        p.weapon = getWeaponFromString(data[i].weapon);
-                        p.x = data[i].x;
-                        p.y = data[i].y;
-                        p.angle = data[i].angle;
-                        p.killCounter = data[i].killCounter;
-                        p.deathCounter = data[i].deathCounter;
-                        p.alive = data[i].alive;
-                        players.set(p.username,p);
-                        addPlayerCard(p);
-                    }
-                }
-                player = new Player(username);
-                players.set(username, player);
-                addPlayerCard(player);
-            })
     }else {
         const p = new Player(message.player);
         addPlayerCard(p);
