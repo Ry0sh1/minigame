@@ -5,7 +5,7 @@ const settings = {
     fps: 60,
     playerWidth: 16,
     playerHeight: 16,
-    playerSpeed: 3,
+    playerSpeed: 2,
     bulletRadius: 3,
     playerVisionLength: 260,
     playerVisionSharpness: 60, //Diese Zahl runterschrauben wenn es zu sehr laggt!

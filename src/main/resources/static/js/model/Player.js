@@ -32,11 +32,17 @@ class Player {
         proposedPosition = this.isCollidingWithObstacle(proposedPosition);
 
         if (proposedPosition.x !== this.x || proposedPosition.y !== this.y) {
+            this.x = proposedPosition.x;
+            this.y = proposedPosition.y;
             stompClient.send("/app/game.position/" + code,
                 {},
                 JSON.stringify({type: 'POSITION', player: this.username, content: proposedPosition.x + ',' + proposedPosition.y, code: code})
             );
         }
+        stompClient.send("/app/game.view-angle/" + code,
+            {},
+            JSON.stringify({type: 'VIEW_ANGLE', player: username,content: this.angle, code: code})
+        );
     }
 
     isTouchingHeal(){
