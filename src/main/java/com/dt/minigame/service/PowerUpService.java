@@ -5,46 +5,43 @@ import com.dt.minigame.model.MapData.MapData;
 import com.dt.minigame.model.MapData.PowerUp;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
-import com.dt.minigame.repository.MapDataRepository;
-import com.dt.minigame.repository.PowerUpRepository;
+import com.dt.minigame.stores.MapDataStore;
+import com.dt.minigame.stores.PowerUpStore;
 import com.dt.minigame.util.FileUtil;
 import com.dt.minigame.util.map.Point;
 import com.dt.minigame.util.map.RawMapData;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Service
 public class PowerUpService {
 
     private final RawMapService rawMapService;
-    private final MapDataRepository mapDataRepository;
-    private final PowerUpRepository powerUpRepository;
+    private final MapDataStore mapDataStore;
+    private final PowerUpStore powerUpStore;
     private final FileUtil fileUtil;
     private final SimpMessageSendingOperations messagingTemplate;
 
     public PowerUpService(RawMapService rawMapService,
-                          MapDataRepository mapDataRepository,
-                          PowerUpRepository powerUpRepository,
+                          MapDataStore mapDataStore,
+                          PowerUpStore powerUpStore,
                           FileUtil fileUtil,
                           SimpMessageSendingOperations messagingTemplate) {
         this.rawMapService = rawMapService;
-        this.mapDataRepository = mapDataRepository;
-        this.powerUpRepository = powerUpRepository;
+        this.mapDataStore = mapDataStore;
+        this.powerUpStore = powerUpStore;
         this.fileUtil = fileUtil;
         this.messagingTemplate = messagingTemplate;
     }
 
-    @Transactional
     public void spawnPowerUp(Game game) throws IOException {
         RawMapData rawMapData = rawMapService.convertJsonToMap(rawMapService.loadMapByName(game.getMap()));
-        MapData mapData = mapDataRepository.findById(game.getCode()).orElseThrow();
+        MapData mapData = mapDataStore.findById(game.getCode());
         List<PowerUp> powerUpList = mapData.getPower_ups();
         if (rawMapData.getPower_up_spawn().size() <= powerUpList.size()){
             //Erstelle kein neues Powerup
@@ -61,8 +58,8 @@ public class PowerUpService {
         powerUp.setName(fileUtil.convertJsonToJustName(fileUtil.getRandomJSONFromDirectory("classpath:assets/powerups")).getName());
         powerUpList.add(powerUp);
         mapData.setPower_ups(powerUpList);
-        powerUpRepository.save(powerUp);
-        mapDataRepository.save(mapData);
+        powerUpStore.save(powerUp);
+        mapDataStore.save(mapData);
         sendPowerUpSpawnMessage(powerUp);
     }
 
@@ -85,14 +82,13 @@ public class PowerUpService {
         return possibleSpawnPoints;
     }
 
-    @Transactional
     public void deletePowerUpById(int id){
-        PowerUp powerUp = powerUpRepository.findById(id).orElseThrow();
-        MapData mapData = mapDataRepository.findById(powerUp.getCode()).orElseThrow();
+        PowerUp powerUp = powerUpStore.findById(id);
+        MapData mapData = mapDataStore.findById(powerUp.getCode());
         List<PowerUp> powerUps = mapData.getPower_ups();
         powerUps.remove(powerUp);
-        powerUpRepository.delete(powerUp);
-        mapDataRepository.save(mapData);
+        powerUpStore.delete(powerUp);
+        mapDataStore.save(mapData);
     }
 
     private void sendPowerUpSpawnMessage(PowerUp powerUp) {
@@ -105,6 +101,6 @@ public class PowerUpService {
     }
 
     public void deleteAllByGame(String code) {
-        powerUpRepository.deleteAllByCode(code);
+        powerUpStore.deleteAllByCode(code);
     }
 }

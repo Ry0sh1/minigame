@@ -4,12 +4,12 @@ import com.dt.minigame.model.Game;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
 import com.dt.minigame.model.Player;
-import com.dt.minigame.repository.GameRepository;
-import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.EventService;
 import com.dt.minigame.service.HealService;
 import com.dt.minigame.service.PowerUpService;
 import com.dt.minigame.service.RawMapService;
+import com.dt.minigame.stores.GameStore;
+import com.dt.minigame.stores.PlayerStore;
 import com.dt.minigame.util.Constant;
 import com.dt.minigame.util.map.Point;
 import com.dt.minigame.util.map.RawMapData;
@@ -26,18 +26,24 @@ import java.util.Random;
 public class GameTimer {
 
     private final SimpMessageSendingOperations messagingTemplate;
-    private final GameRepository gameRepository;
+    private final GameStore gameStore;
     private final EventService eventService;
-    private final PlayerRepository playerRepository;
+    private final PlayerStore playerStore;
     private final RawMapService rawMapService;
     private final HealService healService;
     private final PowerUpService powerUpService;
 
-    public GameTimer(SimpMessageSendingOperations messagingTemplate, GameRepository gameRepository, EventService eventService, PlayerRepository playerRepository, RawMapService rawMapService, HealService healService, PowerUpService powerUpService) {
+    public GameTimer(SimpMessageSendingOperations messagingTemplate,
+                     GameStore gameStore,
+                     EventService eventService,
+                     PlayerStore playerStore,
+                     RawMapService rawMapService,
+                     HealService healService,
+                     PowerUpService powerUpService) {
         this.messagingTemplate = messagingTemplate;
-        this.gameRepository = gameRepository;
+        this.gameStore = gameStore;
         this.eventService = eventService;
-        this.playerRepository = playerRepository;
+        this.playerStore = playerStore;
         this.rawMapService = rawMapService;
         this.healService = healService;
         this.powerUpService = powerUpService;
@@ -55,7 +61,7 @@ public class GameTimer {
                 healService.save(heal);
             }
         });
-        gameRepository.findAll().forEach(game -> {
+        gameStore.findAll().forEach(game -> {
             if (game.isRunning()){
                 game.setTime(game.getTime()+1);
                 if (game.getTime() % Constant.EVENT_INTERVAL == 0){
@@ -81,18 +87,18 @@ public class GameTimer {
                         eventService.stopEvent(game);
                     }
                 }
-                gameRepository.save(game);
+                gameStore.save(game);
                 sendTimer(game);
             }
         });
-        playerRepository.findAll().forEach(player -> {
+        playerStore.findAll().forEach(player -> {
             if (!player.isAlive()){
                 player.setRespawnTimer(player.getRespawnTimer() - 1);
                 if (player.getRespawnTimer() <= 0){
                     player.setAlive(true);
                     respawnPlayer(player);
                 }
-                playerRepository.save(player);
+                playerStore.save(player);
             }
         });
     }
@@ -123,12 +129,12 @@ public class GameTimer {
 
     public void stopGame(Game game){
         game.setRunning(false);
-        gameRepository.save(game);
+        gameStore.save(game);
         Message message = new Message();
         message.setPlayer("server");
         message.setCode(game.getCode());
         message.setType(MessageType.END_GAME);
-        List<Player> players = new ArrayList<>(playerRepository.findAllByGame(game));
+        List<Player> players = new ArrayList<>(playerStore.findAllByGame(game));
         Player max = players.get(0);
         for (int i = 1; i < players.size(); i++){
             if (players.get(i).getKillCounter() > max.getKillCounter()){

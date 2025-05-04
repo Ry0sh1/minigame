@@ -2,12 +2,13 @@ package com.dt.minigame.controller;
 
 import com.dt.minigame.model.*;
 import com.dt.minigame.model.MapData.Heal;
-import com.dt.minigame.model.MapData.MapData;
-import com.dt.minigame.model.MapData.PowerUp;
-import com.dt.minigame.repository.*;
 import com.dt.minigame.scheduled.GameTimer;
 import com.dt.minigame.service.AsyncService;
 import com.dt.minigame.service.PowerUpService;
+import com.dt.minigame.stores.BulletStore;
+import com.dt.minigame.stores.GameStore;
+import com.dt.minigame.stores.HealStore;
+import com.dt.minigame.stores.PlayerStore;
 import com.dt.minigame.util.Constant;
 import com.dt.minigame.service.RawMapService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,36 +23,35 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Controller
 @CrossOrigin
 public class MessageController {
 
-    private final PlayerRepository playerRepository;
-    private final BulletRepository bulletRepository;
-    private final GameRepository gameRepository;
-    private final HealRepository healRepository;
+    private final PlayerStore playerStore;
+    private final BulletStore bulletStore;
+    private final GameStore gameStore;
+    private final HealStore healStore;
     private final RawMapService rawMapService;
     private final ObjectMapper objectMapper;
     private final AsyncService asyncService;
     private final SimpMessageSendingOperations messagingTemplate;
     private final PowerUpService powerUpService;
 
-    public MessageController(PlayerRepository playerRepository,
-                             BulletRepository bulletRepository,
-                             GameRepository gameRepository,
-                             HealRepository healRepository,
+    public MessageController(PlayerStore playerStore,
+                             BulletStore bulletStore,
+                             GameStore gameStore,
+                             HealStore healStore,
                              RawMapService rawMapService,
                              ObjectMapper objectMapper,
                              AsyncService asyncService,
                              SimpMessageSendingOperations messagingTemplate,
                              PowerUpService powerUpService) {
-        this.playerRepository = playerRepository;
-        this.bulletRepository = bulletRepository;
-        this.gameRepository = gameRepository;
-        this.healRepository = healRepository;
+        this.playerStore = playerStore;
+        this.bulletStore = bulletStore;
+        this.gameStore = gameStore;
+        this.healStore = healStore;
         this.rawMapService = rawMapService;
         this.objectMapper = objectMapper;
         this.asyncService = asyncService;
@@ -66,13 +66,13 @@ public class MessageController {
         headerAccessor.getSessionAttributes().put("code", message.getCode());
         Player player = new Player();
         player.setUsername(message.getPlayer());
-        player.setGame(gameRepository.findById(message.getCode()).orElseThrow());
+        player.setGame(gameStore.findById(message.getCode()));
         player.setKillCounter(0);
         player.setDeathCounter(0);
         player.setHp(Constant.MAX_HP);
         player.setAlive(true);
-        playerRepository.save(player);
-        message.setContent(objectMapper.writeValueAsString(gameRepository.findById(message.getCode()).orElseThrow()));
+        playerStore.save(player);
+        message.setContent(objectMapper.writeValueAsString(gameStore.findById(message.getCode())));
         //TODO: Handle Frontend
         return message;
     }
@@ -80,11 +80,11 @@ public class MessageController {
     @MessageMapping("/game.spawn/{code}")
     @SendTo("/start-game/game/{code}")
     public Message onSpawn(@Payload Message message) throws IOException {
-        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Player player = playerStore.findById(message.getPlayer());
         player.setWeapon(message.getContent());
         GameTimer.playerSetRandomSpawnPoint(player, rawMapService);
         player.setAlive(true);
-        playerRepository.save(player);
+        playerStore.save(player);
         message.setContent(player.toString());
         return message;
     }
@@ -93,10 +93,10 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message pos(@Payload Message message){
         String[] pos = message.getContent().split(",");
-        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Player player = playerStore.findById(message.getPlayer());
         player.setX(Double.parseDouble(pos[0]));
         player.setY(Double.parseDouble(pos[1]));
-        playerRepository.save(player);
+        playerStore.save(player);
         return message;
     }
 
@@ -109,7 +109,7 @@ public class MessageController {
         bullet.setY(Double.parseDouble(content[1]));
         bullet.setAngle(Double.parseDouble(content[2]));
         bullet.setSpeed(Double.parseDouble(content[3]));
-        Bullet shotBullet = bulletRepository.save(bullet);
+        Bullet shotBullet = bulletStore.save(bullet);
         message.setContent(shotBullet.toString());
         return message;
     }
@@ -117,22 +117,20 @@ public class MessageController {
     @MessageMapping("/game.delete-bullet/{code}")
     @SendTo("/start-game/game/{code}")
     public Message deleteBullet(@Payload Message message){
-        if (bulletRepository.existsById(Integer.parseInt(message.getContent()))) bulletRepository.deleteById(Integer.parseInt(message.getContent()));
+        if (bulletStore.existsById(Integer.parseInt(message.getContent()))) bulletStore.deleteById(Integer.parseInt(message.getContent()));
         return message;
     }
 
     @MessageMapping("/game.shotgun-shot/{code}")
     public void shotgunShot(@Payload Message message){
-        Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Player killer = playerStore.findById(message.getPlayer());
         Map<String, Integer> nameCountMap = new HashMap<>();
         for (String username : message.getContent().split(",")){
-            if (username != null){
-                nameCountMap.put(username, nameCountMap.getOrDefault(username, 0) + 1);
-            }
+            nameCountMap.put(username, nameCountMap.getOrDefault(username, 0) + 1);
         }
 
         for (Map.Entry<String, Integer> entry : nameCountMap.entrySet()) {
-            Player shotPlayer = playerRepository.findById(entry.getKey()).orElseThrow();
+            Player shotPlayer = playerStore.findById(entry.getKey());
             Message hitMessage = new Message();
             int damage = entry.getValue() * Constant.SHOTGUN_DAMAGE;
             hitMessage.setContent(shotPlayer.getUsername() + "," + damage);
@@ -152,8 +150,8 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message playerHit(@Payload Message message) {
         String[] args = message.getContent().split(",");
-        Player killer = playerRepository.findById(message.getPlayer()).orElseThrow();
-        Player shotPlayer = playerRepository.findById(args[0]).orElseThrow();
+        Player killer = playerStore.findById(message.getPlayer());
+        Player shotPlayer = playerStore.findById(args[0]);
         int damage = Integer.parseInt(args[1]);
         int allHP = shotPlayer.getHp() + shotPlayer.getShield();
         if (allHP - damage <= 0){
@@ -167,13 +165,13 @@ public class MessageController {
     @MessageMapping("/game.heal/{code}")
     @SendTo("/start-game/game/{code}")
     public Message heal(@Payload Message message){
-        Heal heal = healRepository.findById(Integer.parseInt(message.getContent())).orElseThrow();
+        Heal heal = healStore.findById(Integer.parseInt(message.getContent()));
         heal.setActive(false);
         heal.setCooldown(Constant.HEAL_COOLDOWN);
-        healRepository.save(heal);
-        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        healStore.save(heal);
+        Player player = playerStore.findById(message.getPlayer());
         player.setHp(Math.min(player.getHp() + Constant.HEAL, Constant.MAX_HP));
-        playerRepository.save(player);
+        playerStore.save(player);
         return message;
     }
 
@@ -194,19 +192,19 @@ public class MessageController {
     @SendTo("/start-game/game/{code}")
     public Message usePowerUp(@Payload Message message){
         if (message.getContent().equals("shield")){
-            Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+            Player player = playerStore.findById(message.getPlayer());
             if (player.getShield() + Constant.SHIELD_AMOUNT <= 100){
                 player.setShield(player.getShield() + Constant.SHIELD_AMOUNT);
-                playerRepository.save(player);
+                playerStore.save(player);
             }
         }
         return message;
     }
     @MessageMapping("/game.change-weapon/{code}")
     public void changeWeapon(@Payload Message message){
-        Player player = playerRepository.findById(message.getPlayer()).orElseThrow();
+        Player player = playerStore.findById(message.getPlayer());
         player.setWeapon(message.getContent());
-        playerRepository.save(player);
+        playerStore.save(player);
     }
 
 }

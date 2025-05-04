@@ -1,41 +1,42 @@
 package com.dt.minigame.service;
 
 import com.dt.minigame.model.Game;
-import com.dt.minigame.repository.*;
+import com.dt.minigame.stores.GameStore;
+import com.dt.minigame.stores.HealStore;
+import com.dt.minigame.stores.MapDataStore;
+import com.dt.minigame.stores.ObstacleStore;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GameService {
 
-    private final GameRepository gameRepository;
-    private final HealRepository healRepository;
-    private final MapDataRepository mapDataRepository;
-    private final ObstacleRepository obstacleRepository;
+    private final GameStore gameStore;
+    private final HealStore healStore;
+    private final MapDataStore mapDataStore;
+    private final ObstacleStore obstacleStore;
     private final PowerUpService powerUpService;
 
-    public GameService(GameRepository gameRepository,
-                       HealRepository healRepository,
-                       MapDataRepository mapDataRepository,
-                       ObstacleRepository obstacleRepository,
+    public GameService(GameStore gameStore,
+                       HealStore healStore,
+                       MapDataStore mapDataStore,
+                       ObstacleStore obstacleStore,
                        PowerUpService powerUpService) {
-        this.gameRepository = gameRepository;
-        this.healRepository = healRepository;
-        this.mapDataRepository = mapDataRepository;
-        this.obstacleRepository = obstacleRepository;
+        this.gameStore = gameStore;
+        this.healStore = healStore;
+        this.mapDataStore = mapDataStore;
+        this.obstacleStore = obstacleStore;
         this.powerUpService = powerUpService;
     }
 
-    @Transactional
     public void deleteGame(String code){
-        gameRepository.deleteByCode(code);
-        mapDataRepository.deleteById(code);
-        healRepository.deleteAllByCode(code);
+        gameStore.deleteByCode(code);
+        mapDataStore.deleteById(code);
+        healStore.deleteAllByCode(code);
         powerUpService.deleteAllByGame(code);
-        obstacleRepository.deleteAllByCode(code);
+        obstacleStore.deleteAllByCode(code);
     }
 
     public Game findByCode(String code) {
-        return gameRepository.findById(code).orElseThrow();
+        return gameStore.findById(code);
     }
 }

@@ -3,23 +3,21 @@ package com.dt.minigame.service;
 import com.dt.minigame.model.MapData.Heal;
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
-import com.dt.minigame.repository.HealRepository;
+import com.dt.minigame.stores.HealStore;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 @Service
 public class HealService {
 
-    private final HealRepository healRepository;
+    private final HealStore healStore;
     private final SimpMessageSendingOperations messagingTemplate;
-    public HealService(HealRepository healRepository, SimpMessageSendingOperations messagingTemplate) {
-        this.healRepository = healRepository;
+
+    public HealService(HealStore healStore, SimpMessageSendingOperations messagingTemplate) {
+        this.healStore = healStore;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -33,13 +31,11 @@ public class HealService {
     }
 
     public ArrayList<Heal> findAll() {
-        ArrayList<Heal> heals = new ArrayList<>();
-        healRepository.findAll().forEach(heals::add);
-        return heals;
+        return new ArrayList<>(healStore.findAll());
     }
 
     public void save(Heal heal) {
-        healRepository.save(heal);
+        healStore.save(heal);
     }
 
 }

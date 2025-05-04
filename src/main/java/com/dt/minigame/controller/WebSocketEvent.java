@@ -2,9 +2,8 @@ package com.dt.minigame.controller;
 
 import com.dt.minigame.model.Message;
 import com.dt.minigame.model.MessageType;
-import com.dt.minigame.repository.GameRepository;
-import com.dt.minigame.repository.PlayerRepository;
 import com.dt.minigame.service.GameService;
+import com.dt.minigame.stores.PlayerStore;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -16,12 +15,12 @@ import java.util.Objects;
 @Component
 public class WebSocketEvent {
 
-    private final PlayerRepository playerRepository;
+    private final PlayerStore playerStore;
     private final GameService gameService;
     private final SimpMessageSendingOperations messagingTemplate;
 
-    public WebSocketEvent(PlayerRepository playerRepository, GameService gameService, SimpMessageSendingOperations messagingTemplate) {
-        this.playerRepository = playerRepository;
+    public WebSocketEvent(PlayerStore playerStore, GameService gameService, SimpMessageSendingOperations messagingTemplate) {
+        this.playerStore = playerStore;
         this.gameService = gameService;
         this.messagingTemplate = messagingTemplate;
     }
@@ -31,8 +30,8 @@ public class WebSocketEvent {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) Objects.requireNonNull(headerAccessor.getSessionAttributes()).get("username");
         String code = headerAccessor.getSessionAttributes().get("code").toString();
-        playerRepository.delete(playerRepository.findById(username).orElseThrow());
-        if (playerRepository.findAllByGame(gameService.findByCode(code)).isEmpty()){
+        playerStore.deleteById(username);
+        if (playerStore.findAllByGame(gameService.findByCode(code)).isEmpty()){
             gameService.deleteGame(code);
         }
         Message message = new Message(username, "Left the game", MessageType.LEFT, code);

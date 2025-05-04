@@ -1,7 +1,7 @@
 package com.dt.minigame.service;
 
 import com.dt.minigame.model.Player;
-import com.dt.minigame.repository.PlayerRepository;
+import com.dt.minigame.stores.PlayerStore;
 import com.dt.minigame.util.Constant;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -14,10 +14,10 @@ import java.util.List;
 @EnableAsync
 public class AsyncService {
 
-    private final PlayerRepository playerRepository;
+    private final PlayerStore playerStore;
 
-    public AsyncService(PlayerRepository playerRepository) {
-        this.playerRepository = playerRepository;
+    public AsyncService(PlayerStore playerStore) {
+        this.playerStore = playerStore;
     }
 
     @Async
@@ -32,7 +32,7 @@ public class AsyncService {
             shotPlayer.setY(0);
             shotPlayer.setHp(Constant.MAX_HP);
             shotPlayer.setRespawnTimer(Constant.RESPAWN_TIMER);
-            playerRepository.saveAll(List.of(killer, shotPlayer));
+            playerStore.saveAll(List.of(killer, shotPlayer));
         } else {
             int rest = shotPlayer.getShield() - damage;
             shotPlayer.setShield(shotPlayer.getShield() - damage);
@@ -40,7 +40,7 @@ public class AsyncService {
                 shotPlayer.setHp(shotPlayer.getHp() - Math.abs(rest));
                 shotPlayer.setShield(0);
             }
-            playerRepository.save(shotPlayer);
+            playerStore.save(shotPlayer);
         }
     }
 }
