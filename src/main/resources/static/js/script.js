@@ -147,22 +147,22 @@ fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
         map = data;
-        for (let i = 0; i < map.heal_pads.length; i++){
-            heal.set(map.heal_pads[i].id,new Heal(map.heal_pads[i].id,map.heal_pads[i].x,map.heal_pads[i].y,settings.healHitBoxWidth,settings.healHitBoxHeight));
+        for (const element of map.healPads) {
+            heal.set(element.id, new Heal(element.id, element.x, element.y, settings.healHitBoxWidth,settings.healHitBoxHeight));
         }
         fetch("/get-all-player/" + code)
             .then(response => response.json())
             .then(data => {
-                for (let i = 0; i < data.length; i++){
-                    if (data[i].username !== username){
-                        const p = new Player(data[i].username);
-                        p.weapon = getWeaponFromString(data[i].weapon);
-                        p.x = data[i].x;
-                        p.y = data[i].y;
-                        p.angle = data[i].angle;
-                        p.killCounter = data[i].killCounter;
-                        p.deathCounter = data[i].deathCounter;
-                        p.alive = data[i].alive;
+                for (const element of data) {
+                    if (element.username !== username) {
+                        const p = new Player(element.username);
+                        p.weapon = getWeaponFromString(element.weapon);
+                        p.x = element.x;
+                        p.y = element.y;
+                        p.angle = element.angle;
+                        p.killCounter = element.killCounter;
+                        p.deathCounter = element.deathCounter;
+                        p.alive = element.alive;
                         players.set(p.username,p);
                         addPlayerCard(p);
                     }

@@ -4,7 +4,7 @@
   "width": 1000,
   "height": 400,
   "obstacles": [
-      {"x": 40, "y": 40, "width": 60, "height": 5},
+      { "x": 40, "y": 40, "width": 60, "height": 5},
       { "x": 40, "y": 40, "width": 5, "height": 60 },
       { "x": 140, "y": 70, "width": 5, "height": 60 },
       { "x": 250, "y": 120, "width": 75, "height": 20 },
@@ -25,18 +25,18 @@
       { "x": 854, "y": 310, "width": 10, "height": 55 },
       { "x": 914, "y": 370, "width": 50, "height": 5 }
   ],
-  "spawn_points": [
+  "spawnPoints": [
     { "x": 10, "y": 200 },
     { "x": 990, "y": 200 }
   ],
-  "power_up_spawn": [
+  "powerUpSpawn": [
     { "x": 300, "y": 300},
     { "x": 560, "y": 70},
     { "x": 780, "y": 170},
     { "x": 140, "y": 250},
     { "x": 600, "y": 290}
   ],
-  "heal_pad_spawn": [
+  "healPadSpawn": [
     {"x": 100, "y": 100},
     {"x": 430, "y": 130},
     {"x": 700, "y": 180}
