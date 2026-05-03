@@ -1,0 +1,32 @@
+{
+  "name": "chaos",
+  "player": 2,
+  "width": 800,
+  "height": 800,
+  "obstacles": [
+    { "x": 80, "y": 120, "width": 240, "height": 10 },
+    { "x": 480, "y": 670, "width": 240, "height": 10 },
+
+    { "x": 320, "y": 200, "width": 20, "height": 400 },
+    { "x": 460, "y": 120, "width": 20, "height": 400 },
+
+    { "x": 200, "y": 400, "width": 80, "height": 20 },
+    { "x": 520, "y": 380, "width": 100, "height": 20 },
+
+    { "x": 380, "y": 0, "width": 40, "height": 120 },
+    { "x": 380, "y": 680, "width": 40, "height": 120 }
+  ],
+  "spawnPoints": [
+    { "x": 50, "y": 100 },
+    { "x": 750, "y": 700 }
+  ],
+  "powerUpSpawn": [
+    { "x": 400, "y": 400 },
+    { "x": 250, "y": 600 },
+    { "x": 550, "y": 200 }
+  ],
+  "healPadSpawn": [
+    { "x": 120, "y": 700 },
+    { "x": 680, "y": 100 }
+  ]
+}

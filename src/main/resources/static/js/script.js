@@ -48,6 +48,7 @@ function gameLoop(currentTime){
             lastTime = currentTime - (elapsed % fpsInterval);
             update();
             draw();
+            drawMiniMap();
         }
     }
 }
@@ -147,6 +148,7 @@ fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
         map = data;
+        document.getElementById('map-name').innerText = map.name;
         for (const element of map.healPads) {
             heal.set(element.id, new Heal(element.id, element.x, element.y, settings.healHitBoxWidth,settings.healHitBoxHeight));
         }

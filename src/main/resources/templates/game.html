@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body class="p-5">
-<h1>Code: <span id="game-code"></span></h1>
+<h1>Map: <span id="map-name"></span> Code: <span id="game-code"></span></h1>
 <div class="d-flex justify-content-between">
     <div id="player">
 
@@ -28,6 +28,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h2><span id="hp">100</span> HP <span id="shield"> 0</span> SH</h2>
                 <div id="powerup-box" class="powerup-box"></div>
+                <canvas id="minimap" width="80" height="80"></canvas>
             </div>
         </div>
         <div id="change-weapon-info">
@@ -96,6 +97,7 @@
 <script src="/js/model/Bomb.js"></script>
 <script src="/js/model/LaserGun.js"></script>
 <script src="/js/Draw.js"></script>
+<script src="/js/DrawMiniMap.js"></script>
 <script src="/js/WebSocketMessageHandler/Messages/DELETE_BULLET.js"></script>
 <script src="/js/WebSocketMessageHandler/Messages/END_GAME.js"></script>
 <script src="/js/WebSocketMessageHandler/Messages/EVENT.js"></script>

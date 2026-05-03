@@ -53,7 +53,7 @@ function draw() {
     map.obstacles.forEach(drawObstacle);
 }
 function drawObstacle(obstacle) {
-    ctx.fillStyle = "rgb(93,120,85)";
+    ctx.fillStyle = settings.obstacleColor;
     ctx.fillRect(obstacle.x - camera.x, obstacle.y - camera.y, obstacle.width, obstacle.height);
 
     ctx.strokeStyle = 'black';

@@ -5,5 +5,6 @@ function SHOOT(message){
     }
     else{
         bullets.set(bulletAttributes.id, new Bullet(bulletAttributes.id,bulletAttributes.x,bulletAttributes.y,bulletAttributes.angle,bulletAttributes.speed))
+        addShootingPoint(bulletAttributes.x, bulletAttributes.y);
     }
 }

@@ -24,4 +24,7 @@ const settings = {
     laserGunDamage: 100,
     shieldAmount: 50,
     flashDistance: 100,
+    minimapScale: 10,
+    minimapShootingPointVisibleFrames: 20,
+    obstacleColor: 'rgb(93,120,85)',
 }
