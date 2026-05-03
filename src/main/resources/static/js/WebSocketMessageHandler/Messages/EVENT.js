@@ -6,6 +6,7 @@ function EVENT(message){
     }
     if (message.content === 'Destruction') {
         currentEvent = message.content;
+        map.obstacles = [];
         changeEventLabel("Destruction!");
     }
     if (message.content === 'Tower') {
@@ -15,6 +16,7 @@ function EVENT(message){
 }
 
 function changeEventLabel(name) {
+    document.getElementById('current_event').classList.remove('hidden');
     document.getElementById('current_event').innerText = name;
     document.getElementById('event_information').classList.remove('hidden');
 }

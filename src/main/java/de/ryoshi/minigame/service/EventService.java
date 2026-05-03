@@ -43,19 +43,17 @@ public class EventService {
             if (game.getCurrentEventTime() <= 0){
                 stopEvent(game);
             }
-            switch (game.getCurrentEvent()) {
-                case "Tower": {
-                    Random random = new Random();
-                    double x = random.nextDouble(game.getMapData().getWidth());
-                    double y = random.nextDouble(game.getMapData().getHeight());
+            if (game.getCurrentEvent() != null && game.getCurrentEvent().equals("Tower")) {
+                Random random = new Random();
+                double x = random.nextDouble(game.getMapData().getWidth());
+                double y = random.nextDouble(game.getMapData().getHeight());
 
-                    Message message = new Message();
-                    message.setType(MessageType.TOWER);
-                    message.setPlayer("server");
-                    message.setContent(x + "," + y + "," + game.getTime());
-                    message.setCode(game.getCode());
-                    messagingTemplate.convertAndSend("/start-game/game/" + game.getCode(),message);
-                }
+                Message message = new Message();
+                message.setType(MessageType.TOWER);
+                message.setPlayer("server");
+                message.setContent(x + "," + y + "," + game.getTime());
+                message.setCode(game.getCode());
+                messagingTemplate.convertAndSend("/start-game/game/" + game.getCode(),message);
             }
         }
     }

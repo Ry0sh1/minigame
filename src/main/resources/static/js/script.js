@@ -10,6 +10,7 @@ let currentDeathTimer = 0;
 let firstSpawn = true;
 
 let map;
+let obstacleTemp;
 
 const heal = new Map();
 const powerUps = new Map();
@@ -148,6 +149,7 @@ fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {
         map = data;
+        obstacleTemp = structuredClone(map.obstacles);
         document.getElementById('map-name').innerText = map.name;
         for (const element of map.healPads) {
             heal.set(element.id, new Heal(element.id, element.x, element.y, settings.healHitBoxWidth,settings.healHitBoxHeight));
