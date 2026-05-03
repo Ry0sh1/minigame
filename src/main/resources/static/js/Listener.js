@@ -17,6 +17,7 @@ document.addEventListener('keypress', (e) => {
             );
             player.currentPowerup = null;
             document.getElementById('powerup-display').remove();
+            document.getElementById('current-item').innerText = "";
         }
     }
 });

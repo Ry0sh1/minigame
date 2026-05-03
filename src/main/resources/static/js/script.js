@@ -145,6 +145,43 @@ function getWeaponFromString(weaponString){
         case 'rifle': return rifle;
     }
 }
+function addChangeWeaponHTML() {
+    weapons.forEach(weapon => {
+        let html = `
+         <div class="card" id="${weapon.name}">
+            <img src="${weapon.src}" class="card-img-top card-image" alt="${weapon.name}">
+            <div class="card-body">
+                <h3 class="card-title text-center">${weapon.name}</h3>
+                <div>
+                    <ul class="stat-list list-unstyled px-4 py-2 m-auto">
+                        <li>
+                          <i class='bx bxs-chevrons-right'></i>
+                          <span>BulletSpeed</span> 
+                          <p>${weapon.speed}</p>
+                        </li>
+                        <li>
+                          <i class='bx bx-revision' ></i>
+                          <span>ReloadTime</span>
+                          <p>${weapon.reloadFrames}</p>
+                        </li>
+                        <li>
+                          <i class='bx bx-cross' ></i>
+                          <span>Damage</span>
+                          <p>${weapon.damage}</p>
+                        </li>
+                        <li>
+                          <i class='bx bx-trending-up' ></i>
+                          <span>Range</span>
+                          <p>${weapon.range}</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+         </div>`;
+        document.getElementById('change-weapon').insertAdjacentHTML("beforeend", html);
+    })
+}
+addChangeWeaponHTML();
 fetch("/get-map-data/" + code, {method: 'GET'})
     .then(response => response.json())
     .then(data => {

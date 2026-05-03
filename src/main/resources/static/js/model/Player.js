@@ -80,6 +80,7 @@ class Player {
                 }
                 let template = `<img id="powerup-display" src="${src}" alt="${p.name} Powerup Display">`;
                 document.getElementById('powerup-box').insertAdjacentHTML('beforeend', template);
+                document.getElementById('current-item').innerText = p.name;
                 this.currentPowerup = p.name;
                 stompClient.send("/app/game.take-powerup/" + code,
                     {},

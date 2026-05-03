@@ -33,20 +33,29 @@ body{
 .card:hover{
     box-shadow: 0 0 12px 12px rgba(0, 0, 0, 0.1);
 }
-.bx{
-    font-size: 2rem;
-}
-.stat-list li{
+.stat-list li {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 10px;
     font-weight: bold;
 }
-.stat-list li p{
-    vertical-align: middle;
+.stat-list li p {
     margin: 0;
+    text-align: right;
+}
+.player-info-img {
+    height: 2rem !important;
+    width: auto;
+}
+.game-button {
+    padding: 12px;
+    border: black solid 1px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px 8px rgba(0, 0, 0, 0.1);
+}
+.bx{
+    font-size: 2rem;
 }
 .hidden{
     display: none !important;
