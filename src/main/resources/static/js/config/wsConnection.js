@@ -71,4 +71,7 @@ function onMessageReceived(payload){
     if (message.type === 'USE_POWERUP'){
         USE_POWERUP(message);
     }
+    if (message.type === 'TOWER')  {
+        TOWER(message);
+    }
 }

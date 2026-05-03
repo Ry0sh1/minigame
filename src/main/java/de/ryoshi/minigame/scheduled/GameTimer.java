@@ -45,10 +45,7 @@ public class GameTimer {
                     stopGame(game);
                 }
                 if (game.isEvent()){
-                    game.setCurrentEventTime(game.getCurrentEventTime() - 1);
-                    if (game.getCurrentEventTime() <= 0){
-                        eventService.stopEvent(game);
-                    }
+                    eventService.handleEvent(game);
                 }
                 sendTimer(game);
             }

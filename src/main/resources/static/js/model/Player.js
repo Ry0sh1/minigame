@@ -39,10 +39,6 @@ class Player {
                 JSON.stringify({type: 'POSITION', player: this.username, content: proposedPosition.x + ',' + proposedPosition.y, code: code})
             );
         }
-        stompClient.send("/app/game.view-angle/" + code,
-            {},
-            JSON.stringify({type: 'VIEW_ANGLE', player: username,content: this.angle, code: code})
-        );
     }
 
     isTouchingHeal(){

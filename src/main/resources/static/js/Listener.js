@@ -40,6 +40,10 @@ canvas.addEventListener('mousemove', (event) => {
         let rx = (player.x + player.width / 2) - camera.x;
         let ry = (player.y + player.height / 2) - camera.y;
         player.angle = Math.atan2(mouseY - ry, mouseX - rx);
+        stompClient.send("/app/game.view-angle/" + code,
+            {},
+            JSON.stringify({type: 'VIEW_ANGLE', player: username,content: player.angle, code: code})
+        );
     }
 });
 

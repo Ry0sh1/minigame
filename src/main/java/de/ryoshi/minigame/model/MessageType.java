@@ -21,4 +21,5 @@ public enum MessageType {
     SPAWN_POWERUP,
     TAKE_POWERUP,
     USE_POWERUP,
+    TOWER,
 }

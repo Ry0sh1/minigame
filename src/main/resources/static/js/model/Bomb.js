@@ -8,14 +8,20 @@ class Bomb{
     damage;
     exploded;
     bombAfterLifeTimer;
+
     constructor(p,id,x,y,ex) {
         this.p = p;
         this.id = id;
         this.x = x;
         this.y = y;
         this.timer = settings.bombTimer;
-        this.radius = settings.bombRadius;
-        this.damage = settings.bombDamage;
+        if (p === "server") {
+            this.radius = settings.bombRadius / 2;
+            this.damage = settings.bombDamage / 2;
+        } else {
+            this.radius = settings.bombRadius;
+            this.damage = settings.bombDamage;
+        }
         this.exploded = ex;
         this.bombAfterLifeTimer = settings.bombAfterLifeTimer;
     }
@@ -43,6 +49,14 @@ class Bomb{
 
     explode(){
         this.exploded = true;
+        if (this.p === "server") {
+            if (this.isPlayerInRadius(player)) {
+                stompClient.send("/app/game.player-hit/" + code,
+                    {},
+                    JSON.stringify({type: 'PLAYER_HIT', player: "server", content: player.username + "," + this.damage, code: code})
+                );
+            }
+        }
         if (this.p !== username){
             return;
         }
