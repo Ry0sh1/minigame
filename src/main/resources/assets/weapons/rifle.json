@@ -5,6 +5,6 @@
   "reloadFrames": 10,
   "damage": 10,
   "bulletRadius": 3,
-  "sprayRadius": 4,
+  "sprayRadius": 12,
   "bulletCount": 1
 }

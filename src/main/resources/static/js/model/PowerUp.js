@@ -12,21 +12,5 @@ class PowerUp {
         this.y = y;
     }
 
-    drawPowerup(ctx) {
-        if (this.name === "laser-gun"){
-            ctx.drawImage(laserImage, this.x - camera.x, this.y - camera.y, laserImage.width, laserImage.height);
-        } else if(this.name === "shield"){
-            ctx.drawImage(shieldImage, this.x - camera.x, this.y - camera.y, shieldImage.width, shieldImage.height);
-        } else if(this.name === "bomb"){
-            ctx.drawImage(bombImage, this.x - camera.x, this.y - camera.y, bombImage.width, bombImage.height);
-        } else if(this.name === "speed"){
-            ctx.drawImage(speedImage, this.x - camera.x, this.y - camera.y, speedImage.width, speedImage.height);
-        } else if(this.name === "flash"){
-            ctx.drawImage(flashImage, this.x - camera.x, this.y - camera.y, flashImage.width, flashImage.height);
-        }else{
-            //No texture
-            ctx.fillStyle = "rgb(255,0,0)";
-            ctx.fillRect(this.x - camera.x, this.y - camera.y, laserImage.width, laserImage.height);
-        }
-    }
+
 }

@@ -1,16 +1,16 @@
 document.addEventListener('keydown', (e) => {
-    if (e.key in keys) {
+    if (keys.includes(e.key)) {
         stompClient.send("/app/game.move/" + code,
             {},
-            JSON.stringify({type: 'MOVE', player: this.username, content: e.key, code: code})
+            JSON.stringify({type: 'MOVE', player: username, content: e.key, code: code})
         );
     }
 });
 document.addEventListener('keyup', (e) => {
-    if (e.key in keys) {
+    if (keys.includes(e.key)) {
         stompClient.send("/app/game.stop-move/" + code,
             {},
-            JSON.stringify({type: 'STOP_MOVE', player: this.username, content: e.key, code: code})
+            JSON.stringify({type: 'STOP_MOVE', player: username, content: e.key, code: code})
         );
     }
 });
@@ -19,7 +19,7 @@ document.addEventListener('keypress', (e) => {
         if (player.currentPowerup != null){
             stompClient.send("/app/game.use-powerup/" + code,
                 {},
-                JSON.stringify({type: 'USE_POWERUP', player: username,content: player.currentPowerup, code: code})
+                JSON.stringify({type: 'USE_POWERUP', player: username, content: player.currentPowerup, code: code})
             );
             player.currentPowerup = null;
             document.getElementById('powerup-display').remove();
@@ -31,7 +31,7 @@ canvas.addEventListener('mousedown', (e) => {
     if (e.button === 0){
         stompClient.send("/app/game.shoot/" + code,
             {},
-            JSON.stringify({type: 'SHOOT', player: this.username, content: true, code: code})
+            JSON.stringify({type: 'SHOOT', player: username, content: true, code: code})
         );
     }
 });
@@ -39,25 +39,23 @@ canvas.addEventListener('mouseup', (e) => {
     if (e.button === 0){
         stompClient.send("/app/game.shoot/" + code,
             {},
-            JSON.stringify({type: 'SHOOT', player: this.username, content: false, code: code})
+            JSON.stringify({type: 'SHOOT', player: username, content: false, code: code})
         );
     }
 });
 
 canvas.addEventListener('mousemove', (event) => {
-    if (player.alive){
-        const rect = canvas.getBoundingClientRect();
-        mouseX = event.clientX - rect.left;
-        mouseY = event.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
 
-        let rx = (player.x + player.width / 2) - camera.x;
-        let ry = (player.y + player.height / 2) - camera.y;
-        player.angle = Math.atan2(mouseY - ry, mouseX - rx);
-        stompClient.send("/app/game.view-angle/" + code,
-            {},
-            JSON.stringify({type: 'VIEW_ANGLE', player: username,content: player.angle, code: code})
-        );
-    }
+    let rx = (player.x + player.width / 2) - camera.x;
+    let ry = (player.y + player.height / 2) - camera.y;
+    player.angle = Math.atan2(mouseY - ry, mouseX - rx);
+    stompClient.send("/app/game.view-angle/" + code,
+        {},
+        JSON.stringify({type: 'VIEW_ANGLE', player: username, content: player.angle, code: code})
+    );
 });
 
 document.getElementById('change-weapon-button').addEventListener("click", () => {

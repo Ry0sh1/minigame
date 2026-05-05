@@ -6,7 +6,6 @@ let username = localStorage.getItem("username");
 let player;
 let camera;
 let currentEvent = null;
-let currentDeathTimer = 0;
 
 let weaponList = [];
 
@@ -49,7 +48,7 @@ function getWeaponSrc(name){
 function addChangeWeaponHTML() {
     weaponList.forEach(weapon => {
         let html = `
-         <div class="card" id="${weapon.name}" onclick="weaponChange(${weapon.name})">
+         <div class="card" id="${weapon.name}" onclick="weaponChange('${weapon.name}')">
             <img src="${getWeaponSrc(weapon.name)}" class="card-img-top card-image" alt="${weapon.name}">
             <div class="card-body">
                 <h3 class="card-title text-center">${weapon.name}</h3>
@@ -89,7 +88,6 @@ fetch("/get-game-data/" + code, {method: 'GET'})
         map = gameData.mapData;
         weaponList = gameData.weaponList;
         addChangeWeaponHTML();
-        console.log(gameData)
         obstacleTemp = structuredClone(map.obstacles);
         document.getElementById('map-name').innerText = map.name;
         players = gameData.gameState.players;

@@ -17,15 +17,6 @@ function onConnected(){
 
 function onMessageReceived(payload){
     let message = (JSON.parse(payload.body));
-    if (message.type === 'JOIN'){
-        JOIN(message);
-    }
-    if (message.type === 'LEFT'){
-        LEFT(message);
-    }
-    if (message.type === 'SPAWN'){
-        SPAWN(message);
-    }
     if (message.type === 'USE_POWERUP'){
         USE_POWERUP(message);
     }

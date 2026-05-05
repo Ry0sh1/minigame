@@ -2,21 +2,27 @@ package de.ryoshi.minigame.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.ryoshi.minigame.model.*;
+import de.ryoshi.minigame.model.AbstractGameObject;
+import de.ryoshi.minigame.model.Bullet;
+import de.ryoshi.minigame.model.Game;
+import de.ryoshi.minigame.model.GameStateMessage;
+import de.ryoshi.minigame.model.Input;
+import de.ryoshi.minigame.model.Message;
+import de.ryoshi.minigame.model.MessageType;
+import de.ryoshi.minigame.model.Obstacle;
+import de.ryoshi.minigame.model.Player;
+import de.ryoshi.minigame.model.Position;
 import de.ryoshi.minigame.service.EventService;
 import de.ryoshi.minigame.service.GameService;
 import de.ryoshi.minigame.stores.GameStore;
 import de.ryoshi.minigame.stores.PlayerStore;
 import de.ryoshi.minigame.util.Constant;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Component
 @RequiredArgsConstructor
@@ -61,7 +67,7 @@ public class GameTimer {
         });
     }
 
-    @Scheduled(fixedRate = 50)
+    @Scheduled(fixedRate = 16)
     public void gameLoop() {
         gameStore.findAll().forEach(game -> {
             if (!game.isRunning()) return;
@@ -123,9 +129,9 @@ public class GameTimer {
         for (Player player : playerStore.findAllByGame(game)) {
             if (!player.isAlive()) continue;
             if (bullet.getX() + bullet.getRadius() >= player.getX() &&
-                    bullet.getX() <= player.getX() + Constant.PLAYER_WIDTH &&
+                    bullet.getX() <= player.getX() + player.getWidth() &&
                     bullet.getY() + bullet.getRadius() >= player.getY() &&
-                    bullet.getY() <= player.getY() + Constant.PLAYER_HEIGHT){
+                    bullet.getY() <= player.getY() + player.getHeight()){
 
                 Player killer = playerStore.findById(bullet.getPlayerID());
 
@@ -176,10 +182,10 @@ public class GameTimer {
             }
 
             if (player.getInput().isShoot() && !player.isReloading()) {
-                double centerX = (player.getX() + Constant.PLAYER_WIDTH / 2.0);
-                double centerY  = (player.getY() + Constant.PLAYER_HEIGHT / 2.0);
+                double centerX = (player.getX() + player.getWidth() / 2.0);
+                double centerY  = (player.getY() + player.getHeight() / 2.0);
 
-                double spawnDistance = Math.max(Constant.PLAYER_WIDTH, Constant.PLAYER_HEIGHT) / 2.0 + player.getWeapon().getBulletRadius();
+                double spawnDistance = Math.max(player.getWidth(), player.getHeight()) / 2.0 + player.getWeapon().getBulletRadius();
 
                 double bulletSpawnX = centerX + spawnDistance * Math.cos(player.getAngle());
                 double bulletSpawnY = centerY + spawnDistance * Math.sin(player.getAngle());
@@ -223,23 +229,23 @@ public class GameTimer {
             }
 
             game.getObstacleStore().getAll().forEach(obstacle -> {
-                if (pos.getX() + Constant.PLAYER_WIDTH > obstacle.getX() && pos.getX() < obstacle.getX() &&
-                        pos.getY() + Constant.PLAYER_HEIGHT > obstacle.getY() && pos.getY() < obstacle.getY() + obstacle.getHeight()) {
-                    pos.setX(obstacle.getX() - Constant.PLAYER_WIDTH);
+                if (pos.getX() + player.getWidth() > obstacle.getX() && pos.getX() < obstacle.getX() &&
+                        pos.getY() + player.getHeight() > obstacle.getY() && pos.getY() < obstacle.getY() + obstacle.getHeight()) {
+                    pos.setX(obstacle.getX() - player.getWidth());
                 }
 
-                if (pos.getX() < obstacle.getX() + obstacle.getWidth() && pos.getX() + Constant.PLAYER_WIDTH > obstacle.getX() + obstacle.getWidth() &&
-                        pos.getY() + Constant.PLAYER_HEIGHT > obstacle.getY() && pos.getY() < obstacle.getY() + obstacle.getHeight()) {
+                if (pos.getX() < obstacle.getX() + obstacle.getWidth() && pos.getX() + player.getWidth() > obstacle.getX() + obstacle.getWidth() &&
+                        pos.getY() + player.getHeight() > obstacle.getY() && pos.getY() < obstacle.getY() + obstacle.getHeight()) {
                     pos.setX(obstacle.getX() + obstacle.getWidth());
                 }
 
-                if (pos.getY() + Constant.PLAYER_HEIGHT > obstacle.getY() && pos.getY() < obstacle.getY() &&
-                        pos.getX() + Constant.PLAYER_WIDTH > obstacle.getX() && pos.getX() < obstacle.getX() + obstacle.getWidth()) {
-                    pos.setY(obstacle.getY() - Constant.PLAYER_HEIGHT);
+                if (pos.getY() + player.getHeight() > obstacle.getY() && pos.getY() < obstacle.getY() &&
+                        pos.getX() + player.getWidth() > obstacle.getX() && pos.getX() < obstacle.getX() + obstacle.getWidth()) {
+                    pos.setY(obstacle.getY() - player.getHeight());
                 }
 
-                if (pos.getY() < obstacle.getY() + obstacle.getHeight() && pos.getY() + Constant.PLAYER_HEIGHT > obstacle.getY() + obstacle.getHeight() &&
-                        pos.getX() + Constant.PLAYER_WIDTH > obstacle.getX() && pos.getX() < obstacle.getX() + obstacle.getWidth()) {
+                if (pos.getY() < obstacle.getY() + obstacle.getHeight() && pos.getY() + player.getHeight() > obstacle.getY() + obstacle.getHeight() &&
+                        pos.getX() +player.getWidth() > obstacle.getX() && pos.getX() < obstacle.getX() + obstacle.getWidth()) {
                     pos.setY(obstacle.getY() + obstacle.getHeight());
                 }
             });
@@ -255,17 +261,18 @@ public class GameTimer {
             });
             game.getPowerUpStore().getAll().forEach(powerUp -> {
                 if (isColliding(player, powerUp)){
+                    player.setCurrentPowerUp(powerUp);
                     game.powerUpPicked(powerUp.getId());
                 }
             });
-        };
+        }
     }
 
     private boolean isColliding(Player p, AbstractGameObject o) {
         return  p.getX() >= o.getX() && p.getX() <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() >= o.getY() && p.getY() <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT ||
-                p.getX() >= o.getX() && p.getX() <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() + Constant.PLAYER_HEIGHT >= o.getY() && p.getY() + Constant.PLAYER_HEIGHT <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT ||
-                p.getX() + Constant.PLAYER_WIDTH >= o.getX() && p.getX() + Constant.PLAYER_WIDTH <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() + Constant.PLAYER_HEIGHT >= o.getY() && p.getY() + Constant.PLAYER_HEIGHT <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT ||
-                p.getX() + Constant.PLAYER_WIDTH >= o.getX() && p.getX() + Constant.PLAYER_WIDTH <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() >= o.getY() && p.getY() <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT;
+                p.getX() >= o.getX() && p.getX() <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() + p.getHeight() >= o.getY() && p.getY() + p.getHeight() <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT ||
+                p.getX() + p.getWidth() >= o.getX() && p.getX() + p.getWidth() <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() + p.getHeight() >= o.getY() && p.getY() + p.getHeight() <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT ||
+                p.getX() + p.getWidth() >= o.getX() && p.getX() + p.getWidth() <= o.getX() + Constant.POWERUP_PICKUP_WIDTH && p.getY() >= o.getY() && p.getY() <= o.getY() + Constant.POWERUP_PICKUP_HEIGHT;
     }
 
     private void respawnPlayer(Player player) {

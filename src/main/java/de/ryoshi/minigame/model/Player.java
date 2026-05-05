@@ -14,6 +14,8 @@ public class Player {
     private String username;
     private double x;
     private double y;
+    private double width;
+    private double height;
     private Input input;
     private int killCounter;
     private int deathCounter;
@@ -26,6 +28,7 @@ public class Player {
     private int respawnTimer;
     private double angle;
     private String gameCode;
+    private PowerUp currentPowerUp;
 
     public Player(String username, String gameCode) {
         this.gameCode = gameCode;
@@ -37,6 +40,9 @@ public class Player {
         this.isReloading = false;
         this.input = new Input();
         this.currentReloadFrame = 0;
+        this.width = Constant.PLAYER_WIDTH;
+        this.height = Constant.PLAYER_HEIGHT;
+        this.currentPowerUp = null;
     }
 
     @Override

@@ -9,7 +9,7 @@ function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     for (let p of players) {
-        if (p.alive){
+        if (p.alive && p.weapon !== null){
             ctx.save();
             ctx.translate(p.x - camera.x + 6, p.y - camera.y + 6);
             ctx.rotate(p.angle + Math.PI / 2);
@@ -36,11 +36,28 @@ function draw() {
         }
     }
     for (let p of powerUps){
-        p.drawPowerup(ctx);
+        drawPowerup(p);
     }
     //TODO: Draw PowerUp Uses
     ctx.restore();
     map.obstacles.forEach(drawObstacle);
+}
+function drawPowerup(powerup) {
+    if (powerup.name === "laser-gun"){
+        ctx.drawImage(laserImage, powerup.x - camera.x, powerup.y - camera.y, laserImage.width, laserImage.height);
+    } else if(powerup.name === "shield"){
+        ctx.drawImage(shieldImage, powerup.x - camera.x, powerup.y - camera.y, shieldImage.width, shieldImage.height);
+    } else if(powerup.name === "bomb"){
+        ctx.drawImage(bombImage, powerup.x - camera.x, powerup.y - camera.y, bombImage.width, bombImage.height);
+    } else if(powerup.name === "speed"){
+        ctx.drawImage(speedImage, powerup.x - camera.x, powerup.y - camera.y, speedImage.width, speedImage.height);
+    } else if(powerup.name === "flash"){
+        ctx.drawImage(flashImage, powerup.x - camera.x, powerup.y - camera.y, flashImage.width, flashImage.height);
+    }else{
+        //No texture
+        ctx.fillStyle = "rgb(255,0,0)";
+        ctx.fillRect(powerup.x - camera.x, powerup.y - camera.y, laserImage.width, laserImage.height);
+    }
 }
 function drawObstacle(obstacle) {
     ctx.fillStyle = settings.obstacleColor;

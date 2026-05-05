@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.ryoshi.minigame.model.Message;
 import de.ryoshi.minigame.model.Player;
 import de.ryoshi.minigame.model.Position;
-import de.ryoshi.minigame.scheduled.GameTimer;
 import de.ryoshi.minigame.service.WeaponService;
 import de.ryoshi.minigame.stores.GameStore;
 import de.ryoshi.minigame.stores.PlayerStore;
