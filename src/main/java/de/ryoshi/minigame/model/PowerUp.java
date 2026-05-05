@@ -7,13 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class PowerUp extends AbstractGameObject {
 
     private String name;
-    private double x;
-    private double y;
     private String code;
 
     @Override

@@ -1,0 +1,10 @@
+{
+  "name": "shotgun",
+  "speed": 8,
+  "range": 165,
+  "reloadFrames": 30,
+  "damage": 20,
+  "bulletRadius": 3,
+  "sprayRadius": 20,
+  "bulletCount": 8
+}

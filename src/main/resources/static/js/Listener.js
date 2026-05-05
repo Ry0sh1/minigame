@@ -1,11 +1,17 @@
 document.addEventListener('keydown', (e) => {
     if (e.key in keys) {
-        keys[e.key] = true;
+        stompClient.send("/app/game.move/" + code,
+            {},
+            JSON.stringify({type: 'MOVE', player: this.username, content: e.key, code: code})
+        );
     }
 });
 document.addEventListener('keyup', (e) => {
     if (e.key in keys) {
-        keys[e.key] = false;
+        stompClient.send("/app/game.stop-move/" + code,
+            {},
+            JSON.stringify({type: 'STOP_MOVE', player: this.username, content: e.key, code: code})
+        );
     }
 });
 document.addEventListener('keypress', (e) => {
@@ -23,12 +29,18 @@ document.addEventListener('keypress', (e) => {
 });
 canvas.addEventListener('mousedown', (e) => {
     if (e.button === 0){
-        mouseDown = true;
+        stompClient.send("/app/game.shoot/" + code,
+            {},
+            JSON.stringify({type: 'SHOOT', player: this.username, content: true, code: code})
+        );
     }
 });
 canvas.addEventListener('mouseup', (e) => {
     if (e.button === 0){
-        mouseDown = false;
+        stompClient.send("/app/game.shoot/" + code,
+            {},
+            JSON.stringify({type: 'SHOOT', player: this.username, content: false, code: code})
+        );
     }
 });
 
@@ -48,34 +60,15 @@ canvas.addEventListener('mousemove', (event) => {
     }
 });
 
-document.getElementById('rifle').addEventListener("click", () => {
-    weaponChange(rifle);
-})
-document.getElementById('sniper').addEventListener("click", () => {
-    weaponChange(sniper);
-})
-document.getElementById('shotgun').addEventListener("click", () => {
-    weaponChange(shotgun);
-})
 document.getElementById('change-weapon-button').addEventListener("click", () => {
     document.getElementById('change-weapon').classList.remove("hidden");
     document.getElementById('change-weapon-button').classList.add("hidden");
 })
-function weaponChange(weapon){
-    player.weapon = weapon;
+function weaponChange(weaponName){
     document.getElementById('change-weapon').classList.add('hidden');
-    if (firstSpawn){
-        stompClient.send("/app/game.spawn/" + code,
-            {},
-            JSON.stringify({type: 'SPAWN', player: username,content: player.weapon.name, code: code})
-        );
-        document.getElementById('game-main').classList.remove('hidden');
-        firstSpawn = false;
-    }else {
-        document.getElementById('change-weapon-button').classList.remove('hidden');
-        stompClient.send("/app/game.change-weapon/" + code,
-            {},
-            JSON.stringify({type: 'CHANGE_WEAPON', player: username,content: player.weapon.name, code: code})
-        );
-    }
+    document.getElementById('change-weapon-button').classList.remove('hidden');
+    stompClient.send("/app/game.change-weapon/" + code,
+        {},
+        JSON.stringify({type: 'CHANGE_WEAPON', player: username,content: weaponName, code: code})
+    );
 }

@@ -7,149 +7,50 @@ let player;
 let camera;
 let currentEvent = null;
 let currentDeathTimer = 0;
-let firstSpawn = true;
+
+let weaponList = [];
 
 let map;
 let obstacleTemp;
 
-const heal = new Map();
-const powerUps = new Map();
-
 let mouseX = 0;
 let mouseY = 0;
 
-const players = new Map();
+let players = [];
+let bullets = [];
+let heals = [];
+let powerUps = [];
 
-const keys = {
-    w: false,
-    a: false,
-    s: false,
-    d: false,
-};
-
-let mouseDown = false;
-
-const bullets = new Map();
-const playerBullets = new Map();
+const keys = ["w","a","s","d"];
 const bombs = new Map();
 const laserGuns = new Map();
 
 let lastTime = 0;
 const fpsInterval = 1000 / settings.fps;
 
-let reloading = false;
-let reloadTime = 0;
-
 function gameLoop(currentTime){
     requestAnimationFrame(gameLoop);
-    if (!firstSpawn && player.alive){
-        const elapsed = currentTime - lastTime;
+    const elapsed = currentTime - lastTime;
 
-        if (elapsed > fpsInterval) {
-            lastTime = currentTime - (elapsed % fpsInterval);
-            update();
-            draw();
-            drawMiniMap();
-        }
+    if (elapsed > fpsInterval) {
+        lastTime = currentTime - (elapsed % fpsInterval);
+        draw();
     }
 }
 
-function update() {
-    if (reloading) {
-        reloadTime++;
-        if (reloadTime % player.weapon.reloadFrames === 0){
-            reloadTime = 0;
-            reloading = false;
-        }
-    }
-
-    player.updatePlayerPosition();
-    camera.follow(player);
-    for (let [key,value] of bullets){
-        value.move();
-    }
-    for (let [key,value] of playerBullets){
-        value.move();
-        if (player.weapon !== shotgun){
-            value.isCollapsing();
-        }
-    }
-    if (player.weapon === shotgun){
-       shotgunCollapsing();
-    }
-    if (mouseDown) shoot();
-    for (let [key,value] of bombs){
-        value.update();
-    }
-    for (let [key,value] of laserGuns){
-        value.update();
+function getWeaponSrc(name){
+    switch (name) {
+        case 'sniper': return "/texture/sniper-side.png";
+        case 'shotgun': return "/texture/shotgun-side.png";
+        case 'rifle': return "/texture/rifle-side.png";
     }
 }
 
-let temp = [];
-function shotgunCollapsing(){
-    for (let [key, value] of playerBullets) {
-        let shotPlayer = value.isCollapsingWithPlayer();
-        if (shotPlayer != null){
-            temp.push(shotPlayer.username);
-            playerBullets.delete(key);
-            value.deleteBullet(key);
-        }else if (value.isCollapsingWithObstacle() || value.distance >= player.weapon.range){
-            temp.push(null);
-            playerBullets.delete(key);
-            value.deleteBullet(key);
-        }
-    }
-    if (temp.length >= shotgun.bullets && playerBullets.size === 0){
-        stompClient.send("/app/game.shotgun-shot/" + code,
-            {},
-            JSON.stringify({type: 'SHOTGUN_SHOT', player: player.username, content: temp.join(), code: code})
-        );
-        temp = [];
-    }
-}
-
-//TODO Zum Server hinzufügen! Dadurch, dass der Angle jetzt auch dem Server übergeben wird.
-function shoot(){
-    if (!reloading){
-        let bulX = (player.x + player.width / 2);
-        let bulY  = (player.y + player.height / 2);
-
-        let bulletSpawnX = bulX + settings.shootRadius * Math.cos(player.angle);
-        let bulletSpawnY = bulY + settings.shootRadius * Math.sin(player.angle);
-
-        if(player.weapon === shotgun){
-            for (let i = 0; i <= shotgun.bullets; i++){
-                const randomOffset = Math.random() * shotgun.scatter - (shotgun.scatter / 2);
-                const bulAngle = player.angle + randomOffset;
-
-                stompClient.send("/app/game.shoot/" + code,
-                    {},
-                    JSON.stringify({type: 'SHOOT', player: player.username,content: bulletSpawnX + "," + bulletSpawnY + "," + bulAngle + "," + player.weapon.speed, code: code})
-                );
-            }
-        }else {
-            stompClient.send("/app/game.shoot/" + code,
-                {},
-                JSON.stringify({type: 'SHOOT', player: player.username,content: bulletSpawnX + "," + bulletSpawnY + "," + player.angle + "," + player.weapon.speed, code: code})
-            );
-        }
-        reloading = true;
-    }
-}
-
-function getWeaponFromString(weaponString){
-    switch (weaponString){
-        case 'shotgun': return shotgun;
-        case 'sniper': return sniper;
-        case 'rifle': return rifle;
-    }
-}
 function addChangeWeaponHTML() {
-    weapons.forEach(weapon => {
+    weaponList.forEach(weapon => {
         let html = `
-         <div class="card" id="${weapon.name}">
-            <img src="${weapon.src}" class="card-img-top card-image" alt="${weapon.name}">
+         <div class="card" id="${weapon.name}" onclick="weaponChange(${weapon.name})">
+            <img src="${getWeaponSrc(weapon.name)}" class="card-img-top card-image" alt="${weapon.name}">
             <div class="card-body">
                 <h3 class="card-title text-center">${weapon.name}</h3>
                 <div>
@@ -181,37 +82,21 @@ function addChangeWeaponHTML() {
         document.getElementById('change-weapon').insertAdjacentHTML("beforeend", html);
     })
 }
-addChangeWeaponHTML();
-fetch("/get-map-data/" + code, {method: 'GET'})
+
+fetch("/get-game-data/" + code, {method: 'GET'})
     .then(response => response.json())
-    .then(data => {
-        map = data;
+    .then(gameData => {
+        map = gameData.mapData;
+        weaponList = gameData.weaponList;
+        addChangeWeaponHTML();
+        console.log(gameData)
         obstacleTemp = structuredClone(map.obstacles);
         document.getElementById('map-name').innerText = map.name;
-        for (const element of map.healPads) {
-            heal.set(element.id, new Heal(element.id, element.x, element.y, settings.healHitBoxWidth,settings.healHitBoxHeight));
+        players = gameData.gameState.players;
+        if (players != null) {
+            players.forEach(p => {
+                addPlayerCard(p);
+            });
         }
-        fetch("/get-all-player/" + code)
-            .then(response => response.json())
-            .then(data => {
-                for (const element of data) {
-                    if (element.username !== username) {
-                        const p = new Player(element.username);
-                        p.weapon = getWeaponFromString(element.weapon);
-                        p.x = element.x;
-                        p.y = element.y;
-                        p.angle = element.angle;
-                        p.killCounter = element.killCounter;
-                        p.deathCounter = element.deathCounter;
-                        p.alive = element.alive;
-                        players.set(p.username,p);
-                        addPlayerCard(p);
-                    }
-                }
-                player = new Player(username);
-                players.set(username, player);
-                addPlayerCard(player);
-                connect();
-                requestAnimationFrame(gameLoop)
-            })
+        connect();
     })

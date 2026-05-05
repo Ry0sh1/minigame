@@ -10,11 +10,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Heal extends AbstractGameObject {
-
-    private double x;
-    private double y;
     private boolean active;
     private int cooldown;
+
+    public Heal(double y, double x, boolean active, int cooldown) {
+        super(y, x);
+        this.active = active;
+        this.cooldown = cooldown;
+    }
 
     public boolean tick() {
         if (!isActive()){

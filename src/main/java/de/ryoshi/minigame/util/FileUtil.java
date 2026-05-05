@@ -1,8 +1,10 @@
 package de.ryoshi.minigame.util;
 
+import de.ryoshi.minigame.model.Weapon;
 import de.ryoshi.minigame.model.dto.JustName;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ import java.util.Random;
 @Component
 public class FileUtil {
 
+    @Getter
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper;
 

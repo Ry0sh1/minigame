@@ -1,14 +1,9 @@
 package de.ryoshi.minigame.service;
 
-import de.ryoshi.minigame.model.Game;
-import de.ryoshi.minigame.model.MapData;
-import de.ryoshi.minigame.model.PowerUp;
-import de.ryoshi.minigame.model.Message;
-import de.ryoshi.minigame.model.MessageType;
+import de.ryoshi.minigame.model.*;
 import de.ryoshi.minigame.stores.GameStore;
+import de.ryoshi.minigame.stores.PlayerStore;
 import de.ryoshi.minigame.util.FileUtil;
-import de.ryoshi.minigame.model.Position;
-import de.ryoshi.minigame.model.RawMapData;
 import lombok.AllArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
@@ -22,8 +17,10 @@ import java.util.Random;
 public class GameService {
 
     private final GameStore gameStore;
+    private final PlayerStore playerStore;
     private final SimpMessageSendingOperations messagingTemplate;
     private final FileUtil fileUtil;
+    private final WeaponService weaponService;
 
     public void deleteGame(String code){
         gameStore.deleteByCode(code);
@@ -31,6 +28,15 @@ public class GameService {
 
     public Game findByCode(String code) {
         return gameStore.findById(code);
+    }
+
+    public GameData getGameData(String code) {
+        Game game = gameStore.findById(code);
+        GameData gameData = new GameData();
+        gameData.setGameState(game.getState(playerStore.findAllByGame(game)));
+        gameData.setWeaponList(weaponService.loadAllWeapons());
+        gameData.setMapData(game.getMapData());
+        return gameData;
     }
 
     public void tickHeals(Game game){
@@ -59,8 +65,8 @@ public class GameService {
         Random random = new Random();
         int n = random.nextInt(possibleSpawnPoints.size());
         Position powerUpSpawn = possibleSpawnPoints.get(n);
-        powerUp.setX(powerUpSpawn.x());
-        powerUp.setY(powerUpSpawn.y());
+        powerUp.setX(powerUpSpawn.getX());
+        powerUp.setY(powerUpSpawn.getY());
         powerUp.setCode(game.getCode());
         try {
             powerUp.setName(fileUtil.convertJsonToJustName(fileUtil.getRandomJSONFromDirectory("classpath:assets/powerups")).getName());
@@ -80,7 +86,7 @@ public class GameService {
         for (Position position : allPowerUpSpawnPoints){
             boolean possible = true;
             for (PowerUp powerUp : currentPowerUps){
-                if (position.x() == powerUp.getX() && position.y() == powerUp.getY()) {
+                if (position.getX() == powerUp.getX() && position.getY() == powerUp.getY()) {
                     possible = false;
                     break;
                 }

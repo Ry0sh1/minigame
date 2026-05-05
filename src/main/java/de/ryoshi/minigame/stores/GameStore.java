@@ -6,14 +6,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class GameStore {
 
-    private final HashMap<String, Game> store;
+    private final ConcurrentHashMap<String, Game> store;
 
     public GameStore() {
-        this.store = new HashMap<>();
+        this.store = new ConcurrentHashMap<>();
     }
 
     public Game findById(String id) {

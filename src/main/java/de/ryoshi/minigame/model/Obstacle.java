@@ -10,8 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Obstacle extends AbstractGameObject {
-    private double x;
-    private double y;
     private int width;
     private int height;
 }

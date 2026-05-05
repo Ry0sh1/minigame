@@ -8,16 +8,16 @@ function draw() {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (let [key, value] of players) {
-        if (value.alive){
+    for (let p of players) {
+        if (p.alive){
             ctx.save();
-            ctx.translate(value.x - camera.x + 6, value.y - camera.y + 6);
-            ctx.rotate(value.angle + Math.PI / 2);
+            ctx.translate(p.x - camera.x + 6, p.y - camera.y + 6);
+            ctx.rotate(p.angle + Math.PI / 2);
             let currentImg = characterRifle;
-            switch (value.weapon) {
-                case shotgun: currentImg = characterShotgun; break;
-                case sniper: currentImg = characterSniper; break;
-                case rifle: currentImg = characterRifle; break;
+            switch (p.weapon.name) {
+                case "shotgun": currentImg = characterShotgun; break;
+                case "sniper": currentImg = characterSniper; break;
+                case "rifle": currentImg = characterRifle; break;
             }
             ctx.drawImage(currentImg, -12, -30, currentImg.width, currentImg.height);
             ctx.restore();
@@ -25,30 +25,20 @@ function draw() {
     }
 
     ctx.fillStyle = "rgb(18,116,2)";
-    for (let [key, value] of bullets) {
+    for (let b of bullets) {
         ctx.beginPath();
-        ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
+        ctx.arc(b.x - camera.x, b.y - camera.y, b.radius, 0, Math.PI * 2);
         ctx.fill();
     }
-    for (let [key, value] of playerBullets) {
-        ctx.beginPath();
-        ctx.arc(value.x - camera.x, value.y - camera.y, value.radius, 0, Math.PI * 2);
-        ctx.fill();
-    }
-    for (let [key, value] of heal){
-        if (value.active){
-            ctx.drawImage(healImage, value.x - camera.x, value.y - camera.y, healImage.width, healImage.height);
+    for (let h of heals){
+        if (h.active){
+            ctx.drawImage(healImage, h.x - camera.x, h.y - camera.y, healImage.width, healImage.height);
         }
     }
-    for (let [key, value] of powerUps){
-        value.drawPowerup(ctx);
+    for (let p of powerUps){
+        p.drawPowerup(ctx);
     }
-    for (let [key, value] of bombs){
-        value.draw();
-    }
-    for (let [key, value] of laserGuns){
-        value.draw();
-    }
+    //TODO: Draw PowerUp Uses
     ctx.restore();
     map.obstacles.forEach(drawObstacle);
 }

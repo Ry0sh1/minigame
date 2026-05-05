@@ -9,15 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Position {
-    private double x;
-    private double y;
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
+public class GameStateMessage {
+    private String player;
+    private GameState content;
+    private MessageType type;
+    private String code;
 }

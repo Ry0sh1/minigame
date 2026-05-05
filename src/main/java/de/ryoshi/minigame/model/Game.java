@@ -1,9 +1,6 @@
 package de.ryoshi.minigame.model;
 
-import de.ryoshi.minigame.stores.BulletStore;
-import de.ryoshi.minigame.stores.HealStore;
-import de.ryoshi.minigame.stores.ObstacleStore;
-import de.ryoshi.minigame.stores.PowerUpStore;
+import de.ryoshi.minigame.stores.*;
 import de.ryoshi.minigame.util.Constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,6 +8,8 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -39,7 +38,7 @@ public class Game {
     public void initMapData() {
         List<Heal> heals = new ArrayList<>();
         for (Position position : rawMapData.getHealPadSpawn())  {
-            Heal heal = new Heal(position.x(), position.y(), true, 0);
+            Heal heal = new Heal(position.getX(), position.getY(), true, 0);
             Heal heal1 = healStore.save(heal);
             heals.add(heal1);
         }
@@ -76,6 +75,22 @@ public class Game {
 
     public Collection<Heal> getHeals() {
         return healStore.getAll();
+    }
+
+    public GameState getState(List<Player> players) {
+        GameState gameState = new GameState();
+        gameState.setHeals(new ArrayList<>(healStore.getAll()));
+        gameState.setBullets(new ArrayList<>(bulletStore.getAll()));
+        gameState.setPowerUps(new ArrayList<>(powerUpStore.getAll()));
+        gameState.setPlayers(players);
+        return gameState;
+    }
+
+    public Position getRandomSpawnPoint() {
+        Random random = new Random();
+        int n = random.nextInt(rawMapData.getSpawnPoints().size());
+        Position spawn = rawMapData.getSpawnPoints().get(n);
+        return spawn;
     }
 
     public void powerUpSpawn(PowerUp powerUp) {

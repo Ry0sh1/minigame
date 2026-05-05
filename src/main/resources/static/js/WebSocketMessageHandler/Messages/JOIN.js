@@ -6,6 +6,7 @@ function JOIN(message){
         addPlayerCard(p);
         players.set(p.username, p);
     }
+    //requestAnimationFrame(gameLoop);
 }
 
 function addPlayerCard(p){

@@ -1,12 +1,10 @@
 package de.ryoshi.minigame.controller;
 
-import de.ryoshi.minigame.model.Game;
-import de.ryoshi.minigame.model.Player;
-import de.ryoshi.minigame.model.MapData;
+import de.ryoshi.minigame.model.*;
+import de.ryoshi.minigame.service.GameService;
 import de.ryoshi.minigame.service.RawMapService;
 import de.ryoshi.minigame.stores.GameStore;
 import de.ryoshi.minigame.stores.PlayerStore;
-import de.ryoshi.minigame.model.RawMapData;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,13 +19,14 @@ public class GameRestController {
     private final PlayerStore playerStore;
     private final GameStore gameStore;
     private final RawMapService rawMapService;
+    private final GameService gameService;
 
     @GetMapping("/get-all-player/{code}")
     public List<Player> getAllPlayer(@PathVariable String code){
         return new ArrayList<>(playerStore.findAllByGame(gameStore.findById(code)));
     }
 
-    @PostMapping("/create-game")
+    @GetMapping("/create-game")
     public String createGame() throws IOException {
         String[] alphabet = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
         StringBuilder code = new StringBuilder();
@@ -51,6 +50,11 @@ public class GameRestController {
     @GetMapping("/get-map-data/{code}")
     public MapData getTest(@PathVariable String code) {
         return gameStore.findById(code).getMapData();
+    }
+
+    @GetMapping("/get-game-data/{code}")
+    public GameData getGameData(@PathVariable String code) {
+        return gameService.getGameData(code);
     }
 
     @GetMapping("/get-game/{code}")

@@ -1,0 +1,10 @@
+{
+  "name": "sniper",
+  "speed": 8,
+  "range": 400,
+  "reloadFrames": 50,
+  "damage": 100,
+  "bulletRadius": 3,
+  "sprayRadius": 1,
+  "bulletCount": 1
+}

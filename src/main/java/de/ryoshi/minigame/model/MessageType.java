@@ -1,7 +1,9 @@
 package de.ryoshi.minigame.model;
 
 public enum MessageType {
-    POSITION,
+    MOVE,
+    STOP_MOVE,
+    GAME_STATE,
     LEFT,
     JOIN,
     SHOOT,

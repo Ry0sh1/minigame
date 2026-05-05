@@ -24,29 +24,19 @@
 <script>
     document.getElementById('create-button').addEventListener('click', () => {
         localStorage.setItem('username', document.getElementById('username').value);
-        const Game = {
-            code: "ABCD",
-        }
-        fetch('/create-game', {
-            method: 'POST',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(Game)
-        })
-        .then(response => response.text())
-        .then(code => {
-            localStorage.setItem("code", code);
-            window.location.href = "/game/" + code;
-        });
-    })
+        fetch('/create-game', { method: 'get' })
+            .then(response => response.text())
+            .then(code => {
+                localStorage.setItem("code", code);
+                window.location.href = "/game/" + code;
+            });
+    });
     document.getElementById('join-button').addEventListener('click', () => {
         localStorage.setItem('username', document.getElementById('username').value);
         let code = document.getElementById('game-code').value;
         localStorage.setItem("code", code);
         window.location.href = "/game/" + code;
-    })
+    });
 </script>
 </body>
 </html>

@@ -5,19 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Position {
-    private double x;
-    private double y;
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
+public class GameData {
+    private GameState gameState;
+    private MapData mapData;
+    private List<Weapon> weaponList;
 }

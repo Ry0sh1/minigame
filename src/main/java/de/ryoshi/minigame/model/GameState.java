@@ -5,19 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Position {
-    private double x;
-    private double y;
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
+public class GameState {
+    private List<Player> players;
+    private List<Bullet> bullets;
+    private List<PowerUp> powerUps;
+    private List<Heal> heals;
 }

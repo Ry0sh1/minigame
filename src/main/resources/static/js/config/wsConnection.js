@@ -17,59 +17,32 @@ function onConnected(){
 
 function onMessageReceived(payload){
     let message = (JSON.parse(payload.body));
-    if (message.type === 'POSITION'){
-        POSITION(message);
-    }
     if (message.type === 'JOIN'){
         JOIN(message);
     }
     if (message.type === 'LEFT'){
         LEFT(message);
     }
-    if (message.type === 'SHOOT'){
-        SHOOT(message);
-    }
-    if (message.type === 'DELETE_BULLET'){
-        DELETE_BULLET(message);
-    }
     if (message.type === 'SPAWN'){
         SPAWN(message);
     }
-    if (message.type === 'PLAYER_HIT'){
-        PLAYER_HIT(message);
-    }
-    if (message.type === 'KILLED'){
-        KILLED(message);
-    }
-    if (message.type === 'HEAL'){
-        HEAL(message);
-    }
-    if (message.type === 'REACTIVATE_HEAL'){
-        REACTIVATE_HEAL(message);
-    }
-    if (message.type === 'EVENT'){
-        EVENT(message);
+    if (message.type === 'USE_POWERUP'){
+        USE_POWERUP(message);
     }
     if (message.type === 'END_GAME'){
         END_GAME(message);
     }
-    if (message.type === 'VIEW_ANGLE'){
-        VIEW_ANGLE(message);
+    if (message.type === 'GAME_STATE') {
+        GAME_STATE(message.content);
     }
     if (message.type === 'TIMER'){
         TIMER(message);
     }
+    if (message.type === 'EVENT'){
+        EVENT(message);
+    }
     if (message.type === 'STOP_EVENT'){
         STOP_EVENT(message);
-    }
-    if (message.type === 'SPAWN_POWERUP'){
-        SPAWN_POWERUP(message);
-    }
-    if (message.type === 'TAKE_POWERUP'){
-        TAKE_POWERUP(message);
-    }
-    if (message.type === 'USE_POWERUP'){
-        USE_POWERUP(message);
     }
     if (message.type === 'TOWER')  {
         TOWER(message);

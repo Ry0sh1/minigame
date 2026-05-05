@@ -10,10 +10,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Bullet extends AbstractGameObject {
-    private double x;
-    private double y;
     private double angle;
     private double speed;
+    private double distance;
+    private double range;
+    private double radius;
+    private String playerID;
+    private int damage;
 
     @Override
     public String toString() {

@@ -1,0 +1,10 @@
+{
+  "name": "rifle",
+  "speed": 5,
+  "range": 240,
+  "reloadFrames": 10,
+  "damage": 10,
+  "bulletRadius": 3,
+  "sprayRadius": 4,
+  "bulletCount": 1
+}
