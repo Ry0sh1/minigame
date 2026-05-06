@@ -19,23 +19,10 @@ let players = [];
 let bullets = [];
 let heals = [];
 let powerUps = [];
+let bombs = [];
 
 const keys = ["w","a","s","d"];
-const bombs = new Map();
 const laserGuns = new Map();
-
-let lastTime = 0;
-const fpsInterval = 1000 / settings.fps;
-
-function gameLoop(currentTime){
-    requestAnimationFrame(gameLoop);
-    const elapsed = currentTime - lastTime;
-
-    if (elapsed > fpsInterval) {
-        lastTime = currentTime - (elapsed % fpsInterval);
-        draw();
-    }
-}
 
 function getWeaponSrc(name){
     switch (name) {
@@ -48,7 +35,7 @@ function getWeaponSrc(name){
 function addChangeWeaponHTML() {
     weaponList.forEach(weapon => {
         let html = `
-         <div class="card" id="${weapon.name}" onclick="weaponChange('${weapon.name}')">
+         <div class="card col-4" id="${weapon.name}" onclick="weaponChange('${weapon.name}')">
             <img src="${getWeaponSrc(weapon.name)}" class="card-img-top card-image" alt="${weapon.name}">
             <div class="card-body">
                 <h3 class="card-title text-center">${weapon.name}</h3>
@@ -90,11 +77,6 @@ fetch("/get-game-data/" + code, {method: 'GET'})
         addChangeWeaponHTML();
         obstacleTemp = structuredClone(map.obstacles);
         document.getElementById('map-name').innerText = map.name;
-        players = gameData.gameState.players;
-        if (players != null) {
-            players.forEach(p => {
-                addPlayerCard(p);
-            });
-        }
+        document.getElementById('game-code').innerText = code;
         connect();
     })

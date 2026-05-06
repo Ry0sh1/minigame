@@ -28,6 +28,7 @@ public class Player {
     private int respawnTimer;
     private double angle;
     private String gameCode;
+    private boolean nearSight;
     private PowerUp currentPowerUp;
 
     public Player(String username, String gameCode) {
@@ -43,6 +44,7 @@ public class Player {
         this.width = Constant.PLAYER_WIDTH;
         this.height = Constant.PLAYER_HEIGHT;
         this.currentPowerUp = null;
+        this.nearSight = false;
     }
 
     @Override

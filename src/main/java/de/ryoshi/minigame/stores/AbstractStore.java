@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class AbstractStore<T extends AbstractGameObject>  {
 
-    protected final ConcurrentHashMap<Integer, T> store;
+    protected ConcurrentHashMap<Integer, T> store;
     protected final AtomicInteger counter;
 
     public AbstractStore() {

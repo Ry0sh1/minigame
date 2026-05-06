@@ -3,6 +3,17 @@ function GAME_STATE(gameState) {
     bullets = gameState.bullets;
     heals = gameState.heals;
     powerUps = gameState.powerUps;
+    bombs = gameState.bombs;
+    map.obstacles = gameState.obstacles;
+
+    if (gameState.currentEvent != null) {
+        event(gameState.currentEvent);
+    } else {
+        map.obstacles = structuredClone(obstacleTemp);
+        document.getElementById('current_event').classList.add('hidden');
+        document.getElementById('current_event').innerText = "";
+        document.getElementById('event_information').classList.add('hidden');
+    }
 
     redrawPlayerCards();
 
@@ -10,10 +21,29 @@ function GAME_STATE(gameState) {
         if (p.username === username) {
             player = p;
 
+            if (document.getElementById('powerup-display') != null) {
+                document.getElementById('powerup-display').remove();
+                document.getElementById('current-item').innerText = "";
+            }
+
+            if (player.currentPowerUp) {
+                let src = "";
+                switch (player.currentPowerUp.name){
+                    case "bomb": src = bombImage.src; break;
+                    case "laser-gun": src = laserImage.src; break;
+                    case "speed": src = speedImage.src; break;
+                    case "shield": src = shieldImage.src; break;
+                    case "flash": src = flashImage.src; break;
+                }
+                let template = `<img id="powerup-display" src="${src}" alt="${player.currentPowerUp.name} Powerup Display">`;
+                document.getElementById('powerup-box').insertAdjacentHTML('beforeend', template);
+                document.getElementById('current-item').innerText = player.currentPowerUp.name;
+            }
+
             if (player.weapon === null) return;
 
-
             document.getElementById('hp').innerText = player.hp;
+            document.getElementById('shield').innerText = player.shield;
 
             if (player.alive) {
                 camera = new Camera(0,0, canvas.width, canvas.height);
@@ -36,6 +66,24 @@ function GAME_STATE(gameState) {
             }
         }
     });
+}
+
+function event(eventName){
+    if (eventName === 'Darkness') {
+        changeEventLabel("Darkness!");
+    }
+    if (eventName === 'Destruction') {
+        changeEventLabel("Destruction!");
+    }
+    if (eventName === 'Tower') {
+        changeEventLabel("The Tower!");
+    }
+}
+
+function changeEventLabel(name) {
+    document.getElementById('current_event').classList.remove('hidden');
+    document.getElementById('current_event').innerText = name;
+    document.getElementById('event_information').classList.remove('hidden');
 }
 
 function redrawPlayerCards() {

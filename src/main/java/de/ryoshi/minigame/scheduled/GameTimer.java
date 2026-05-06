@@ -2,16 +2,7 @@ package de.ryoshi.minigame.scheduled;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.ryoshi.minigame.model.AbstractGameObject;
-import de.ryoshi.minigame.model.Bullet;
-import de.ryoshi.minigame.model.Game;
-import de.ryoshi.minigame.model.GameStateMessage;
-import de.ryoshi.minigame.model.Input;
-import de.ryoshi.minigame.model.Message;
-import de.ryoshi.minigame.model.MessageType;
-import de.ryoshi.minigame.model.Obstacle;
-import de.ryoshi.minigame.model.Player;
-import de.ryoshi.minigame.model.Position;
+import de.ryoshi.minigame.model.*;
 import de.ryoshi.minigame.service.EventService;
 import de.ryoshi.minigame.service.GameService;
 import de.ryoshi.minigame.stores.GameStore;
@@ -42,7 +33,7 @@ public class GameTimer {
                 game.setTime(game.getTime() + 1);
                 gameService.tickHeals(game);
                 if (game.getTime() % Constant.EVENT_INTERVAL == 0){
-                    eventService.sendEventMessage(game);
+                    eventService.startEvent(game);
                 }
                 if (game.getTime() % Constant.POWERUP_INTERVAL == 0){
                     gameService.spawnPowerUp(game);
@@ -60,7 +51,6 @@ public class GameTimer {
             if (!player.isAlive()){
                 player.setRespawnTimer(player.getRespawnTimer() - 1);
                 if (player.getRespawnTimer() <= 0){
-                    player.setAlive(true);
                     respawnPlayer(player);
                 }
             }
@@ -73,6 +63,7 @@ public class GameTimer {
             if (!game.isRunning()) return;
 
             synchronized (game) {
+                updateBombs(game);
                 updatePlayer(game);
                 updateBullets(game);
                 try {
@@ -82,6 +73,37 @@ public class GameTimer {
                 }
             }
         });
+    }
+
+    public void updateBombs(Game game) {
+        for (Bomb bomb : new ArrayList<>(game.getBombStore().getAll())) {
+            bomb.setTimer(bomb.getTimer() - 1);
+            if (bomb.getTimer() <= 0 && !bomb.isExploded()) {
+                bomb.setExploded(true);
+
+                playerStore.findAllByGame(game).forEach(player -> {
+                    if (playerInBombRadius(player, bomb)) {
+                        gameService.processPlayerHit(null, player, bomb.getDamage());
+                    }
+                });
+
+                bomb.setTimer(bomb.getBombAfterLifeTimer());
+            } else if (bomb.getTimer() <= 0){
+                game.getBombStore().delete(bomb.getId());
+            }
+        }
+    }
+
+    private boolean playerInBombRadius(Player player, Bomb bomb) {
+        double pCenterX = player.getX() + player.getWidth() / 2;
+        double pCenterY = player.getY() + player.getHeight() / 2;
+
+        double dx = pCenterX - bomb.getX();
+        double dy = pCenterY - bomb.getY();
+
+        double distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance <= bomb.getRadius();
     }
 
     private void updateBullets(Game game) {
@@ -127,7 +149,7 @@ public class GameTimer {
 
     private boolean bulletCollapsingWithPlayer(Bullet bullet, Game game) {
         for (Player player : playerStore.findAllByGame(game)) {
-            if (!player.isAlive()) continue;
+            if (!player.isAlive() || player.getUsername().equals(bullet.getPlayerID())) continue;
             if (bullet.getX() + bullet.getRadius() >= player.getX() &&
                     bullet.getX() <= player.getX() + player.getWidth() &&
                     bullet.getY() + bullet.getRadius() >= player.getY() &&
@@ -135,35 +157,12 @@ public class GameTimer {
 
                 Player killer = playerStore.findById(bullet.getPlayerID());
 
-                processPlayerHit(killer, player, bullet.getDamage());
+                gameService.processPlayerHit(killer, player, bullet.getDamage());
 
                 return true;
             }
         }
         return false;
-    }
-
-    private void processPlayerHit(Player killer, Player shotPlayer, int damage) {
-        if ((shotPlayer.getHp() + shotPlayer.getShield()) - damage <= 0) {
-            if (!killer.getUsername().equals(shotPlayer.getUsername())){
-                killer.setKillCounter(killer.getKillCounter() + 1);
-            }
-            shotPlayer.setDeathCounter(shotPlayer.getDeathCounter() + 1);
-            shotPlayer.setAlive(false);
-            shotPlayer.setX(0);
-            shotPlayer.setY(0);
-            shotPlayer.setHp(Constant.MAX_HP);
-            shotPlayer.setRespawnTimer(Constant.RESPAWN_TIMER);
-            playerStore.saveAll(List.of(killer, shotPlayer));
-        } else {
-            int rest = shotPlayer.getShield() - damage;
-            shotPlayer.setShield(shotPlayer.getShield() - damage);
-            if (shotPlayer.getShield() < 0){
-                shotPlayer.setHp(shotPlayer.getHp() - Math.abs(rest));
-                shotPlayer.setShield(0);
-            }
-            playerStore.save(shotPlayer);
-        }
     }
 
     private void updatePlayer(Game game) {
@@ -279,21 +278,13 @@ public class GameTimer {
         Position position = gameStore.findById(player.getGameCode()).getRandomSpawnPoint();
         player.setX(position.getX());
         player.setY(position.getY());
-        //TODO: player.setWeapon(message.getContent());
-        Message message = new Message();
-        message.setContent(player.toString());
-        message.setPlayer(player.getUsername());
-        message.setCode(player.getGameCode());
-        message.setType(MessageType.SPAWN);
-        messagingTemplate.convertAndSend("/start-game/game/" + player.getGameCode(),message);
+        player.setAlive(true);
     }
 
     public void stopGame(Game game){
         game.setRunning(false);
         gameStore.save(game);
         Message message = new Message();
-        message.setPlayer("server");
-        message.setCode(game.getCode());
         message.setType(MessageType.END_GAME);
         List<Player> players = new ArrayList<>(playerStore.findAllByGame(game));
         Player max = players.get(0);
@@ -327,8 +318,6 @@ public class GameTimer {
 
     public void sendTimer(Game game){
         Message message = new Message();
-        message.setPlayer("server");
-        message.setCode(game.getCode());
         message.setType(MessageType.TIMER);
         message.setContent("" + game.getTime());
         messagingTemplate.convertAndSend("/start-game/game/" + game.getCode(), message);

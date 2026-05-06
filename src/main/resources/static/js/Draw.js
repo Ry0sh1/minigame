@@ -32,13 +32,17 @@ function draw() {
     }
     for (let h of heals){
         if (h.active){
-            ctx.drawImage(healImage, h.x - camera.x, h.y - camera.y, healImage.width, healImage.height);
+            healImage.height = h.height;
+            healImage.width = h.width;
+            ctx.drawImage(healImage, h.x - camera.x, h.y - camera.y, h.width, h.height);
         }
     }
     for (let p of powerUps){
         drawPowerup(p);
     }
-    //TODO: Draw PowerUp Uses
+    for (let b of bombs) {
+        drawBomb(b);
+    }
     ctx.restore();
     map.obstacles.forEach(drawObstacle);
 }
@@ -57,6 +61,16 @@ function drawPowerup(powerup) {
         //No texture
         ctx.fillStyle = "rgb(255,0,0)";
         ctx.fillRect(powerup.x - camera.x, powerup.y - camera.y, laserImage.width, laserImage.height);
+    }
+}
+function drawBomb(bomb) {
+    if (!bomb.exploded){
+        ctx.drawImage(bombImage, bomb.x - camera.x, bomb.y - camera.y, bombImage.width, bombImage.height);
+    }else {
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(236,101,101,0.3)"
+        ctx.arc(bomb.x - camera.x, bomb.y - camera.y, bomb.radius, 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 function drawObstacle(obstacle) {
@@ -105,7 +119,7 @@ function drawVision() {
     }
 
     ctx.beginPath();
-    if (!player.nearsight){
+    if (!player.nearSight){
         ctx.arc(playerCenterX, playerCenterY, settings.playerVisionRadius, startAngle, endAngle);
         ctx.lineTo(playerCenterX, playerCenterY);
         for (let i = 0; i < lines.length - 1; i++){

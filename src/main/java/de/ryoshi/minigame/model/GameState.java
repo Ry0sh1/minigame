@@ -10,10 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class GameState {
     private List<Player> players;
     private List<Bullet> bullets;
     private List<PowerUp> powerUps;
     private List<Heal> heals;
+    private List<Bomb> bombs;
+    private List<Obstacle> obstacles;
+    private String currentEvent;
 }

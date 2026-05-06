@@ -34,7 +34,7 @@ public class WebSocketEvent {
         if (playerStore.findAllByGame(gameService.findByCode(code)).isEmpty()){
             gameService.deleteGame(code);
         }
-        Message message = new Message(username, "Left the game", MessageType.LEFT, code);
+        Message message = new Message("Left the game", MessageType.LEFT);
         messagingTemplate.convertAndSend("/start-game/game/" + code, message);
     }
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,6 +27,7 @@ public class Game {
     private final HealStore healStore = new HealStore();
     private final PowerUpStore powerUpStore = new PowerUpStore();
     private final ObstacleStore obstacleStore = new ObstacleStore();
+    private final BombStore bombStore = new BombStore();
 
     public Game(RawMapData rawMapData) {
         this.rawMapData = rawMapData;
@@ -51,8 +51,21 @@ public class Game {
         mapData.setPowerUps(new ArrayList<>());
     }
 
+    public void resetObstacles() {
+        List<Obstacle> obstacles = new ArrayList<>();
+        for (Obstacle obstacle: rawMapData.getObstacles()) {
+            obstacles.add(obstacleStore.save(obstacle));
+        }
+        mapData.setObstacles(obstacles);
+    }
+
     public Bullet shootBullet(Bullet bullet) {
         return bulletStore.save(bullet);
+    }
+
+    public void createBomb(String player, double x, double y) {
+        Bomb bomb = new Bomb(player, x, y);
+        bombStore.save(bomb);
     }
 
     public void deleteBullet(int id) {
@@ -78,12 +91,14 @@ public class Game {
     }
 
     public GameState getState(List<Player> players) {
-        GameState gameState = new GameState();
-        gameState.setHeals(new ArrayList<>(healStore.getAll()));
-        gameState.setBullets(new ArrayList<>(bulletStore.getAll()));
-        gameState.setPowerUps(new ArrayList<>(powerUpStore.getAll()));
-        gameState.setPlayers(players);
-        return gameState;
+        return new GameState(
+                players,
+                new ArrayList<>(bulletStore.getAll()),
+                new ArrayList<>(powerUpStore.getAll()),
+                new ArrayList<>(healStore.getAll()),
+                new ArrayList<>(bombStore.getAll()),
+                new ArrayList<>(obstacleStore.getAll()),
+                currentEvent);
     }
 
     public Position getRandomSpawnPoint() {

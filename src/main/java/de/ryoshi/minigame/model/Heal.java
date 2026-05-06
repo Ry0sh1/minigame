@@ -1,5 +1,6 @@
 package de.ryoshi.minigame.model;
 
+import de.ryoshi.minigame.util.Constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,15 @@ import lombok.Setter;
 public class Heal extends AbstractGameObject {
     private boolean active;
     private int cooldown;
+    private int width;
+    private int height;
 
     public Heal(double y, double x, boolean active, int cooldown) {
         super(y, x);
         this.active = active;
         this.cooldown = cooldown;
+        this.width = Constant.HEAL_HITBOX_WIDTH;
+        this.height = Constant.HEAL_HITBOX_HEIGHT;
     }
 
     public boolean tick() {

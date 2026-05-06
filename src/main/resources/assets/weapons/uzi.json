@@ -1,0 +1,10 @@
+{
+  "name": "uzi",
+  "speed": 10,
+  "range": 180,
+  "reloadFrames": 5,
+  "damage": 5,
+  "bulletRadius": 2,
+  "sprayRadius": 16,
+  "bulletCount": 1
+}

@@ -3,6 +3,7 @@ package de.ryoshi.minigame.service;
 import de.ryoshi.minigame.model.Game;
 import de.ryoshi.minigame.model.Message;
 import de.ryoshi.minigame.model.MessageType;
+import de.ryoshi.minigame.stores.PlayerStore;
 import de.ryoshi.minigame.util.Constant;
 import de.ryoshi.minigame.util.FileUtil;
 import lombok.AllArgsConstructor;
@@ -20,8 +21,9 @@ public class EventService {
 
     private final FileUtil fileUtil;
     private final SimpMessageSendingOperations messagingTemplate;
+    private final PlayerStore playerStore;
 
-    public void sendEventMessage(Game game) {
+    public void startEvent(Game game) {
         try {
             game.setCurrentEvent(fileUtil.convertJsonToJustName(fileUtil.getRandomJSONFromDirectory("classpath:assets/events")).getName());
         } catch (IOException e) {
@@ -29,12 +31,6 @@ public class EventService {
         }
         game.setCurrentEventTime(Constant.EVENT_TIME);
         game.setEvent(true);
-        Message message = new Message();
-        message.setType(MessageType.EVENT);
-        message.setPlayer("server");
-        message.setCode(game.getCode());
-        message.setContent(game.getCurrentEvent());
-        messagingTemplate.convertAndSend("/start-game/game/" + game.getCode(),message);
     }
 
     public void handleEvent(Game game) {
@@ -42,27 +38,38 @@ public class EventService {
             game.setCurrentEventTime(game.getCurrentEventTime() - 1);
             if (game.getCurrentEventTime() <= 0){
                 stopEvent(game);
+                return;
             }
-            if (game.getCurrentEvent() != null && game.getCurrentEvent().equals("Tower")) {
-                Random random = new Random();
-                double x = random.nextDouble(game.getMapData().getWidth());
-                double y = random.nextDouble(game.getMapData().getHeight());
+            switch (game.getCurrentEvent()) {
+                case "Tower" -> {
+                    Random random = new Random();
+                    double x = random.nextDouble(game.getMapData().getWidth());
+                    double y = random.nextDouble(game.getMapData().getHeight());
 
-                Message message = new Message();
-                message.setType(MessageType.TOWER);
-                message.setPlayer("server");
-                message.setContent(x + "," + y + "," + game.getTime());
-                message.setCode(game.getCode());
-                messagingTemplate.convertAndSend("/start-game/game/" + game.getCode(),message);
+                    game.createBomb("server", x, y);
+                }
+                case "Destruction" -> {
+                    game.getMapData().getObstacles().clear();
+                }
+                case "Darkness" -> {
+                    playerStore.findAllByGame(game).forEach(player -> player.setNearSight(true));
+                }
             }
         }
     }
 
     public void stopEvent(Game game){
+        switch (game.getCurrentEvent()) {
+            case "Destruction" -> {
+                game.resetObstacles();
+            }
+            case "Darkness" -> {
+                playerStore.findAllByGame(game).forEach(player -> player.setNearSight(false));
+            }
+        }
+
         Message message = new Message();
         message.setType(MessageType.STOP_EVENT);
-        message.setPlayer("server");
-        message.setCode(game.getCode());
         message.setContent(game.getCurrentEvent());
         game.setCurrentEvent(null);
         game.setEvent(false);

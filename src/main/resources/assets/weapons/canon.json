@@ -1,0 +1,10 @@
+{
+  "name": "canon",
+  "speed": 4,
+  "range": 500,
+  "reloadFrames": 80,
+  "damage": 80,
+  "bulletRadius": 16,
+  "sprayRadius": 1,
+  "bulletCount": 1
+}
