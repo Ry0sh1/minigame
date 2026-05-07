@@ -66,6 +66,7 @@ public class GameTimer {
                 updateBombs(game);
                 updatePlayer(game);
                 updateBullets(game);
+                updateShootingPoints(game);
                 try {
                     sendGameState(game);
                 } catch (JsonProcessingException e) {
@@ -73,6 +74,16 @@ public class GameTimer {
                 }
             }
         });
+    }
+
+    private void updateShootingPoints(Game game) {
+        for (ShootingPoint shootingPoint : new ArrayList<>(game.getShootingPointStore().getAll())) {
+            shootingPoint.setCurrentFrame(shootingPoint.getCurrentFrame() + 1);
+
+            if (shootingPoint.getCurrentFrame() >= shootingPoint.getMax()) {
+                game.getShootingPointStore().delete(shootingPoint.getId());
+            }
+        }
     }
 
     public void updateBombs(Game game) {
@@ -210,6 +221,9 @@ public class GameTimer {
                     player.setReloading(true);
                     player.setCurrentReloadFrame(0);
                 }
+
+                ShootingPoint shootingPoint = new ShootingPoint(player.getX(), player.getY());
+                game.getShootingPointStore().save(shootingPoint);
             }
 
             Position pos = new Position(player.getX(), player.getY());

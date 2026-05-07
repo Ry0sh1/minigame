@@ -1,7 +1,7 @@
 {
   "name": "uzi",
   "speed": 10,
-  "range": 180,
+  "range": 220,
   "reloadFrames": 5,
   "damage": 5,
   "bulletRadius": 2,

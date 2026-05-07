@@ -13,8 +13,8 @@ public class AbstractGameObject {
     public AbstractGameObject() {
     }
 
-    public AbstractGameObject(double y, double x) {
-        this.y = y;
+    public AbstractGameObject(double x, double y) {
         this.x = x;
+        this.y = y;
     }
 }

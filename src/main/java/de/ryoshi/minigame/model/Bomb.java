@@ -18,8 +18,8 @@ public class Bomb extends AbstractGameObject {
     private int bombAfterLifeTimer;
     private boolean exploded;
 
-    public Bomb(String player, double y, double x) {
-        super(y, x);
+    public Bomb(String player, double x, double y) {
+        super(x, y);
         timer = Constant.BOMB_TIMER;
         radius = Constant.BOMB_RADIUS;
         damage = Constant.BOMB_DAMAGE;

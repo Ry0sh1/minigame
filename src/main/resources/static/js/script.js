@@ -20,6 +20,7 @@ let bullets = [];
 let heals = [];
 let powerUps = [];
 let bombs = [];
+let shootingPoints = [];
 
 const keys = ["w","a","s","d"];
 const laserGuns = new Map();

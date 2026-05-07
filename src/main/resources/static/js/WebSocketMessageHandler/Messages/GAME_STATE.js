@@ -4,6 +4,7 @@ function GAME_STATE(gameState) {
     heals = gameState.heals;
     powerUps = gameState.powerUps;
     bombs = gameState.bombs;
+    shootingPoints = gameState.shootingPoints;
     map.obstacles = gameState.obstacles;
 
     if (gameState.currentEvent != null) {

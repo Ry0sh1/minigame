@@ -28,6 +28,7 @@ public class Game {
     private final PowerUpStore powerUpStore = new PowerUpStore();
     private final ObstacleStore obstacleStore = new ObstacleStore();
     private final BombStore bombStore = new BombStore();
+    private final ShootingPointStore shootingPointStore = new ShootingPointStore();
 
     public Game(RawMapData rawMapData) {
         this.rawMapData = rawMapData;
@@ -98,6 +99,7 @@ public class Game {
                 new ArrayList<>(healStore.getAll()),
                 new ArrayList<>(bombStore.getAll()),
                 new ArrayList<>(obstacleStore.getAll()),
+                new ArrayList<>(shootingPointStore.getAll()),
                 currentEvent);
     }
 

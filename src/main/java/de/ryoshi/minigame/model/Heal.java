@@ -16,8 +16,8 @@ public class Heal extends AbstractGameObject {
     private int width;
     private int height;
 
-    public Heal(double y, double x, boolean active, int cooldown) {
-        super(y, x);
+    public Heal(double x, double y, boolean active, int cooldown) {
+        super(x, y);
         this.active = active;
         this.cooldown = cooldown;
         this.width = Constant.HEAL_HITBOX_WIDTH;
