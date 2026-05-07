@@ -15,5 +15,4 @@ class Camera {
         if (this.x + this.width > map.width) this.x = map.width - this.width;
         if (this.y + this.height > map.height) this.y = map.height - this.height;
     }
-
 }

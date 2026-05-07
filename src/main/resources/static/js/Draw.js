@@ -18,6 +18,8 @@ function draw() {
                 case "shotgun": currentImg = characterShotgun; break;
                 case "sniper": currentImg = characterSniper; break;
                 case "rifle": currentImg = characterRifle; break;
+                case "uzi": currentImg  = characterRifle; break;
+                case "canon": currentImg = characterShotgun; break;
             }
             ctx.drawImage(currentImg, -12, -30, currentImg.width, currentImg.height);
             ctx.restore();

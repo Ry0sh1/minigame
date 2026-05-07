@@ -26,7 +26,6 @@ body{
     object-fit: scale-down;
 }
 .card{
-    width: 300px;
     cursor: pointer;
     transition: all 0.15s;
 }

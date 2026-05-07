@@ -30,13 +30,15 @@ function getWeaponSrc(name){
         case 'sniper': return "/texture/sniper-side.png";
         case 'shotgun': return "/texture/shotgun-side.png";
         case 'rifle': return "/texture/rifle-side.png";
+        case 'canon': return "/texture/canon-side.png";
+        case 'uzi': return "/texture/uzi-side.png"
     }
 }
 
 function addChangeWeaponHTML() {
     weaponList.forEach(weapon => {
         let html = `
-         <div class="card col-4" id="${weapon.name}" onclick="weaponChange('${weapon.name}')">
+         <div class="card col-3" id="${weapon.name}" onclick="weaponChange('${weapon.name}')">
             <img src="${getWeaponSrc(weapon.name)}" class="card-img-top card-image" alt="${weapon.name}">
             <div class="card-body">
                 <h3 class="card-title text-center">${weapon.name}</h3>

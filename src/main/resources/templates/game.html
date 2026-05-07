@@ -25,7 +25,7 @@
         <div id="game-main" class="hidden">
             <h2 id="event_information" class="hidden"><span id="current_event">Darkness</span></h2>
             <canvas id="game-canvas" width="400px" height="400px"></canvas>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <h2><span id="hp">100</span> <img src="/texture/heal.png" class="player-info-img" alt="HealthPoints"></h2>
                     <h2><span id="shield">0</span> <img src="/texture/shield.png" class="player-info-img" alt="ShieldPoints"></h2>
@@ -35,7 +35,11 @@
                     <div id="powerup-box" class="powerup-box"></div>
                     <p id="current-item"></p>
                 </div>
-                <canvas id="minimap" width="100" height="100"></canvas>
+                <div class="d-flex align-items-center justify-content-center flex-column">
+                    <p>Minimap</p>
+                    <canvas id="minimap" width="100" height="100"></canvas>
+                    <p></p>
+                </div>
             </div>
         </div>
         <div id="change-weapon-info">
